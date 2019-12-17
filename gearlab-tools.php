@@ -9,7 +9,18 @@
  * Version: 0.1.0
  */
 
-require_once __DIR__ . '/vendor/autoload.php';
+// no script kiddiez
+if (!defined('ABSPATH')) {
+  return;
+}
+
+// require the composer autoloader, making educated guesses as to where it is
+if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+  require_once __DIR__ . '/vendor/autoload.php';
+} elseif (file_exists(ABSPATH . '/vendor/autoload.php')) {
+  require_once ABSPATH . '/vendor/autoload.php';
+}
+
 require_once __DIR__ . '/wp-api.php';
 
 use GearLab\Api\Client;
