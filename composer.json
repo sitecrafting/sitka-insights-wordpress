@@ -3,6 +3,7 @@
   "description": "Integrate your WordPress site with the GearLab Tools platform",
   "type": "wordpress-plugin",
   "require": {
+    "composer/installers": "~1.0",
     "sitecrafting/gearlab-tools-php": "v2.0-alpha.04"
   },
   "license": "MIT",
