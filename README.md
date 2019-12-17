@@ -79,7 +79,7 @@ The only assumption this module makes about your HTML is that the search input c
 
 For the curious, this feature works by registering a custom WP REST route at `/wp-json/gearlab/v2/completions` and telling `jquery-ui-autocomplete` to grab its autocomplete suggestions from that route.
 
-### WP-CLI Custom CommandS
+### WP-CLI Custom Commands
 
 The plugin implements WP-CLI commands for major GearLab Tools REST endpoints, such as search:
 
