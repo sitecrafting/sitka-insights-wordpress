@@ -1,0 +1,21 @@
+{
+  "name": "sitecrafting/gearlab-tools-wordpress",
+  "description": "Integrate your WordPress site with the GearLab Tools platform",
+  "type": "wordpress-plugin",
+  "require": {
+    "sitecrafting/gearlab-tools-php": "v2.0-alpha.04"
+  },
+  "license": "GPLv2",
+  "authors": [
+    {
+      "name": "Coby Tamayo",
+      "email": "ctamayo@sitecrafting.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "GearLab\\Plugin\\": "src/",
+      "GearLab\\WpCli\\": "cli/"
+    }
+  }
+}
