@@ -18,5 +18,8 @@
       "GearLab\\Plugin\\": "src/",
       "GearLab\\WpCli\\": "cli/"
     }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8.5"
   }
 }
