@@ -103,6 +103,10 @@ function main() {
   restore_vendor
 
   echo "Created ${tar_name}, ${zip_name}"
+
+  create_github_release $RELEASE $tar_name $zip_name
+
+  echo 'Done.'
 }
 
 function backup_vendor() {
@@ -117,6 +121,21 @@ function restore_vendor() {
   if [[ -d vendor.bak ]] ; then
     rm -rf vendor
     mv vendor.bak vendor
+  fi
+}
+
+function create_github_release() {
+  if [[ $(which hub) ]] ; then
+    echo $($BOLD)hub detected! You win at Git!$($RESET)
+    read -p 'Create a GitHub release? (y/N) ' create
+    if [[ "$create" = "y" ]] ; then
+      echo 'pushing latest changes and tags...'
+      git push origin master
+      git push --tags
+      hub release create -a "$2" -a "$3" -e "$1"
+    else
+      echo 'skipping GitHub release.'
+    fi
   fi
 }
 

@@ -90,3 +90,15 @@ wp gearlab search tacos
 This will automatically use the credentials you've configured in the plugin settings.
 
 Run `wp gearlab --help` to list subcommands.
+
+## Development
+
+To build a new release, choose the Git tag name and run:
+
+```bash
+bin/build-release.sh <TAG>
+```
+
+This will create a .tar.gz and a .zip archive which you can upload to a new release on GitHub.
+
+If you have [`hub`](https://hub.github.com/) installed, the script will detect it and prompt you to optionally create a GitHub release directly.
