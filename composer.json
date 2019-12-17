@@ -5,7 +5,7 @@
   "require": {
     "sitecrafting/gearlab-tools-php": "v2.0-alpha.04"
   },
-  "license": "GPLv2",
+  "license": "MIT",
   "authors": [
     {
       "name": "Coby Tamayo",
