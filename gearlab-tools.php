@@ -17,8 +17,6 @@ use GearLab\Plugin\AdminPage;
 use GearLab\Plugin\Rest\GearLabRestController;
 
 
-define('GEARLAB_API_STAGING_URL', 'https://stg.search.sitecrafting.net/v2');
-define('GEARLAB_API_PRODUCTION_URL', 'TODO');
 define('GEARLAB_PLUGIN_WEB_PATH', plugin_dir_url(__FILE__));
 define('GEARLAB_PLUGIN_JS_ROOT', GEARLAB_PLUGIN_WEB_PATH . 'js');
 
