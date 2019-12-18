@@ -1,5 +1,7 @@
 # GearLab Tools for WordPress
 
+![Travis CI build status](https://api.travis-ci.org/sitecrafting/gearlab-tools-wordpress.svg?branch=master)
+
 Integrate your WordPress site seamlessly with the GearLab Tools suite.
 
 ## Installation
