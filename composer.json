@@ -4,7 +4,7 @@
   "type": "wordpress-plugin",
   "require": {
     "composer/installers": "~1.0",
-    "sitecrafting/gearlab-tools-php": "v2.0-alpha.04"
+    "sitecrafting/gearlab-tools-php": "v2.0-alpha.05"
   },
   "license": "MIT",
   "authors": [
