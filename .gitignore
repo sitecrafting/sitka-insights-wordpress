@@ -2,3 +2,8 @@
 *.tar.gz
 *.zip
 .phpunit.result.cache
+
+# editor artifacts
+*.swp
+*.swo
+*.swn
