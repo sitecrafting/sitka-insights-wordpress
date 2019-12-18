@@ -19,6 +19,11 @@
       "GearLab\\WpCli\\": "cli/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "GearLab\\Plugin\\": "test/cases/"
+    }
+  },
   "require-dev": {
     "phpunit/phpunit": "^8.5"
   }
