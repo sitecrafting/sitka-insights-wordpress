@@ -1,3 +1,4 @@
 /vendor/
 *.tar.gz
 *.zip
+.phpunit.result.cache

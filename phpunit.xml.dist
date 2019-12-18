@@ -7,7 +7,7 @@
     beStrictAboutTestsThatDoNotTestAnything="true"
 >
     <testsuites>
-        <testsuite>
+        <testsuite name="plugin tests">
             <directory suffix=".php">./test/cases</directory>
         </testsuite>
     </testsuites>
