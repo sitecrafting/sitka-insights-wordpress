@@ -12,4 +12,20 @@ namespace GearLab\Plugin;
 
 class Paginator {
   use Paginated;
+
+  public static function from_search_response(array $response) : self {
+    $paginator = new static();
+
+    $count     = apply_filters('gearlab/search/result_count', 10);
+    $pageCount = ceil((int) ($response['total'] ?? 0) / $count);
+    $page      = apply_filters('gearlab/search/page_num', 1);
+
+    $paginator->set_pagination([
+      'page_count'          => $pageCount,
+      'current_page_number' => $page,
+      // TODO filter for param_name
+    ]);
+
+    return $paginator;
+  }
 }
