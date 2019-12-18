@@ -38,13 +38,38 @@ Shortcodes for a drop-in search interface are planned. For now, you must overrid
 // NOTE: the client may throw an exception!
 use Swagger\Client\ApiException;
 
-// Honor your site's pagination settings.
-$count = get_option('posts_per_page');
+// Call out to the API
+try {
+  // search with some sensible defaults
+  $response = GearLab\search();
+} catch (ApiException $e) {
+  error_log($e->getMessage());
+  $response = [];
+}
 
-// Compute the results offset based on current pagination.
+
+// Render results
+foreach (($response['results'] ?? []) as $result) : ?>
+  <article class="search-result">
+    <h1><a href="<?= $result['url'] ?>><?= $result['title'] ?></a></h1>
+    <p><?= $result['snippet'] ?></p>
+  </article>
+<?php endforeach; ?>
+
+<?= GearLab\paginate_links($response) ?>
+```
+
+For more custom behavior, you can pass params directly to `GearLab\search()`:
+
+```php
+use Swagger\Client\ApiException;
+
+// Override your site's pagination settings.
+$count = 25;
+
 // Note that we can't use $paged here, because WordPress core won't
 // necessarily report the same number of pages as GearLab, leading to 404s
-// in cases where GearLab has more result pages that WP would.
+// in cases where GearLab has more result pages than WP would.
 $pageOffset = ($_GET['page_num'] ?? 1) - 1;
 
 
@@ -71,6 +96,8 @@ foreach (($response['results'] ?? []) as $result) : ?>
     <p><?= $result['snippet'] ?></p>
   </article>
 <?php endforeach; ?>
+
+<?= GearLab\paginate_links($response) ?>
 ```
 
 ### Search Autocomplete
@@ -92,6 +119,17 @@ wp gearlab search tacos
 This will automatically use the credentials you've configured in the plugin settings.
 
 Run `wp gearlab --help` to list subcommands.
+
+As with other WordPress options, you can configure the plugin options with `wp option`:
+
+```bash
+wp option get gearlab_api_key
+wp option get gearlab_collection_id
+wp option get gearlab_base_uri
+wp option set gearlab_api_key supersecure
+wp option set gearlab_collection_id 12345
+wp option set gearlab_base_uri https://stg.search.sitecrafting.net/v2
+```
 
 ## Development
 
