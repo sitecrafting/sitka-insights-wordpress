@@ -49,6 +49,13 @@ add_filter('gearlab/api/client', function() {
   ]);
 });
 
+
+/*
+ * Disable default search
+ */
+add_action('init', GearLab\disable_default_wp_search::class);
+
+
 /*
  * Add WP Admin pages (just the one page, actually 🐦)
  */

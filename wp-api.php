@@ -9,6 +9,8 @@
 
 namespace GearLab;
 
+use WP_Query;
+
 use GearLab\Plugin\Paginator;
 
 function client() {
@@ -32,6 +34,21 @@ function paginate_links(array $response) : string {
   ob_start();
   require __DIR__ . '/views/pagination.php';
   return ob_get_clean();
+}
+
+function disable_default_wp_search() {
+  add_action('parse_query', function(WP_Query $query) {
+    if ($query->is_search()) {
+      $query->is_search = false;
+    }
+  });
+  add_filter('template_include', function(string $template) {
+    $searchTpl = get_template_directory() . '/search.php';
+    if (!empty(get_query_var('s')) && file_exists($searchTpl)) {
+      return $searchTpl;
+    }
+    return $template;
+  });
 }
 
 
