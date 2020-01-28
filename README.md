@@ -77,11 +77,13 @@ $pageOffset = ($_GET['page_num'] ?? 1) - 1;
 try {
   $response = GearLab\search([
     // Pass the user's search term to the API.
-    'query'     => $_GET['s'] ?? '',
+    'query'     => get_query_var('s'),
     // Tell the API how many results we want per page.
     'resLength' => $count,
     // Tell the API which page of results we want.
     'resOffset' => $pageOffset * $count,
+    // Tell the API to only return results of a certain type
+    'metaKey'   => $_GET['my_content_type'],
   ]);
 } catch (ApiException $e) {
   error_log($e->getMessage());
