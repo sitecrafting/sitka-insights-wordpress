@@ -40,6 +40,7 @@ function disable_default_wp_search() {
   add_action('parse_query', function(WP_Query $query) {
     if ($query->is_search()) {
       $query->is_search = false;
+      $query->set('gearlab_search', true);
     }
   });
   add_filter('template_include', function(string $template) {
