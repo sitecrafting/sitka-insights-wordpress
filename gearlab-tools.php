@@ -89,27 +89,9 @@ add_action('rest_api_init', function() {
  * Add JS for
  */
 add_action('wp_enqueue_scripts', function() {
-  if (!is_admin() && is_search()) {
-    // enqueue dependencies
-    wp_enqueue_script('jquery-ui-core');
-    wp_enqueue_script('jquery-ui-autocomplete');
-
-    // enqueue our AJAX autocomplete script
-    wp_enqueue_script(
-      'gearlab-js',
-      GEARLAB_PLUGIN_JS_ROOT . '/search.js',
-      ['jquery', 'jquery-ui-core', 'jquery-ui-autocomplete'],
-      /** @version v0.0.2 */
-      'v0.0.2',
-      $footer = true
-    );
-
-    // Provide basic styles for the search form
-    wp_register_style(
-      'jquery-ui-styles',
-      'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css'
-    );
-    wp_enqueue_style('jquery-ui-styles');
+  $enqueue = apply_filters('gearlab/search/enqueue_js', !is_admin());
+  if ($enqueue) {
+    GearLab\enqueue_scripts();
   }
 });
 

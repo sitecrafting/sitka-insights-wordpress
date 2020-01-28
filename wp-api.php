@@ -51,6 +51,29 @@ function disable_default_wp_search() {
   });
 }
 
+function enqueue_scripts() {
+  // enqueue dependencies
+  wp_enqueue_script('jquery-ui-core');
+  wp_enqueue_script('jquery-ui-autocomplete');
+
+  // enqueue our AJAX autocomplete script
+  wp_enqueue_script(
+    'gearlab-js',
+    GEARLAB_PLUGIN_JS_ROOT . '/search.js',
+    ['jquery', 'jquery-ui-core', 'jquery-ui-autocomplete'],
+    /** @version v0.0.2 */
+    'v0.0.2',
+    $footer = true
+  );
+
+  // Provide basic styles for the search form
+  wp_register_style(
+    'jquery-ui-styles',
+    'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css'
+  );
+  wp_enqueue_style('jquery-ui-styles');
+}
+
 
 add_filter('gearlab/search/params', function(array $params) : array {
   if ($params) {
