@@ -45,7 +45,7 @@ function disable_default_wp_search() {
   });
   add_filter('template_include', function(string $template) {
     $searchTpl = get_template_directory() . '/search.php';
-    if (!empty(get_query_var('s')) && file_exists($searchTpl)) {
+    if (null !== get_query_var('s') && file_exists($searchTpl)) {
       return $searchTpl;
     }
     return $template;
