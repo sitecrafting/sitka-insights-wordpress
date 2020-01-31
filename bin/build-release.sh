@@ -132,7 +132,7 @@ function create_github_release() {
       echo 'pushing latest changes and tags...'
       git push origin master
       git push --tags
-      hub release create -a "$2" -a "$3" -e "$1"
+      hub release create --prerelease -a "$2" -a "$3" -e "$1"
     else
       echo 'skipping GitHub release.'
     fi
