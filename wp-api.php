@@ -46,6 +46,11 @@ function disable_default_wp_search() {
   add_filter('template_include', function(string $template) {
     $searchTpl = get_template_directory() . '/search.php';
     if (isset($_GET['s']) && file_exists($searchTpl)) {
+      // Force a 200 OK response
+      global $wp_query;
+      $wp_query->is_404 = false;
+      status_header(200);
+
       return $searchTpl;
     }
     return $template;
