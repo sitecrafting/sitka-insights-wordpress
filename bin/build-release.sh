@@ -75,6 +75,7 @@ function main() {
 
   # archive plugins distro files inside a top-level gearlab-tools-wordpress/ dir
   tar -cvzf "$tar_name" \
+    gearlab-tools-wordpress/autoload.php \
     gearlab-tools-wordpress/gearlab-tools.php \
     gearlab-tools-wordpress/wp-api.php \
     gearlab-tools-wordpress/src \
