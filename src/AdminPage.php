@@ -14,11 +14,11 @@ class AdminPage {
    * the settings this page is in charge of managing and the view it renders.
    * @return AdminPage the newly created AdminPage instance
    */
-  public static function add_menu_page(array $config) : self {
+  public static function add_options_page(array $config) : self {
     $page = new static($config);
 
     // Add this page to the main WP Admin
-    add_menu_page(
+    add_options_page(
       'GearLab Tools',
       'GearLab Tools',
       'manage_options',

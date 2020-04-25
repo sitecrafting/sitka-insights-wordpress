@@ -62,7 +62,7 @@ add_action('init', GearLab\disable_default_wp_search::class);
 add_action('admin_menu', function() {
   // Create an admin page responsible for managing the main
   // GearLab Tools credentials
-  $page = AdminPage::add_menu_page([
+  $page = AdminPage::add_options_page([
     'option_keys' => [
       'gearlab_api_key',
       'gearlab_collection_id',
