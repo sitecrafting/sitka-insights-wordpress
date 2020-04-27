@@ -42,24 +42,26 @@ function main() {
     fi
   fi
 
-  # check tag
-  git rev-parse --verify "$RELEASE" 2>/dev/null
-  if ! [[ "$?" -eq 0 ]] ; then
+  if [[ -z $NO_INTERACTION ]] ; then
+    # check tag
+    git rev-parse --verify "$RELEASE" 2>/dev/null
+    if ! [[ "$?" -eq 0 ]] ; then
 
-    # prompt for creating a tag
-    read -p "'${RELEASE}' is not a Git revision. Create tag ${RELEASE}? (y/N) " create
-    if ! [[ "$create" = "y" ]] ; then
-      echo 'aborted.'
-      exit
-    fi
+      # prompt for creating a tag
+      read -p "'${RELEASE}' is not a Git revision. Create tag ${RELEASE}? (y/N) " create
+      if ! [[ "$create" = "y" ]] ; then
+        echo 'aborted.'
+        exit
+      fi
 
-    # prompt for annotation
-    read -p "Annotate this tag? (leave blank for no annotation) " annotation
+      # prompt for annotation
+      read -p "Annotate this tag? (leave blank for no annotation) " annotation
 
-    if [[ "$annotation" ]] ; then
-      git tag "$RELEASE" -am "$annotation"
-    else
-      git tag "$RELEASE"
+      if [[ "$annotation" ]] ; then
+        git tag "$RELEASE" -am "$annotation"
+      else
+        git tag "$RELEASE"
+      fi
     fi
   fi
 
@@ -105,7 +107,9 @@ function main() {
 
   echo "Created ${tar_name}, ${zip_name}"
 
-  create_github_release $RELEASE $tar_name $zip_name
+  if [[ -z $NO_INTERACTION ]] ; then
+    create_github_release $RELEASE $tar_name $zip_name
+  fi
 
   echo 'Done.'
 }
@@ -152,6 +156,10 @@ case $key in
     # show usage and bail
     usage
     exit
+    ;;
+  -n|--no-interaction)
+    NO_INTERACTION='1'
+    shift # past argument
     ;;
   *)
     POSITIONAL+=("$1") # save it in an array for later
