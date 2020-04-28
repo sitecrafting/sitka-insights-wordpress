@@ -124,7 +124,7 @@ add_filter('gearlab/search/result_count', function() : int {
 }, 1);
 
 add_filter('gearlab/search/page_num', function() : int {
-  return $_GET['page_num'] ?? 1;
+  return (int) ($_GET['page_num'] ?? 1);
 }, 1);
 
 add_filter('gearlab/search/meta_tag', function() : string {
