@@ -43,6 +43,7 @@ function disable_default_wp_search() {
       $query->set('gearlab_search', true);
     }
   });
+
   add_filter('template_include', function(string $template) {
     $searchTpl = get_template_directory() . '/search.php';
     if (isset($_GET['s']) && file_exists($searchTpl)) {
@@ -55,6 +56,21 @@ function disable_default_wp_search() {
     }
     return $template;
   });
+
+  add_filter('wp_title', function(string $title, $separator) {
+    global $wp_query;
+    if ($wp_query->get('gearlab_search')) {
+      $searchTerms = $wp_query->get('search_terms') ?: [];
+
+      $title = sprintf(
+        'Search: %s %s %s',
+        implode(' ', $searchTerms),
+        trim($separator) ?: '|',
+        get_bloginfo('name')
+      );
+    }
+    return $title;
+  }, 10, 2);
 }
 
 function enqueue_scripts() {
