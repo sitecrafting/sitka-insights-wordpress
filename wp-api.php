@@ -9,6 +9,7 @@
 
 namespace GearLab;
 
+use Timber\Timber;
 use WP_Query;
 
 use GearLab\Plugin\Paginator;
@@ -45,15 +46,23 @@ function disable_default_wp_search() {
   });
 
   add_filter('template_include', function(string $template) {
-    $searchTpl = get_template_directory() . '/search.php';
-    if (isset($_GET['s']) && file_exists($searchTpl)) {
-      // Force a 200 OK response
-      global $wp_query;
+    // Use the theme override search template if there is one.
+    // Otherwise, fallback on the plugin template.
+    $searchTpl = get_template_directory() . '/gearlab-tools/search.php';
+
+    // Hook up Timber fallback view, if supported.
+    $searchTpl = apply_filters('gearlab/timber/search_template', $searchTpl);
+
+    global $wp_query;
+    if ($wp_query->get('gearlab_search') && file_exists($searchTpl)) {
+      // Force a 200 OK response.
       $wp_query->is_404 = false;
       status_header(200);
 
+      // Override the current selected WP template.
       return $searchTpl;
     }
+
     return $template;
   });
 

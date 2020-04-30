@@ -37,6 +37,7 @@ use Timber\Timber;
 
 define('GEARLAB_PLUGIN_WEB_PATH', plugin_dir_url(__FILE__));
 define('GEARLAB_PLUGIN_JS_ROOT', GEARLAB_PLUGIN_WEB_PATH . 'js');
+define('GEARLAB_PLUGIN_VIEW_PATH', __DIR__ . '/views');
 
 /*
  * Add the main hook for getting an API client instance
@@ -90,7 +91,7 @@ add_action('rest_api_init', function() {
 });
 
 /*
- * Add JS for
+ * Add JS for autocomplete suggestions.
  */
 add_action('wp_enqueue_scripts', function() {
   $enqueue = apply_filters('gearlab/search/enqueue_js', !is_admin());
@@ -104,7 +105,7 @@ if (class_exists(WP_CLI::class)) {
   WP_CLI::add_command('gearlab', $command);
 }
 
-// Inject Timber-specific specializations
+// Inject Timber-specific specializations.
 add_action('plugins_loaded', function() {
   if (class_exists(Timber::class)) {
     // Timber is running. Extend it!
@@ -116,5 +117,24 @@ add_action('plugins_loaded', function() {
 
       return $twig;
     });
+
+    // Add our views/twig to Timber's list of locations.
+    add_filter('timber/locations', function($templatePaths) {
+      $templatePaths[] = GEARLAB_PLUGIN_VIEW_PATH . '/twig';
+      return $templatePaths;
+    });
+
+    // Load our plugin's default.
+    add_filter('gearlab/timber/search_template', function($searchTpl) {
+      if (!file_exists($searchTpl)) {
+        $searchTpl = GEARLAB_PLUGIN_VIEW_PATH . '/timber/search.php';
+      }
+
+      return $searchTpl;
+    });
+
+    // Tell our plugin how to render the search view, calling Timber::render()
+    // by default.
+    add_action('gearlab/timber/render_search', [Timber::class, 'render'], 10, 3);
   }
 });
