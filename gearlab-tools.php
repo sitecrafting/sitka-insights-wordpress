@@ -83,6 +83,13 @@ add_action('admin_menu', function() {
   $page->init()->add_meta_boxes();
 });
 
+add_action('admin_enqueue_scripts', function() {
+  wp_enqueue_style(
+    'gearlab-tools-admin-styles',
+    GEARLAB_PLUGIN_WEB_PATH . 'css/gearlab-tools-admin.css'
+  );
+});
+
 /*
  * Add REST Routes
  */
