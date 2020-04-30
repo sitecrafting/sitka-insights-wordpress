@@ -44,15 +44,15 @@ Once you've entered the settings above correctly, you're ready to enable GearLab
 
 To override how Timber renders your search results, you can add Theme Overrides. These are files that the plugin looks for in your theme and loads it if finds them, falling back to the plugin's own templates if it does not. These files are (relative to your theme root):
 
-* `gearlab-tools/search.php`
-* `(Timber template path)/gearlab-tools/search.twig`
-* `(Timber template path)/gearlab-tools/search-result.twig`
+* `gearlab-tools/search.php`: Main PHP template to run. If you want to support e.g. a UI for filtering on `metaTag`, override this file and see the examples below.
+* `(Timber template path)/gearlab-tools/search.twig`: Main Twig template for rendering the search page. If you don't need to change the backend functionality (e.g. how search filters are applied) and only want to change how the overall search results page is rendered, override this file.
+* `(Timber template path)/gearlab-tools/search-result.twig`: Render a single search result with Twig.
 
 ...where `(Timber template path)` is anywhere that Timber already knows to look for Twig templates. The most commone place is the `templates` or `views` directory in your theme.
 
 #### Override the GearLab search.php template
 
-To make it work without Timber, place something like the following in your theme at `gearlab-tools/search.php`:
+Place something like the following in your theme at `gearlab-tools/search.php` (this example does not rely on Timber):
 
 ```php
 // NOTE: the client may throw an exception!
