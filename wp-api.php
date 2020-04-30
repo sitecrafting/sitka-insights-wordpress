@@ -94,6 +94,8 @@ function enqueue_scripts() {
     'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css'
   );
   wp_enqueue_style('jquery-ui-styles');
+
+  wp_enqueue_style('gearlab-tools-search', GEARLAB_PLUGIN_WEB_PATH . 'css/gearlab-tools-search.css');
 }
 
 
