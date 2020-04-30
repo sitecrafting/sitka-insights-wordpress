@@ -71,7 +71,8 @@ add_action('admin_menu', function() {
     'option_keys' => [
       'gearlab_api_key',
       'gearlab_collection_id',
-      'gearlab_base_uri'
+      'gearlab_base_uri',
+      'gearlab_search_enabled',
     ],
   ]);
   // Process any user updates

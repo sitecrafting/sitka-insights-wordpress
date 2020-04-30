@@ -26,13 +26,33 @@ composer require sitecrafting/gearlab-tools-wordpress --prefer-dist
 
 After installing and activating the plugin, go to the *GearLab Tools* section of the WP Admin. Enter your *API Key*, *Collection ID*, and *Base URI* as provided by GearLab. All settings are required.
 
-Once you've entered these settings, you're ready to start consuming the GearLab Tools API directly!
-
 ### Search
 
-With GearLab Tools, you can override the default WordPress search functionality, which is extremely limited by default, with results from the ElasticSearch crawler that powers GearLab Search.
+With GearLab Tools, you can override the default WordPress search functionality, which is extremely limited by default, with results from the ElasticSearch crawler that powers GearLab Search. To do this you must first enter your settings as described above, in **Getting Started**.
 
-Shortcodes for a drop-in search interface are planned. For now, you must override the search results in your `search.php` template directly:
+Once you've entered your GearLab Tools settings, but before enabling overriding WordPress search globally, you can test from the command line to see if you get results. To do this, run `wp gearlab search <search term>`. You should see a JSON object like this:
+
+```json
+{"results": [{"url": "https://www.example.com/example-page", "title": "Example Page", "snippet": "Some content"}, ...]}
+```
+
+Once you've entered the settings above correctly, you're ready to enable GearLab Tools Search to override the default WP search. Enable the option **Override default WordPress search** and save the settings again. You should now see a basic search results page rendered by GearLab Tools whenever you perform a search.
+
+**IMPORTANT: This plugin currently only works "out of the box" with the Timber library enabled.** A less opinionated, dependency-free workflow based on shortcodes is planned. For now, you must either use the default Timber-rendered markup (see the `views` directory) or override them from your theme.
+
+#### Overriding Timber templates
+
+To override how Timber renders your search results, you can add Theme Overrides. These are files that the plugin looks for in your theme and loads it if finds them, falling back to the plugin's own templates if it does not. These files are (relative to your theme root):
+
+* `gearlab-tools/search.php`
+* `(Timber template path)/gearlab-tools/search.twig`
+* `(Timber template path)/gearlab-tools/search-result.twig`
+
+...where `(Timber template path)` is anywhere that Timber already knows to look for Twig templates. The most commone place is the `templates` or `views` directory in your theme.
+
+#### Override the GearLab search.php template
+
+To make it work without Timber, place something like the following in your theme at `gearlab-tools/search.php`:
 
 ```php
 // NOTE: the client may throw an exception!
@@ -47,6 +67,7 @@ try {
   $response = [];
 }
 
+wp_header();
 
 // Render results
 foreach (($response['results'] ?? []) as $result) : ?>
@@ -57,6 +78,8 @@ foreach (($response['results'] ?? []) as $result) : ?>
 <?php endforeach; ?>
 
 <?= GearLab\paginate_links($response) ?>
+
+<?php wp_footer(); ?>
 ```
 
 For more custom behavior, you can pass params directly to `GearLab\search()`:
@@ -128,9 +151,11 @@ As with other WordPress options, you can configure the plugin options with `wp o
 wp option get gearlab_api_key
 wp option get gearlab_collection_id
 wp option get gearlab_base_uri
+wp option get gearlab_enabled
 wp option set gearlab_api_key supersecure
 wp option set gearlab_collection_id 12345
-wp option set gearlab_base_uri https://stg.search.sitecrafting.net/v2
+wp option https://prd.search-api-gateway.aws.gearlabnw.net
+wp option set gearlab_enabled 1
 ```
 
 ## Development

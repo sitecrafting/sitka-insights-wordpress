@@ -90,7 +90,7 @@ class AdminPage {
 
     // update each option that this page is responsible for managing
     foreach ($this->config['option_keys'] as $key) {
-      update_option($key, $request[$key]);
+      update_option($key, $request[$key] ?? false);
     }
   }
 

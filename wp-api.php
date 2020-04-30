@@ -26,6 +26,10 @@ function completions(array $params) : array {
   return client()->completions($params);
 }
 
+function search_enabled() : bool {
+  return apply_filters('gearlab/search/enabled', get_option('gearlab_search_enabled') === '1');
+}
+
 function paginate_links(array $response) : string {
   $paginator = Paginator::from_search_response($response);
   // TODO filters for pagination params
@@ -38,6 +42,11 @@ function paginate_links(array $response) : string {
 }
 
 function disable_default_wp_search() {
+  if (!search_enabled()) {
+    // Search is currently disabled. Don't override any search functionality.
+    return;
+  }
+
   add_action('parse_query', function(WP_Query $query) {
     if ($query->is_search()) {
       $query->is_search = false;
