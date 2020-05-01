@@ -170,12 +170,24 @@ add_filter('gearlab/render', function($tpl, $data = []) {
 add_action('init', function() {
   global $wp;
   $wp->add_query_var('glt_search');
+  $wp->add_query_var('glt_meta_tag');
+  $wp->add_query_var('glt_page_num');
 
   add_shortcode('gearlab_search', function($atts = []) {
     global $post;
 
+    // Override how search paramaters are set in shortcode context.
     add_filter('gearlab/search/query', function() {
       return get_query_var('glt_search');
+    });
+    add_filter('gearlab/search/meta_tag', function() {
+      return get_query_var('glt_meta_tag');
+    });
+    add_filter('gearlab/search/page_num', function() {
+      return get_query_var('glt_page_num') ?: 1;
+    });
+    add_filter('gearlab/search/page_num_param', function() {
+      return 'glt_page_num';
     });
 
     $searchQuery = apply_filters('gearlab/search/query', '');
