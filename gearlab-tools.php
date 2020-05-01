@@ -32,6 +32,7 @@ use GearLab\Plugin\AdminPage;
 use GearLab\Plugin\Rest\GearLabRestController;
 use GearLab\Plugin\TimberTwigHelper;
 
+use Swagger\Client\ApiException;
 use Timber\Timber;
 
 
@@ -145,4 +146,60 @@ add_action('plugins_loaded', function() {
     // by default.
     add_action('gearlab/timber/render_search', [Timber::class, 'render'], 10, 3);
   }
+});
+
+
+/*
+ * Add support for the Search UI shortcode.
+ */
+
+add_filter('gearlab/render', function($tpl, $data = []) {
+  $path = get_template_directory() . '/gearlab-tools/' . $tpl;
+
+  if (!file_exists($path)) {
+    $path = GEARLAB_PLUGIN_VIEW_PATH . '/frontend/' . $tpl;
+  }
+
+  if (file_exists($path)) {
+    ob_start();
+    require $path;
+    return ob_get_clean();
+  }
+}, 10, 2);
+
+add_action('init', function() {
+  global $wp;
+  $wp->add_query_var('glt_search');
+
+  add_shortcode('gearlab_search', function($atts = []) {
+    global $post;
+
+    add_filter('gearlab/search/query', function() {
+      return get_query_var('glt_search');
+    });
+
+    $searchQuery = apply_filters('gearlab/search/query', '');
+
+    try {
+      $response = GearLab\search();
+    } catch (ApiException $e) {
+      do_action('gearlab/api/error/api_exception', sprintf(
+        'GearLab API error: %s',
+        $e->getMessage()
+      ));
+      $response = [];
+    } catch (InvalidArgumentException $e) {
+      do_action('gearlab/api/error/invalid_client_args', sprintf(
+        'Error setting up GearLab client: %s',
+        $e->getMessage()
+      ));
+      $response = [];
+    }
+
+    return apply_filters('gearlab/render', 'search-results.php', [
+      'post'     => $post,
+      'query'    => $searchQuery,
+      'response' => $response,
+    ]);
+  });
 });
