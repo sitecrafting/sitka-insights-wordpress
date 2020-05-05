@@ -9,6 +9,7 @@
 
 namespace GearLab;
 
+use Timber\Timber;
 use WP_Query;
 
 use GearLab\Plugin\Paginator;
@@ -25,6 +26,10 @@ function completions(array $params) : array {
   return client()->completions($params);
 }
 
+function search_enabled() : bool {
+  return apply_filters('gearlab/search/enabled', get_option('gearlab_search_enabled') === '1');
+}
+
 function paginate_links(array $response) : string {
   $paginator = Paginator::from_search_response($response);
   // TODO filters for pagination params
@@ -37,6 +42,11 @@ function paginate_links(array $response) : string {
 }
 
 function disable_default_wp_search() {
+  if (!search_enabled()) {
+    // Search is currently disabled. Don't override any search functionality.
+    return;
+  }
+
   add_action('parse_query', function(WP_Query $query) {
     if ($query->is_search()) {
       $query->is_search = false;
@@ -45,15 +55,23 @@ function disable_default_wp_search() {
   });
 
   add_filter('template_include', function(string $template) {
-    $searchTpl = get_template_directory() . '/search.php';
-    if (isset($_GET['s']) && file_exists($searchTpl)) {
-      // Force a 200 OK response
-      global $wp_query;
+    // Use the theme override search template if there is one.
+    // Otherwise, fallback on the plugin template.
+    $searchTpl = get_template_directory() . '/gearlab-tools/search.php';
+
+    // Hook up Timber fallback view, if supported.
+    $searchTpl = apply_filters('gearlab/timber/search_template', $searchTpl);
+
+    global $wp_query;
+    if ($wp_query->get('gearlab_search') && file_exists($searchTpl)) {
+      // Force a 200 OK response.
       $wp_query->is_404 = false;
       status_header(200);
 
+      // Override the current selected WP template.
       return $searchTpl;
     }
+
     return $template;
   });
 
@@ -94,6 +112,8 @@ function enqueue_scripts() {
     'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css'
   );
   wp_enqueue_style('jquery-ui-styles');
+
+  wp_enqueue_style('gearlab-tools-search', GEARLAB_PLUGIN_WEB_PATH . 'css/gearlab-tools-search.css');
 }
 
 

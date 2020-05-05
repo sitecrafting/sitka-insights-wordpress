@@ -83,6 +83,7 @@ function main() {
     gearlab-tools-wordpress/src \
     gearlab-tools-wordpress/cli \
     gearlab-tools-wordpress/js \
+    gearlab-tools-wordpress/css \
     gearlab-tools-wordpress/vendor \
     gearlab-tools-wordpress/views \
     gearlab-tools-wordpress/LICENSE.txt \
@@ -95,6 +96,7 @@ function main() {
     gearlab-tools-wordpress/src \
     gearlab-tools-wordpress/cli \
     gearlab-tools-wordpress/js \
+    gearlab-tools-wordpress/css \
     gearlab-tools-wordpress/vendor \
     gearlab-tools-wordpress/views \
     gearlab-tools-wordpress/LICENSE.txt \
