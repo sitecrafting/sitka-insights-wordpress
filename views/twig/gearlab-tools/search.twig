@@ -16,11 +16,22 @@
   <section class="glt-search-results-container">
     <div class="container">
       {% if response.results is not empty %}
+
         {% for result in response.results %}
           {% include 'gearlab-tools/search-result.twig' with {
             result: result
           } only %}
         {% endfor %}
+
+      {% else %}
+
+        <p>{{ fn(
+          'apply_filters',
+          'gearlab/search/no_results_message',
+          'No results for "'~search_query~'."',
+          search_query)
+        }}</p>
+
       {% endif %}
 
       <div class="post-navigation">
