@@ -150,3 +150,17 @@ add_filter('gearlab/search/page_num', function() : int {
 add_filter('gearlab/search/meta_tag', function() : string {
   return '';
 }, 1);
+
+add_filter('gearlab/search/result/meta_tag_label_map', function($map = []) : array {
+  return array_merge($map, [
+    '_document' => 'Document',
+    'post'      => 'Post',
+    'page'      => 'Page',
+  ]);
+});
+
+add_filter('gearlab/search/result/meta_tag_label', function($tag, $_result) : string {
+  $map = apply_filters('gearlab/search/result/meta_tag_label_map', []);
+
+  return $map[$tag] ?? ucfirst($tag);
+}, 10, 2);
