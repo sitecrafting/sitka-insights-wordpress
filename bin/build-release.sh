@@ -54,14 +54,7 @@ function main() {
         exit
       fi
 
-      # prompt for annotation
-      read -p "Annotate this tag? (leave blank for no annotation) " annotation
-
-      if [[ "$annotation" ]] ; then
-        git tag "$RELEASE" -am "$annotation"
-      else
-        git tag "$RELEASE"
-      fi
+      git tag "$RELEASE"
     fi
   fi
 
@@ -136,10 +129,15 @@ function create_github_release() {
     echo $($BOLD)hub detected! You win at Git!$($RESET)
     read -p 'Create a GitHub release? (y/N) ' create
     if [[ "$create" = "y" ]] ; then
+      read -p 'Is this a pre-release? (y/N) ' prerelease
+      if [[ "$prerelease" = "y" ]] ; then
+        prerelease_opt='--prerelease'
+      fi
+
       echo 'pushing latest changes and tags...'
       git push origin master
       git push --tags
-      hub release create --prerelease -a "$2" -a "$3" -e "$1"
+      hub release create $prerelease_opt -a "$2" -a "$3" -e "$1"
     else
       echo 'skipping GitHub release.'
     fi

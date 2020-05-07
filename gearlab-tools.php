@@ -6,7 +6,7 @@
  * Plugin URI: https://gearlab.tools
  * Author: Coby Tamayo <ctamayo@sitecrafting.com>
  * Author URI: https://www.sitecrafting.com/
- * Version: 0.2.4
+ * Version: 1.0.1
  */
 
 // no script kiddiez
