@@ -1,6 +1,5 @@
 <div class="glt-search-card">
 	{# If filtering by post_type using metaTag, this is where that data will show up #}
-	{{ fn('debug', result )}}
 	{% for tag in result.meta.tags %}
 		<div class="glt-search-card__label">{{ fn(
 			'apply_filters',
