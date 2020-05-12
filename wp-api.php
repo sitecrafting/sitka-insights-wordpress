@@ -27,7 +27,17 @@ function completions(array $params) : array {
 }
 
 function search_enabled() : bool {
-  return apply_filters('gearlab/search/enabled', get_option('gearlab_search_enabled') === '1');
+  return apply_filters(
+    'gearlab/search/enabled',
+    get_option('gearlab_search_enabled') === GEARLAB_OVERRIDE_METHOD_TIMBER
+  );
+}
+
+function shortcode_redirect_enabled() : bool {
+  return apply_filters(
+    'gearlab/search_shortcode/enabled',
+    get_option('gearlab_search_enabled') === GEARLAB_OVERRIDE_METHOD_SHORTCODE
+  );
 }
 
 function paginate_links(array $response) : string {

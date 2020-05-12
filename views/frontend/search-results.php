@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Generic search results page, powered by Timber
+ * Generic search results page content
  */
 
 $response    = $data['response'] ?? [];

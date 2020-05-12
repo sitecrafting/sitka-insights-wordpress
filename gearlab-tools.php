@@ -40,6 +40,10 @@ define('GEARLAB_PLUGIN_WEB_PATH', plugin_dir_url(__FILE__));
 define('GEARLAB_PLUGIN_JS_ROOT', GEARLAB_PLUGIN_WEB_PATH . 'js');
 define('GEARLAB_PLUGIN_VIEW_PATH', __DIR__ . '/views');
 
+// "1" for backwards compatibility, from when this was a single toggle setting
+define('GEARLAB_OVERRIDE_METHOD_TIMBER', '1');
+define('GEARLAB_OVERRIDE_METHOD_SHORTCODE', 'shortcode');
+
 /*
  * Add the main hook for getting an API client instance
  */
@@ -74,6 +78,7 @@ add_action('admin_menu', function() {
       'gearlab_collection_id',
       'gearlab_base_uri',
       'gearlab_search_enabled',
+      'gearlab_search_redirect',
     ],
   ]);
   // Process any user updates
@@ -213,5 +218,26 @@ add_action('init', function() {
       'query'    => $searchQuery,
       'response' => $response,
     ]);
+  });
+
+  /*
+   * Redirect to the configured search page
+   */
+  add_action('template_redirect', function() {
+    if (!GearLab\shortcode_redirect_enabled()) {
+      return;
+    }
+
+    global $wp_query;
+    $dest = get_option('gearlab_search_redirect');
+    if ($dest && $wp_query->is_search()) {
+      $params = array_merge($_GET, [
+        'glt_search' => get_query_var('s')
+      ]);
+      unset($params['s']);
+
+      wp_redirect($dest . '?' . http_build_query($params));
+      exit;
+    }
   });
 });
