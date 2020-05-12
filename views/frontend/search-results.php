@@ -13,7 +13,7 @@ $searchQuery = $data['query'] ?? '';
   <div class="container">
     <div class="global-search">
       <h5>Search</h5>
-      <form role="search" method="get" id="searchform" class="searchform" action="<?= get_permalink($post) ?>">
+      <form role="search" method="get" id="searchform" class="searchform glt-search-form" action="<?= get_permalink($post) ?>">
         <input
           type="text"
           value="<?= $searchQuery ?>"
