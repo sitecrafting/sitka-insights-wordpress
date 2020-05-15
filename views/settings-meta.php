@@ -23,7 +23,10 @@
 
   <div class="glt-field">
     <h3>Override WP Search</h3>
-    <p>Unless you have custom-built an integration, to get site-wide search you must enable one of the following options:</p>
+    <p>Use this shortcode on any page:</p>
+    <textarea class="glt-shortcode-text" disabled>[gearlab_search]</textarea>
+    <button type="button" class="button button-secondary glt-shortcode-copy">Copy to clipboard</button>
+    <p>Unless you have custom-built an integration, for your theme's normal search form to work, you must enable one of the following options:</p>
     <p>
       <input
         type="radio"
@@ -76,6 +79,21 @@
         } else {
           $('.glt-redirect-url-field').hide();
         }
+      });
+
+      $('.glt-shortcode-copy').click(function(e) {
+        e.preventDefault();
+
+        // copy shortcode text to clipboard
+        $textarea = $('.glt-shortcode-text');
+        $textarea.attr('disabled', false);
+        $textarea.get(0).select();
+        document.execCommand('copy');
+        $textarea.attr('disabled', true);
+
+        var $btn = $(this);
+        var updatedText = $btn.text() === 'Copied!' ? 'Copied again!' : 'Copied!';
+        $(this).text(updatedText);
       });
 
     });
