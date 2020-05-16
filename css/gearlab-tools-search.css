@@ -14,6 +14,9 @@
 .glt-search-card__snippet{ margin: 0 0 20px 0; }
 .glt-search-card__link{ font-weight: 700; }
 
+.ui-autocomplete .ui-menu-item {
+  padding: 3px 7px;
+}
 .ui-autocomplete .ui-state-focus {
   border: none;
   background: #c6c6c6;
