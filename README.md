@@ -38,9 +38,17 @@ Once you've entered your GearLab Tools settings, but before enabling overriding 
 
 Once you've entered the settings above correctly, you're ready to enable GearLab Tools Search to override the default WP search. Enable the option **Override default WordPress search** and save the settings again. You should now see a basic search results page rendered by GearLab Tools whenever you perform a search.
 
-**IMPORTANT: This plugin currently only works "out of the box" with the Timber library enabled.** A less opinionated, dependency-free workflow based on shortcodes is planned. For now, you must either use the default Timber-rendered markup (see the `views` directory) or override them from your theme.
+#### Search Shortcode
+
+Out of the box, you can use the `[gearlab_search]` shortcode in any RTE that supports shortcodes. This is the recommended approach for most cases.
+
+However, basic searches (using WordPress's standard `s` query param), will still render your theme's default search.php template (assuming there is one). You can redirect global searches to the page your shortcode lives on in the Settings. Go to **Settings > GearLab Tools** and select **Redirect searches to a specific page**. Type the URI, e.g. `/search`, in the text box that appears.
+
+Save your changes and you're good to go! Default searches will now redirect to your page. Note that all query string parameters will be preserved *except* `s`, which will be renamed to `glt_search` to avoid conflicting with WordPress's default functionality.
 
 #### Overriding Timber templates
+
+This plugin has special support for [Timber](https://www.upstatement.com/timber/).
 
 To override how Timber renders your search results, you can add Theme Overrides. These are files that the plugin looks for in your theme and loads it if finds them, falling back to the plugin's own templates if it does not. These files are (relative to your theme root):
 

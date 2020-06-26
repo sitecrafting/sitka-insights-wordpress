@@ -6,7 +6,7 @@
  * Plugin URI: https://gearlab.tools
  * Author: Coby Tamayo <ctamayo@sitecrafting.com>
  * Author URI: https://www.sitecrafting.com/
- * Version: 1.0.2
+ * Version: 1.2.0
  */
 
 // no script kiddiez
@@ -32,12 +32,17 @@ use GearLab\Plugin\AdminPage;
 use GearLab\Plugin\Rest\GearLabRestController;
 use GearLab\Plugin\TimberTwigHelper;
 
+use Swagger\Client\ApiException;
 use Timber\Timber;
 
 
 define('GEARLAB_PLUGIN_WEB_PATH', plugin_dir_url(__FILE__));
 define('GEARLAB_PLUGIN_JS_ROOT', GEARLAB_PLUGIN_WEB_PATH . 'js');
 define('GEARLAB_PLUGIN_VIEW_PATH', __DIR__ . '/views');
+
+// "1" for backwards compatibility, from when this was a single toggle setting
+define('GEARLAB_OVERRIDE_METHOD_TIMBER', '1');
+define('GEARLAB_OVERRIDE_METHOD_SHORTCODE', 'shortcode');
 
 /*
  * Add the main hook for getting an API client instance
@@ -73,6 +78,7 @@ add_action('admin_menu', function() {
       'gearlab_collection_id',
       'gearlab_base_uri',
       'gearlab_search_enabled',
+      'gearlab_search_redirect',
     ],
   ]);
   // Process any user updates
@@ -145,4 +151,93 @@ add_action('plugins_loaded', function() {
     // by default.
     add_action('gearlab/timber/render_search', [Timber::class, 'render'], 10, 3);
   }
+});
+
+
+/*
+ * Add support for the Search UI shortcode.
+ */
+
+add_filter('gearlab/render', function($tpl, $data = []) {
+  $path = get_template_directory() . '/gearlab-tools/' . $tpl;
+
+  if (!file_exists($path)) {
+    $path = GEARLAB_PLUGIN_VIEW_PATH . '/frontend/' . $tpl;
+  }
+
+  if (file_exists($path)) {
+    ob_start();
+    require $path;
+    return ob_get_clean();
+  }
+}, 10, 2);
+
+add_action('init', function() {
+  global $wp;
+  $wp->add_query_var('glt_search');
+  $wp->add_query_var('glt_meta_tag');
+  $wp->add_query_var('glt_page_num');
+
+  add_shortcode('gearlab_search', function($atts = []) {
+    global $post;
+
+    // Override how search paramaters are set in shortcode context.
+    add_filter('gearlab/search/query', function() {
+      return get_query_var('glt_search');
+    });
+    add_filter('gearlab/search/meta_tag', function() {
+      return get_query_var('glt_meta_tag');
+    });
+    add_filter('gearlab/search/page_num', function() {
+      return get_query_var('glt_page_num') ?: 1;
+    });
+    add_filter('gearlab/search/page_num_param', function() {
+      return 'glt_page_num';
+    });
+
+    $searchQuery = apply_filters('gearlab/search/query', '');
+
+    try {
+      $response = GearLab\search();
+    } catch (ApiException $e) {
+      do_action('gearlab/api/error/api_exception', sprintf(
+        'GearLab API error: %s',
+        $e->getMessage()
+      ));
+      $response = [];
+    } catch (InvalidArgumentException $e) {
+      do_action('gearlab/api/error/invalid_client_args', sprintf(
+        'Error setting up GearLab client: %s',
+        $e->getMessage()
+      ));
+      $response = [];
+    }
+
+    return apply_filters('gearlab/render', 'search-results.php', [
+      'post'     => $post,
+      'query'    => $searchQuery,
+      'response' => $response,
+    ]);
+  });
+
+  /*
+   * Redirect to the configured search page
+   */
+  add_action('template_redirect', function() {
+    if (!GearLab\shortcode_redirect_enabled()) {
+      return;
+    }
+
+    global $wp_query;
+    $dest = get_option('gearlab_search_redirect');
+    if ($dest && $wp_query->is_search()) {
+      $params = array_merge($_GET, [
+        'glt_search' => get_query_var('s')
+      ]);
+      unset($params['s']);
+
+      wp_redirect($dest . '?' . http_build_query($params));
+      exit;
+    }
+  });
 });

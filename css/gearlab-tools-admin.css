@@ -1,3 +1,22 @@
+.glt-field {
+  margin: 1em 0;
+}
+.glt-field--flex {
+  display: flex;
+}
+.glt-field__label {
+  width: 20%;
+}
+.glt-field__input {
+  width: 80%;
+}
 .glt-field input[type=text] {
   width: 100%;
+}
+textarea.glt-shortcode-text {
+  color: black;
+  font-weight: 700;
+  border: none;
+  height: 2em;
+  width: 16ch;
 }
