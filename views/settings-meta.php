@@ -63,7 +63,7 @@
         value="<?= $data['gearlab_search_redirect'] ?>"
         placeholder="/search"
       />
-      <em>Do not include "?" or else redirects may not work properly.</em>
+      <em>Do not include "?" or else redirects may not work properly. The page you specify here must contain the shortcode above.</em>
     </p>
     <p>
       <input
