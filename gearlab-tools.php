@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Plugin Name: GearLab Tools
- * Description: Integrate your WordPress site with the GearLab Tools platform
+ * Plugin Name: Sitka Insights
+ * Description: Integrate your WordPress site with the Sitka Insights platform
  * Plugin URI: https://gearlab.tools
  * Author: Coby Tamayo <ctamayo@sitecrafting.com>
  * Author URI: https://www.sitecrafting.com/
@@ -71,7 +71,7 @@ add_action('init', GearLab\disable_default_wp_search::class);
  */
 add_action('admin_menu', function() {
   // Create an admin page responsible for managing the main
-  // GearLab Tools credentials
+  // Sitka Insights credentials
   $page = AdminPage::add_options_page([
     'option_keys' => [
       'gearlab_api_key',

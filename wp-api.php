@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Public API for consuming the GearLab Tools API from WordPress code
+ * Public API for consuming the Sitka Insights API from WordPress code
  *
  * @copyright 2019 SiteCrafting, Inc.
  * @author    Coby Tamayo <ctamayo@sitecrafting.com>

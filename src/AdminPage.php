@@ -19,8 +19,8 @@ class AdminPage {
 
     // Add this page to the main WP Admin
     add_options_page(
-      'GearLab Tools',
-      'GearLab Tools',
+      'Sitka Insights',
+      'Sitka Insights',
       'manage_options',
       'gearlab-tools',
       [$page, 'render']
@@ -56,7 +56,7 @@ class AdminPage {
   public function add_meta_boxes() {
     add_meta_box(
       'gearlab_tools_settings',
-      'GearLab Tools Settings',
+      'Sitka Insights Settings',
       [$this, 'render_settings_meta_box'],
       'gearlab-tools', 'normal'
     );

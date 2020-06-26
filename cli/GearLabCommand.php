@@ -15,8 +15,8 @@ use WP_CLI\Utils;
 use GearLab;
 
 /**
- * Perform a query against the GearLab Tools API using the settings from the
- * GearLab Tools settings admin page (/wp-admin/admin.php?page=gearlab-tools)
+ * Perform a query against the Sitka Insights API using the settings from the
+ * Sitka Insights settings admin page (/wp-admin/admin.php?page=gearlab-tools)
  */
 class GearLabCommand {
   /**

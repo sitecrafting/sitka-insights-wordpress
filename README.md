@@ -1,8 +1,8 @@
-# GearLab Tools for WordPress
+# Sitka Insights for WordPress
 
 ![Travis CI build status](https://api.travis-ci.org/sitecrafting/gearlab-tools-wordpress.svg?branch=master)
 
-Integrate your WordPress site seamlessly with the GearLab Tools suite.
+Integrate your WordPress site seamlessly with the Sitka Insights suite.
 
 ## Installation
 
@@ -24,25 +24,25 @@ composer require sitecrafting/gearlab-tools-wordpress --prefer-dist
 
 ### Getting Started
 
-After installing and activating the plugin, go to the *GearLab Tools* section of the WP Admin. Enter your *API Key*, *Collection ID*, and *Base URI* as provided by GearLab. All settings are required.
+After installing and activating the plugin, go to the *Sitka Insights* section of the WP Admin. Enter your *API Key*, *Collection ID*, and *Base URI* as provided by GearLab. All settings are required.
 
 ### Search
 
-With GearLab Tools, you can override the default WordPress search functionality, which is extremely limited by default, with results from the ElasticSearch crawler that powers GearLab Search. To do this you must first enter your settings as described above, in **Getting Started**.
+With Sitka Insights, you can override the default WordPress search functionality, which is extremely limited by default, with results from the ElasticSearch crawler that powers GearLab Search. To do this you must first enter your settings as described above, in **Getting Started**.
 
-Once you've entered your GearLab Tools settings, but before enabling overriding WordPress search globally, you can test from the command line to see if you get results. To do this, run `wp gearlab search <search term>`. You should see a JSON object like this:
+Once you've entered your Sitka Insights settings, but before enabling overriding WordPress search globally, you can test from the command line to see if you get results. To do this, run `wp gearlab search <search term>`. You should see a JSON object like this:
 
 ```json
 {"results": [{"url": "https://www.example.com/example-page", "title": "Example Page", "snippet": "Some content"}, ...]}
 ```
 
-Once you've entered the settings above correctly, you're ready to enable GearLab Tools Search to override the default WP search. Enable the option **Override default WordPress search** and save the settings again. You should now see a basic search results page rendered by GearLab Tools whenever you perform a search.
+Once you've entered the settings above correctly, you're ready to enable Sitka Insights Search to override the default WP search. Enable the option **Override default WordPress search** and save the settings again. You should now see a basic search results page rendered by Sitka Insights whenever you perform a search.
 
 #### Search Shortcode
 
 Out of the box, you can use the `[gearlab_search]` shortcode in any RTE that supports shortcodes. This is the recommended approach for most cases.
 
-However, basic searches (using WordPress's standard `s` query param), will still render your theme's default search.php template (assuming there is one). You can redirect global searches to the page your shortcode lives on in the Settings. Go to **Settings > GearLab Tools** and select **Redirect searches to a specific page**. Type the URI, e.g. `/search`, in the text box that appears.
+However, basic searches (using WordPress's standard `s` query param), will still render your theme's default search.php template (assuming there is one). You can redirect global searches to the page your shortcode lives on in the Settings. Go to **Settings > Sitka Insights** and select **Redirect searches to a specific page**. Type the URI, e.g. `/search`, in the text box that appears.
 
 Save your changes and you're good to go! Default searches will now redirect to your page. Note that all query string parameters will be preserved *except* `s`, which will be renamed to `glt_search` to avoid conflicting with WordPress's default functionality.
 
@@ -135,7 +135,7 @@ foreach (($response['results'] ?? []) as $result) : ?>
 
 ### Search Autocomplete
 
-In addition to providing superior search results, GearLab Tools also adds search autocomplete to your search template out of the box. You don't need to do anything to make this work, although you may want to override the default [`jquery-ui-autocomplete`](https://api.jqueryui.com/autocomplete/) styles.
+In addition to providing superior search results, Sitka Insights also adds search autocomplete to your search template out of the box. You don't need to do anything to make this work, although you may want to override the default [`jquery-ui-autocomplete`](https://api.jqueryui.com/autocomplete/) styles.
 
 The only assumption this module makes about your HTML is that the search input can be found at the selector `form [name="s"]`, i.e. a form element whose `name` attribute is `"s"`. Because of how WordPress search is implemented, this assumption will hold true unless your search functionality is overriding WordPress core in an advanced way.
 
@@ -143,7 +143,7 @@ For the curious, this feature works by registering a custom WP REST route at `/w
 
 ### WP-CLI Custom Commands
 
-The plugin implements WP-CLI commands for major GearLab Tools REST endpoints, such as search:
+The plugin implements WP-CLI commands for major Sitka Insights REST endpoints, such as search:
 
 ```bash
 wp gearlab search tacos

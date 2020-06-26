@@ -1,6 +1,6 @@
 {
   "name": "sitecrafting/gearlab-tools-wordpress",
-  "description": "Integrate your WordPress site with the GearLab Tools platform",
+  "description": "Integrate your WordPress site with the Sitka Insights platform",
   "type": "wordpress-plugin",
   "require": {
     "composer/installers": "~1.0",

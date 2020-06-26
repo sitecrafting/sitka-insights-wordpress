@@ -16,7 +16,7 @@ use WP_REST_Response;
 use GearLab;
 
 /**
- * Base controller for GearLab Tools REST API integration
+ * Base controller for Sitka Insights REST API integration
  */
 class GearLabRestController {
   const API_NAMESPACE = 'gearlab/v2';
