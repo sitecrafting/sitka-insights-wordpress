@@ -1,25 +1,25 @@
 <?php
 
 /**
- * GearLab\Rest\GearLabRestController class
+ * Sitka\Rest\SitkaRestController class
  *
  * @copyright 2019 SiteCrafting, Inc.
  * @author    Coby Tamayo <ctamayo@sitecrafting.com>
  */
 
-namespace GearLab\Plugin\Rest;
+namespace Sitka\Plugin\Rest;
 
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 
-use GearLab;
+use Sitka;
 
 /**
  * Base controller for Sitka Insights REST API integration
  */
-class GearLabRestController {
-  const API_NAMESPACE = 'gearlab/v2';
+class SitkaRestController {
+  const API_NAMESPACE = 'sitka/v2';
 
   public function register_routes() {
     register_rest_route(static::API_NAMESPACE, '/completions', [
@@ -37,19 +37,19 @@ class GearLabRestController {
       ], 400);
     }
 
-    $response = GearLab\completions([
+    $response = Sitka\completions([
       // honor either prefix or term, the jquery-ui-autocomplete key
       'prefix' => $_GET['prefix'] ?? $_GET['term'],
     ]);
 
     if (!isset($response['results'])) {
       // support taking action from theme code when results are empty
-      do_action('gearlab/api/completions/empty_results', $response);
+      do_action('sitka/api/completions/empty_results', $response);
 
       return new WP_REST_Response([
         'success' => false,
         'data'    => [],
-        'error'   => 'Bad response from GearLab API',
+        'error'   => 'Bad response from Sitka API',
       ], 500);
     }
 

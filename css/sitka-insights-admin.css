@@ -1,19 +1,19 @@
-.glt-field {
+.sitka-field {
   margin: 1em 0;
 }
-.glt-field--flex {
+.sitka-field--flex {
   display: flex;
 }
-.glt-field__label {
+.sitka-field__label {
   width: 20%;
 }
-.glt-field__input {
+.sitka-field__input {
   width: 80%;
 }
-.glt-field input[type=text] {
+.sitka-field input[type=text] {
   width: 100%;
 }
-textarea.glt-shortcode-text {
+textarea.sitka-shortcode-text {
   color: black;
   font-weight: 700;
   border: none;

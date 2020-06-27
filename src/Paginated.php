@@ -8,7 +8,7 @@
  * @author    Coby Tamayo <ctamayo@sitecrafting.com>
  */
 
-namespace GearLab\Plugin;
+namespace Sitka\Plugin;
 
 trait Paginated {
   public function set_pagination(array $pagination) {

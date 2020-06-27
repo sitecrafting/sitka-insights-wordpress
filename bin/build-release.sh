@@ -8,7 +8,7 @@ RESET="tput sgr 0"
 function usage() {
   echo 'Usage:'
   echo
-  echo '  build-release.sh <RELEASE>'
+  echo "  $0 <RELEASE>"
   echo
   echo 'RELEASE: the name of the release, e.g. "v1.2.3"'
   echo
@@ -23,8 +23,8 @@ function fail() {
 }
 
 function main() {
-  if ! [[ -f ./gearlab-tools.php ]] ; then
-    fail 'Error: not in root gearlab-tools-wordpress directory?'
+  if ! [[ -f ./sitka-insights.php ]] ; then
+    fail 'Error: not in root sitka-insights-wordpress directory?'
   fi
 
   RELEASE="$1"
@@ -60,43 +60,43 @@ function main() {
 
   backup_vendor
 
-  tar_name="gearlab-tools-wordpress-${RELEASE}.tar.gz"
-  zip_name="gearlab-tools-wordpress-${RELEASE}.zip"
+  tar_name="sitka-insights-${RELEASE}.tar.gz"
+  zip_name="sitka-insights-${RELEASE}.zip"
   composer install --no-dev --prefer-dist
 
-  # hackishly create a symlink gearlab-tools-wordpress directory, so that when
+  # hackishly create a symlink sitka-insights directory, so that when
   # extracted, the archives we create have a top-level directory
-  ln -sfn . gearlab-tools-wordpress
+  ln -sfn . sitka-insights
 
-  # archive plugins distro files inside a top-level gearlab-tools-wordpress/ dir
+  # archive plugins distro files inside a top-level sitka-insights/ dir
   tar -cvzf "$tar_name" \
-    gearlab-tools-wordpress/vendor/autoload.php \
-    gearlab-tools-wordpress/gearlab-tools.php \
-    gearlab-tools-wordpress/wp-api.php \
-    gearlab-tools-wordpress/src \
-    gearlab-tools-wordpress/cli \
-    gearlab-tools-wordpress/js \
-    gearlab-tools-wordpress/css \
-    gearlab-tools-wordpress/vendor \
-    gearlab-tools-wordpress/views \
-    gearlab-tools-wordpress/LICENSE.txt \
-    gearlab-tools-wordpress/README.md
+    sitka-insights/vendor/autoload.php \
+    sitka-insights/sitka-insights.php \
+    sitka-insights/wp-api.php \
+    sitka-insights/src \
+    sitka-insights/cli \
+    sitka-insights/js \
+    sitka-insights/css \
+    sitka-insights/vendor \
+    sitka-insights/views \
+    sitka-insights/LICENSE.txt \
+    sitka-insights/README.md
 
   # ditto for zip
   zip -r "${zip_name}" \
-    gearlab-tools-wordpress/gearlab-tools.php \
-    gearlab-tools-wordpress/wp-api.php \
-    gearlab-tools-wordpress/src \
-    gearlab-tools-wordpress/cli \
-    gearlab-tools-wordpress/js \
-    gearlab-tools-wordpress/css \
-    gearlab-tools-wordpress/vendor \
-    gearlab-tools-wordpress/views \
-    gearlab-tools-wordpress/LICENSE.txt \
-    gearlab-tools-wordpress/README.md
+    sitka-insights/sitka-insights.php \
+    sitka-insights/wp-api.php \
+    sitka-insights/src \
+    sitka-insights/cli \
+    sitka-insights/js \
+    sitka-insights/css \
+    sitka-insights/vendor \
+    sitka-insights/views \
+    sitka-insights/LICENSE.txt \
+    sitka-insights/README.md
 
   # remove hackish symlink
-  rm ./gearlab-tools-wordpress
+  rm ./sitka-insights
 
   restore_vendor
 

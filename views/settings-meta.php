@@ -1,66 +1,66 @@
-<form name="gearlab_tools_settings" method="post">
-  <div class="glt-field glt-field--flex">
-    <div class="glt-field__label">
-      <label for="gearlab_api_key"><b>API Key</b></label>
+<form name="sitka-insights-settings" method="post">
+  <div class="sitka-field sitka-field--flex">
+    <div class="sitka-field__label">
+      <label for="sitka_api_key"><b>API Key</b></label>
     </div>
-    <div class="glt-field__input">
-      <input type="text" id="gearlab_api_key" name="gearlab_api_key" value="<?= $data['gearlab_api_key'] ?>">
+    <div class="sitka-field__input">
+      <input type="text" id="sitka_api_key" name="sitka_api_key" value="<?= $data['sitka_api_key'] ?>">
     </div>
   </div>
 
-  <div class="glt-field glt-field--flex">
-    <div class="glt-field__label">
-      <label for="gearlab_collection_id"><b>Collection ID</b></label>
+  <div class="sitka-field sitka-field--flex">
+    <div class="sitka-field__label">
+      <label for="sitka_collection_id"><b>Collection ID</b></label>
     </div>
-    <div class="glt-field__input">
-      <input type="text" id="gearlab_collection_id" name="gearlab_collection_id" value="<?= $data['gearlab_collection_id'] ?>">
+    <div class="sitka-field__input">
+      <input type="text" id="sitka_collection_id" name="sitka_collection_id" value="<?= $data['sitka_collection_id'] ?>">
     </div>
   </div>
 
   <?php // TODO: configure a radio toggle between Staging/Live environments ?>
-  <div class="glt-field glt-field--flex">
-    <div class="glt-field__label">
-      <label for="gearlab_base_uri"><b>Base URI</b></label>
+  <div class="sitka-field sitka-field--flex">
+    <div class="sitka-field__label">
+      <label for="sitka_base_uri"><b>Base URI</b></label>
     </div>
-    <div class="glt-field__input">
-      <input type="text" id="gearlab_base_uri" name="gearlab_base_uri" value="<?= $data['gearlab_base_uri'] ?>">
+    <div class="sitka-field__input">
+      <input type="text" id="sitka_base_uri" name="sitka_base_uri" value="<?= $data['sitka_base_uri'] ?>">
     </div>
   </div>
 
-  <div class="glt-field">
+  <div class="sitka-field">
     <h3>Override WP Search</h3>
     <p>Use this shortcode on any page:</p>
-    <textarea class="glt-shortcode-text" disabled>[gearlab_search]</textarea>
-    <button type="button" class="button button-secondary glt-shortcode-copy">Copy to clipboard</button>
+    <textarea class="sitka-shortcode-text" disabled>[sitka_search]</textarea>
+    <button type="button" class="button button-secondary sitka-shortcode-copy">Copy to clipboard</button>
     <p>Unless you have custom-built an integration, for your theme's normal search form to work, you must enable one of the following options:</p>
     <p>
       <input
         type="radio"
-        id="gearlab-search-override-disabled"
-        name="gearlab_search_enabled"
+        id="sitka-search-override-disabled"
+        name="sitka_search_enabled"
         value=""
-        <?= empty($data['gearlab_search_enabled']) ? 'checked' : '' ?>
+        <?= empty($data['sitka_search_enabled']) ? 'checked' : '' ?>
       />
-      <label for="gearlab-search-override-disabled"><b>Disable overrides</b></label>
+      <label for="sitka-search-override-disabled"><b>Disable overrides</b></label>
     </p>
-    <?php $searchRedirectEnabled = $data['gearlab_search_enabled'] === GEARLAB_OVERRIDE_METHOD_SHORTCODE; ?>
+    <?php $searchRedirectEnabled = $data['sitka_search_enabled'] === SITKA_OVERRIDE_METHOD_SHORTCODE; ?>
     <p>
       <input
         type="radio"
-        id="gearlab-search-shortcode"
-        name="gearlab_search_enabled"
-        value="<?= GEARLAB_OVERRIDE_METHOD_SHORTCODE ?>"
+        id="sitka-search-shortcode"
+        name="sitka_search_enabled"
+        value="<?= SITKA_OVERRIDE_METHOD_SHORTCODE ?>"
         <?= $searchRedirectEnabled ? 'checked' : '' ?>
       />
-      <label for="gearlab-search-shortcode"><b>Redirect searches to a specific page (Recommended)</b></label>
+      <label for="sitka-search-shortcode"><b>Redirect searches to a specific page (Recommended)</b></label>
     </p>
-    <p class="glt-redirect-url-field" <?= $searchRedirectEnabled ? '' : 'style="display:none"' ?>>
-      <label for="gearlab-search-page-redirect"><b>Redirect searches to:</b></label>
+    <p class="sitka-redirect-url-field" <?= $searchRedirectEnabled ? '' : 'style="display:none"' ?>>
+      <label for="sitka-search-page-redirect"><b>Redirect searches to:</b></label>
       <input
         type="text"
-        id="gearlab-search-page-redirect"
-        name="gearlab_search_redirect"
-        value="<?= $data['gearlab_search_redirect'] ?>"
+        id="sitka-search-page-redirect"
+        name="sitka_search_redirect"
+        value="<?= $data['sitka_search_redirect'] ?>"
         placeholder="/search"
       />
       <em>Do not include "?" or else redirects may not work properly. The page you specify here must contain the shortcode above.</em>
@@ -68,30 +68,30 @@
     <p>
       <input
         type="radio"
-        id="gearlab-search-timber"
-        name="gearlab_search_enabled"
-        value="<?= GEARLAB_OVERRIDE_METHOD_TIMBER ?>"
-        <?= $data['gearlab_search_enabled'] === GEARLAB_OVERRIDE_METHOD_TIMBER ? 'checked' : '' ?>
+        id="sitka-search-timber"
+        name="sitka_search_enabled"
+        value="<?= SITKA_OVERRIDE_METHOD_TIMBER ?>"
+        <?= $data['sitka_search_enabled'] === SITKA_OVERRIDE_METHOD_TIMBER ? 'checked' : '' ?>
       />
-      <label for="gearlab-search-timber"><b>Override default WordPress search template (Advanced - requires Timber plugin, or custom coding)</b></label>
+      <label for="sitka-search-timber"><b>Override default WordPress search template (Advanced - requires Timber plugin, or custom coding)</b></label>
     </p>
   </div>
   <script>
     jQuery(function($){
 
-      $('[name=gearlab_search_enabled]').click(function() {
-        if ($('[name=gearlab_search_enabled][value=shortcode]:checked').length) {
-          $('.glt-redirect-url-field').show();
+      $('[name=sitka_search_enabled]').click(function() {
+        if ($('[name=sitka_search_enabled][value=shortcode]:checked').length) {
+          $('.sitka-redirect-url-field').show();
         } else {
-          $('.glt-redirect-url-field').hide();
+          $('.sitka-redirect-url-field').hide();
         }
       });
 
-      $('.glt-shortcode-copy').click(function(e) {
+      $('.sitka-shortcode-copy').click(function(e) {
         e.preventDefault();
 
         // copy shortcode text to clipboard
-        $textarea = $('.glt-shortcode-text');
+        $textarea = $('.sitka-shortcode-text');
         $textarea.attr('disabled', false);
         $textarea.get(0).select();
         document.execCommand('copy');
@@ -106,8 +106,8 @@
   </script>
 
   <div class="gtl-form-footer">
-    <button type="submit" value="update_gearlab_settings" class="button button-primary">Save settings</button>
+    <button type="submit" value="update_sitka_settings" class="button button-primary">Save settings</button>
   </div>
 
-  <?php wp_nonce_field('gearlab_tools'); ?>
+  <?php wp_nonce_field('sitka-insights'); ?>
 </form>

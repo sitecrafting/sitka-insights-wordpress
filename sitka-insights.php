@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Sitka Insights
  * Description: Integrate your WordPress site with the Sitka Insights platform
- * Plugin URI: https://gearlab.tools
+ * Plugin URI: https://sitka.tools
  * Author: Coby Tamayo <ctamayo@sitecrafting.com>
  * Author URI: https://www.sitecrafting.com/
  * Version: 1.1.0
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 // Require the composer autoloader, making educated guesses as to where it is.
 // If it exists, honor the project-wide autoloader first, but do not treat it
 // as mutually exclusive from the plugin's autoloader, since you can't assume
-// the project pulls in the GLT plugin as a dependency.
+// the project pulls in the Sitka Insights plugin as a dependency.
 if (file_exists(ABSPATH . 'vendor/autoload.php')) {
   require_once ABSPATH . 'vendor/autoload.php';
 }
@@ -28,34 +28,34 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 require_once __DIR__ . '/wp-api.php';
 
 use GearLab\Api\Client;
-use GearLab\Plugin\AdminPage;
-use GearLab\Plugin\Rest\GearLabRestController;
-use GearLab\Plugin\TimberTwigHelper;
+use Sitka\Plugin\AdminPage;
+use Sitka\Plugin\Rest\SitkaRestController;
+use Sitka\Plugin\TimberTwigHelper;
 
 use Swagger\Client\ApiException;
 use Timber\Timber;
 
 
-define('GEARLAB_PLUGIN_WEB_PATH', plugin_dir_url(__FILE__));
-define('GEARLAB_PLUGIN_JS_ROOT', GEARLAB_PLUGIN_WEB_PATH . 'js');
-define('GEARLAB_PLUGIN_VIEW_PATH', __DIR__ . '/views');
+define('SITKA_PLUGIN_WEB_PATH', plugin_dir_url(__FILE__));
+define('SITKA_PLUGIN_JS_ROOT', SITKA_PLUGIN_WEB_PATH . 'js');
+define('SITKA_PLUGIN_VIEW_PATH', __DIR__ . '/views');
 
 // "1" for backwards compatibility, from when this was a single toggle setting
-define('GEARLAB_OVERRIDE_METHOD_TIMBER', '1');
-define('GEARLAB_OVERRIDE_METHOD_SHORTCODE', 'shortcode');
+define('SITKA_OVERRIDE_METHOD_TIMBER', '1');
+define('SITKA_OVERRIDE_METHOD_SHORTCODE', 'shortcode');
 
 /*
  * Add the main hook for getting an API client instance
  */
-add_filter('gearlab/api/client', function() {
+add_filter('sitka/api/client', function() {
   // avoid instantiating the same object twice
   static $client;
 
   // instantiate a Client instance if we don't have one already
   return $client ?: new Client([
-    'key'        => get_option('gearlab_api_key'),
-    'collection' => get_option('gearlab_collection_id'),
-    'baseUri'    => get_option('gearlab_base_uri'),
+    'key'        => get_option('sitka_api_key'),
+    'collection' => get_option('sitka_collection_id'),
+    'baseUri'    => get_option('sitka_base_uri'),
   ]);
 });
 
@@ -63,7 +63,7 @@ add_filter('gearlab/api/client', function() {
 /*
  * Disable default search
  */
-add_action('init', GearLab\disable_default_wp_search::class);
+add_action('init', Sitka\disable_default_wp_search::class);
 
 
 /*
@@ -74,11 +74,11 @@ add_action('admin_menu', function() {
   // Sitka Insights credentials
   $page = AdminPage::add_options_page([
     'option_keys' => [
-      'gearlab_api_key',
-      'gearlab_collection_id',
-      'gearlab_base_uri',
-      'gearlab_search_enabled',
-      'gearlab_search_redirect',
+      'sitka_api_key',
+      'sitka_collection_id',
+      'sitka_base_uri',
+      'sitka_search_enabled',
+      'sitka_search_redirect',
     ],
   ]);
   // Process any user updates
@@ -91,8 +91,8 @@ add_action('admin_menu', function() {
 
 add_action('admin_enqueue_scripts', function() {
   wp_enqueue_style(
-    'gearlab-tools-admin-styles',
-    GEARLAB_PLUGIN_WEB_PATH . 'css/gearlab-tools-admin.css'
+    'sitka-insights-admin-styles',
+    SITKA_PLUGIN_WEB_PATH . 'css/sitka-insights-admin.css'
   );
 });
 
@@ -100,7 +100,7 @@ add_action('admin_enqueue_scripts', function() {
  * Add REST Routes
  */
 add_action('rest_api_init', function() {
-  $controller = new GearLabRestController();
+  $controller = new SitkaRestController();
   $controller->register_routes();
 });
 
@@ -108,15 +108,15 @@ add_action('rest_api_init', function() {
  * Add JS for autocomplete suggestions.
  */
 add_action('wp_enqueue_scripts', function() {
-  $enqueue = apply_filters('gearlab/search/enqueue_js', !is_admin());
+  $enqueue = apply_filters('sitka/search/enqueue_js', !is_admin());
   if ($enqueue) {
-    GearLab\enqueue_scripts();
+    Sitka\enqueue_scripts();
   }
 });
 
 if (class_exists(WP_CLI::class)) {
-  $command = new GearLab\WpCli\GearLabCommand();
-  WP_CLI::add_command('gearlab', $command);
+  $command = new Sitka\WpCli\SitkaCommand();
+  WP_CLI::add_command('sitka', $command);
 }
 
 // Inject Timber-specific specializations.
@@ -125,8 +125,8 @@ add_action('plugins_loaded', function() {
     // Timber is running. Extend it!
     add_filter('get_twig', function(Twig_Environment $twig) {
       $twig->addFunction(new Twig_SimpleFunction(
-        'gearlab_paginate_links',
-        GearLab\paginate_links::class
+        'sitka_paginate_links',
+        Sitka\paginate_links::class
       ));
 
       return $twig;
@@ -134,14 +134,14 @@ add_action('plugins_loaded', function() {
 
     // Add our views/twig to Timber's list of locations.
     add_filter('timber/locations', function($templatePaths) {
-      $templatePaths[] = GEARLAB_PLUGIN_VIEW_PATH . '/twig';
+      $templatePaths[] = SITKA_PLUGIN_VIEW_PATH . '/twig';
       return $templatePaths;
     });
 
     // Load our plugin's default.
-    add_filter('gearlab/timber/search_template', function($searchTpl) {
+    add_filter('sitka/timber/search_template', function($searchTpl) {
       if (!file_exists($searchTpl)) {
-        $searchTpl = GEARLAB_PLUGIN_VIEW_PATH . '/timber/search.php';
+        $searchTpl = SITKA_PLUGIN_VIEW_PATH . '/timber/search.php';
       }
 
       return $searchTpl;
@@ -149,7 +149,7 @@ add_action('plugins_loaded', function() {
 
     // Tell our plugin how to render the search view, calling Timber::render()
     // by default.
-    add_action('gearlab/timber/render_search', [Timber::class, 'render'], 10, 3);
+    add_action('sitka/timber/render_search', [Timber::class, 'render'], 10, 3);
   }
 });
 
@@ -158,11 +158,11 @@ add_action('plugins_loaded', function() {
  * Add support for the Search UI shortcode.
  */
 
-add_filter('gearlab/render', function($tpl, $data = []) {
-  $path = get_template_directory() . '/gearlab-tools/' . $tpl;
+add_filter('sitka/render', function($tpl, $data = []) {
+  $path = get_template_directory() . '/sitka-insights/' . $tpl;
 
   if (!file_exists($path)) {
-    $path = GEARLAB_PLUGIN_VIEW_PATH . '/frontend/' . $tpl;
+    $path = SITKA_PLUGIN_VIEW_PATH . '/frontend/' . $tpl;
   }
 
   if (file_exists($path)) {
@@ -174,46 +174,46 @@ add_filter('gearlab/render', function($tpl, $data = []) {
 
 add_action('init', function() {
   global $wp;
-  $wp->add_query_var('glt_search');
-  $wp->add_query_var('glt_meta_tag');
-  $wp->add_query_var('glt_page_num');
+  $wp->add_query_var('sitka_search');
+  $wp->add_query_var('sitka_meta_tag');
+  $wp->add_query_var('sitka_page_num');
 
-  add_shortcode('gearlab_search', function($atts = []) {
+  add_shortcode('sitka_search', function($atts = []) {
     global $post;
 
     // Override how search paramaters are set in shortcode context.
-    add_filter('gearlab/search/query', function() {
-      return get_query_var('glt_search');
+    add_filter('sitka/search/query', function() {
+      return get_query_var('sitka_search');
     });
-    add_filter('gearlab/search/meta_tag', function() {
-      return get_query_var('glt_meta_tag');
+    add_filter('sitka/search/meta_tag', function() {
+      return get_query_var('sitka_meta_tag');
     });
-    add_filter('gearlab/search/page_num', function() {
-      return get_query_var('glt_page_num') ?: 1;
+    add_filter('sitka/search/page_num', function() {
+      return get_query_var('sitka_page_num') ?: 1;
     });
-    add_filter('gearlab/search/page_num_param', function() {
-      return 'glt_page_num';
+    add_filter('sitka/search/page_num_param', function() {
+      return 'sitka_page_num';
     });
 
-    $searchQuery = apply_filters('gearlab/search/query', '');
+    $searchQuery = apply_filters('sitka/search/query', '');
 
     try {
-      $response = GearLab\search();
+      $response = Sitka\search();
     } catch (ApiException $e) {
-      do_action('gearlab/api/error/api_exception', sprintf(
-        'GearLab API error: %s',
+      do_action('sitka/api/error/api_exception', sprintf(
+        'Sitka API error: %s',
         $e->getMessage()
       ));
       $response = [];
     } catch (InvalidArgumentException $e) {
-      do_action('gearlab/api/error/invalid_client_args', sprintf(
-        'Error setting up GearLab client: %s',
+      do_action('sitka/api/error/invalid_client_args', sprintf(
+        'Error setting up Sitka client: %s',
         $e->getMessage()
       ));
       $response = [];
     }
 
-    return apply_filters('gearlab/render', 'search-results.php', [
+    return apply_filters('sitka/render', 'search-results.php', [
       'post'     => $post,
       'query'    => $searchQuery,
       'response' => $response,
@@ -224,15 +224,15 @@ add_action('init', function() {
    * Redirect to the configured search page
    */
   add_action('template_redirect', function() {
-    if (!GearLab\shortcode_redirect_enabled()) {
+    if (!Sitka\shortcode_redirect_enabled()) {
       return;
     }
 
     global $wp_query;
-    $dest = get_option('gearlab_search_redirect');
+    $dest = get_option('sitka_search_redirect');
     if ($dest && $wp_query->is_search()) {
       $params = array_merge($_GET, [
-        'glt_search' => get_query_var('s')
+        'sitka_search' => get_query_var('s')
       ]);
       unset($params['s']);
 
