@@ -38,6 +38,14 @@ $searchQuery = stripslashes($data['query']) ?? '';
         ])) ?>
 
       <?php endforeach; ?>
+    <?php else : ?>
+
+      <p><?= apply_filters(
+        'sitka/search/no_results_message',
+        sprintf('%s <b>%s</b>', __('No results for'), esc_attr($searchQuery)),
+        $searchQuery
+      ) ?></p>
+
     <?php endif; ?>
 
     <div class="post-navigation">
