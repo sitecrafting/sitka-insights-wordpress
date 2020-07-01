@@ -6,7 +6,7 @@
  * Plugin URI: https://sitka.tools
  * Author: Coby Tamayo <ctamayo@sitecrafting.com>
  * Author URI: https://www.sitecrafting.com/
- * Version: 1.1.0
+ * Version: 2.0.0
  */
 
 // no script kiddiez
