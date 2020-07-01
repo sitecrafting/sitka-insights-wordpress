@@ -1,6 +1,6 @@
 # Sitka Insights for WordPress
 
-![Travis CI build status](https://api.travis-ci.org/sitecrafting/sitka-insights-wordpress.svg?branch=master)
+![Travis CI build status](https://api.travis-ci.org/sitecrafting/sitka-insights-wordpress.svg?branch=main)
 
 Integrate your WordPress site seamlessly with the Sitka Insights suite.
 
