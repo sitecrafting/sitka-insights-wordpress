@@ -105,7 +105,7 @@
     });
   </script>
 
-  <div class="gtl-form-footer">
+  <div class="sitka-form-footer">
     <button type="submit" value="update_sitka_settings" class="button button-primary">Save settings</button>
   </div>
 

@@ -27,7 +27,7 @@ $searchQuery = $data['query'] ?? '';
     </div><!-- global-search -->
   </div><!-- container -->
 </section>
-<section class="gtl-search-results-container">
+<section class="sitka-search-results-container">
   <div class="container">
 
     <?php if (!empty($response['results'])) : ?>
