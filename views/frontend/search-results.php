@@ -6,7 +6,7 @@
 
 $response    = $data['response'] ?? [];
 $post        = $data['post'] ?? $GLOBALS['post'] ?? null;
-$searchQuery = $data['query'] ?? '';
+$searchQuery = stripslashes($data['query']) ?? '';
 
 ?>
 <section class="sitka-search-form-container">
@@ -16,7 +16,7 @@ $searchQuery = $data['query'] ?? '';
       <form role="search" method="get" id="searchform" class="searchform sitka-search-form" action="<?= get_permalink($post) ?>">
         <input
           type="text"
-          value="<?= $searchQuery ?>"
+          value="<?= esc_attr_e($searchQuery) ?>"
           name="sitka_search"
           id="search-term"
           placeholder="Enter keyword or phrase"
