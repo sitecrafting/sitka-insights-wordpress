@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Sitka Insights
  * Description: Integrate your WordPress site with the Sitka Insights platform
- * Plugin URI: https://sitka.tools
+ * Plugin URI: https://sitkainsights.com
  * Author: Coby Tamayo <ctamayo@sitecrafting.com>
  * Author URI: https://www.sitecrafting.com/
  * Version: 2.0.0
