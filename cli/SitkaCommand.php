@@ -1,24 +1,24 @@
 <?php
 
 /**
- * GearLabCommand class
+ * SitkaCommand class
  *
  * @copyright 2019 SiteCrafting, Inc.
  * @author    Coby Tamayo <ctamayo@sitecrafting.com>
  */
 
-namespace GearLab\WpCli;
+namespace Sitka\WpCli;
 
 use WP_CLI;
 use WP_CLI\Utils;
 
-use GearLab;
+use Sitka;
 
 /**
- * Perform a query against the GearLab Tools API using the settings from the
- * GearLab Tools settings admin page (/wp-admin/admin.php?page=gearlab-tools)
+ * Perform a query against the Sitka Insights API using the settings from the
+ * Sitka Insights settings admin page (/wp-admin/admin.php?page=sitka-insights)
  */
-class GearLabCommand {
+class SitkaCommand {
   /**
    * Perform a search
    *
@@ -58,19 +58,19 @@ class GearLabCommand {
    *
    * ## EXAMPLES
    *
-   *     wp gearlab search tacoma
-   *     wp gearlab s tacoma
-   *     wp gearlab search --meta-tag=document tacoma
-   *     wp gearlab search --meta-tag=page tacoma
-   *     wp gearlab search --meta-tag=page tacoma
-   *     wp gearlab search --meta-tag=page --format=table tacoma
+   *     wp sitka search tacoma
+   *     wp sitka s tacoma
+   *     wp sitka search --meta-tag=document tacoma
+   *     wp sitka search --meta-tag=page tacoma
+   *     wp sitka search --meta-tag=page tacoma
+   *     wp sitka search --meta-tag=page --format=table tacoma
    *
    * @subcommand search
    * @alias s
    * @when after_wp_load
    */
   public function search(array $args, array $opts = []) {
-    $response = GearLab\search([
+    $response = Sitka\search([
       'query'        => $args[0],
       'resLength'    => $opts['count'] ?? '',
       'resOffset'    => $opts['offset'] ?? '',
@@ -116,15 +116,15 @@ class GearLabCommand {
    *
    * ## EXAMPLES
    *
-   *     wp gearlab completions tac
-   *     wp gearlab c tac
+   *     wp sitka completions tac
+   *     wp sitka c tac
    *
    * @subcommand completions
    * @alias c
    * @when after_wp_load
    */
   public function completions(array $args, array $opts = []) {
-    $response = GearLab\completions([
+    $response = Sitka\completions([
       'prefix'  => $args[0],
       'metaTag' => $opts['meta-tag'] ?? '',
     ]);

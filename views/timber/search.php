@@ -7,16 +7,16 @@
 use Swagger\Client\ApiException;
 
 try {
-  $response = GearLab\search();
+  $response = Sitka\search();
 } catch (ApiException $e) {
-  do_action('gearlab/api/error/api_exception', sprintf(
-    'GearLab API error: %s',
+  do_action('sitka/api/error/api_exception', sprintf(
+    'Sitka API error: %s',
     $e->getMessage()
   ));
   $response = [];
 } catch (InvalidArgumentException $e) {
-  do_action('gearlab/api/error/invalid_client_args', sprintf(
-    'Error setting up GearLab client: %s',
+  do_action('sitka/api/error/invalid_client_args', sprintf(
+    'Error setting up Sitka client: %s',
     $e->getMessage()
   ));
   $response = [];
@@ -27,8 +27,8 @@ $data['response'] = $response;
 $data['layout_template'] = 'layouts/main.twig';
 
 do_action(
-  'gearlab/timber/render_search',
-  apply_filters('gearlab/timber/render_search_view', 'gearlab-tools/search.twig'),
-  apply_filters('gearlab/timber/render_search_context', $data),
+  'sitka/timber/render_search',
+  apply_filters('sitka/timber/render_search_view', 'sitka-insights/search.twig'),
+  apply_filters('sitka/timber/render_search_context', $data),
   false
 );

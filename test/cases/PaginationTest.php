@@ -7,7 +7,7 @@
  * @author    Coby Tamayo <ctamayo@sitecrafting.com>
  */
 
-namespace GearLab\Plugin;
+namespace Sitka\Plugin;
 
 use PHPUnit\Framework\TestCase;
 

@@ -1,6 +1,6 @@
 {
-  "name": "sitecrafting/gearlab-tools-wordpress",
-  "description": "Integrate your WordPress site with the GearLab Tools platform",
+  "name": "sitecrafting/sitka-insights-wordpress",
+  "description": "Integrate your WordPress site with the Sitka Insights platform",
   "type": "wordpress-plugin",
   "require": {
     "composer/installers": "~1.0",
@@ -15,13 +15,13 @@
   ],
   "autoload": {
     "psr-4": {
-      "GearLab\\Plugin\\": "src/",
-      "GearLab\\WpCli\\": "cli/"
+      "Sitka\\Plugin\\": "src/",
+      "Sitka\\WpCli\\": "cli/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "GearLab\\Plugin\\": "test/cases/"
+      "Sitka\\Plugin\\": "test/cases/"
     }
   },
   "require-dev": {

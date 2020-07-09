@@ -1,6 +1,6 @@
 <?php
 
-namespace GearLab\Plugin;
+namespace Sitka\Plugin;
 
 class AdminPage {
   protected $config;
@@ -8,7 +8,7 @@ class AdminPage {
 
   /**
    * Top-level static function for creating an admin page
-   * responsible for managing various GLT settings.
+   * responsible for managing various Sitka Insights settings.
    *
    * @param array $config the configuration for this page, which includes
    * the settings this page is in charge of managing and the view it renders.
@@ -19,10 +19,10 @@ class AdminPage {
 
     // Add this page to the main WP Admin
     add_options_page(
-      'GearLab Tools',
-      'GearLab Tools',
+      'Sitka Insights',
+      'Sitka Insights',
       'manage_options',
-      'gearlab-tools',
+      'sitka-insights',
       [$page, 'render']
     );
 
@@ -55,10 +55,11 @@ class AdminPage {
    */
   public function add_meta_boxes() {
     add_meta_box(
-      'gearlab_tools_settings',
-      'GearLab Tools Settings',
+      'sitka-insights-settings',
+      'Sitka Insights Settings',
       [$this, 'render_settings_meta_box'],
-      'gearlab-tools', 'normal'
+      'sitka-insights',
+      'normal'
     );
   }
 
@@ -66,7 +67,7 @@ class AdminPage {
    * Generic callback for rendering this settings page
    */
   public function render() {
-    wp_create_nonce('gearlab_tools');
+    wp_create_nonce('sitka-insights');
     echo $this->render_view('admin-page.php');
   }
 
@@ -84,7 +85,7 @@ class AdminPage {
    */
   public function save_settings(array $request) {
     $nonce = $request['_wpnonce'] ?? '';
-    if (!wp_verify_nonce($nonce, 'gearlab_tools')) {
+    if (!wp_verify_nonce($nonce, 'sitka-insights')) {
       return;
     }
 

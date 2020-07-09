@@ -1,11 +1,11 @@
 {% extends layout_template %}
 
 {% block main_content %}
-  <section class="glt-search-form-container">
+  <section class="sitka-search-form-container">
     <div class="container">
       <div class="global-search">
         <h5>Search</h5>
-        <form role="search" method="get" id="searchform" class="searchform glt-search-form" action="/">
+        <form role="search" method="get" id="searchform" class="searchform sitka-search-form" action="/">
           <input type="text" value="{{ search_query }}" name="s" id="search-term" placeholder="Enter keyword or phrase" title="Enter keyword or phrase" />
           <button id="searchsubmit" type="submit" class="btn"><span>Search</span></button>
         </form>
@@ -13,12 +13,12 @@
     </div><!-- container -->
   </section>
 
-  <section class="glt-search-results-container">
+  <section class="sitka-search-results-container">
     <div class="container">
       {% if response.results is not empty %}
 
         {% for result in response.results %}
-          {% include 'gearlab-tools/search-result.twig' with {
+          {% include 'sitka-insights/search-result.twig' with {
             result: result
           } only %}
         {% endfor %}
@@ -27,7 +27,7 @@
 
         <p>{{ fn(
           'apply_filters',
-          'gearlab/search/no_results_message',
+          'sitka/search/no_results_message',
           'No results for "'~search_query~'."',
           search_query)
         }}</p>
@@ -35,7 +35,7 @@
       {% endif %}
 
       <div class="post-navigation">
-        {{ gearlab_paginate_links(response) }}
+        {{ sitka_paginate_links(response) }}
       </div>
     </div><!-- .container -->
   </section>

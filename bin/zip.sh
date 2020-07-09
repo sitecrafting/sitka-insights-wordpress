@@ -16,5 +16,5 @@ rm *.zip *.tar.gz
 bin/build-release.sh --no-interaction vtest
 
 # install in the plugin dir of the project given in the sole CLI arg
-rm -rf "$1/wp-content/plugins/gearlab-tools-wordpress/"
-unzip -d "$1/wp-content/plugins/" gearlab-tools-wordpress-vtest.zip
+rm -rf "$1/wp-content/plugins/sitka-insights/"
+unzip -d "$1/wp-content/plugins/" sitka-insights-vtest.zip

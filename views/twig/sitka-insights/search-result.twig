@@ -1,0 +1,14 @@
+<div class="sitka-search-card">
+	{# If filtering by post_type using metaTag, this is where that data will show up #}
+	{% for tag in result.meta.tags %}
+		<div class="sitka-search-card__label">{{ fn(
+			'apply_filters',
+			'sitka/search/result/meta_tag_label',
+			tag,
+			result
+		) }}</div>
+	{% endfor %}
+	<h3 class="sitka-search-card__title">{{ result.title }}</h3>
+	<div class="sitka-search-card__snippet">{{ result.snippet }}</div>
+	<a class="sitka-search-card__link" href="{{ result.url }}">Learn More</a>
+</div>

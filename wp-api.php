@@ -1,25 +1,25 @@
 <?php
 
 /**
- * Public API for consuming the GearLab Tools API from WordPress code
+ * Public API for consuming the Sitka Insights API from WordPress code
  *
  * @copyright 2019 SiteCrafting, Inc.
  * @author    Coby Tamayo <ctamayo@sitecrafting.com>
  */
 
-namespace GearLab;
+namespace Sitka;
 
 use Timber\Timber;
 use WP_Query;
 
-use GearLab\Plugin\Paginator;
+use Sitka\Plugin\Paginator;
 
 function client() {
-  return apply_filters('gearlab/api/client', null);
+  return apply_filters('sitka/api/client', null);
 }
 
 function search(array $params = []) : array {
-  return client()->search(apply_filters('gearlab/search/params', $params));
+  return client()->search(apply_filters('sitka/search/params', $params));
 }
 
 function completions(array $params) : array {
@@ -28,15 +28,15 @@ function completions(array $params) : array {
 
 function search_enabled() : bool {
   return apply_filters(
-    'gearlab/search/enabled',
-    get_option('gearlab_search_enabled') === GEARLAB_OVERRIDE_METHOD_TIMBER
+    'sitka/search/enabled',
+    get_option('sitka_search_enabled') === SITKA_OVERRIDE_METHOD_TIMBER
   );
 }
 
 function shortcode_redirect_enabled() : bool {
   return apply_filters(
-    'gearlab/search_shortcode/enabled',
-    get_option('gearlab_search_enabled') === GEARLAB_OVERRIDE_METHOD_SHORTCODE
+    'sitka/search_shortcode/enabled',
+    get_option('sitka_search_enabled') === SITKA_OVERRIDE_METHOD_SHORTCODE
   );
 }
 
@@ -60,20 +60,20 @@ function disable_default_wp_search() {
   add_action('parse_query', function(WP_Query $query) {
     if ($query->is_search()) {
       $query->is_search = false;
-      $query->set('gearlab_search', true);
+      $query->set('sitka_search', true);
     }
   });
 
   add_filter('template_include', function(string $template) {
     // Use the theme override search template if there is one.
     // Otherwise, fallback on the plugin template.
-    $searchTpl = get_template_directory() . '/gearlab-tools/search.php';
+    $searchTpl = get_template_directory() . '/sitka-insights/search.php';
 
     // Hook up Timber fallback view, if supported.
-    $searchTpl = apply_filters('gearlab/timber/search_template', $searchTpl);
+    $searchTpl = apply_filters('sitka/timber/search_template', $searchTpl);
 
     global $wp_query;
-    if ($wp_query->get('gearlab_search') && file_exists($searchTpl)) {
+    if ($wp_query->get('sitka_search') && file_exists($searchTpl)) {
       // Force a 200 OK response.
       $wp_query->is_404 = false;
       status_header(200);
@@ -87,7 +87,7 @@ function disable_default_wp_search() {
 
   add_filter('wp_title', function(string $title, $separator) {
     global $wp_query;
-    if ($wp_query->get('gearlab_search')) {
+    if ($wp_query->get('sitka_search')) {
       $searchTerms = $wp_query->get('search_terms') ?: [];
 
       $title = sprintf(
@@ -108,8 +108,8 @@ function enqueue_scripts() {
 
   // enqueue our AJAX autocomplete script
   wp_enqueue_script(
-    'gearlab-js',
-    GEARLAB_PLUGIN_JS_ROOT . '/search.js',
+    'sitka-js',
+    SITKA_PLUGIN_JS_ROOT . '/search.js',
     ['jquery', 'jquery-ui-core', 'jquery-ui-autocomplete'],
     /** @version v0.0.2 */
     'v0.0.2',
@@ -123,29 +123,29 @@ function enqueue_scripts() {
   );
   wp_enqueue_style('jquery-ui-styles');
 
-  wp_enqueue_style('gearlab-tools-search', GEARLAB_PLUGIN_WEB_PATH . 'css/gearlab-tools-search.css');
+  wp_enqueue_style('sitka-insights-search', SITKA_PLUGIN_WEB_PATH . 'css/sitka-insights-search.css');
 }
 
 
-add_filter('gearlab/search/params', function(array $params) : array {
+add_filter('sitka/search/params', function(array $params) : array {
   if ($params) {
     // we already have params; no need to set up defaults
     return $params;
   }
 
-  $pageNum = apply_filters('gearlab/search/page_num', 1);
-  $count   = apply_filters('gearlab/search/result_count', 10);
+  $pageNum = apply_filters('sitka/search/page_num', 1);
+  $count   = apply_filters('sitka/search/result_count', 10);
   $offset  = ($pageNum - 1) * $count;
 
   return [
-    'query'     => apply_filters('gearlab/search/query', $_GET['s'] ?? ''),
+    'query'     => apply_filters('sitka/search/query', $_GET['s'] ?? ''),
     'resLength' => $count,
     'resOffset' => $offset,
-    'metaTag'   => apply_filters('gearlab/search/meta_tag', ''),
+    'metaTag'   => apply_filters('sitka/search/meta_tag', ''),
   ];
 }, 10);
 
-add_filter('gearlab/search/result_count', function() : int {
+add_filter('sitka/search/result_count', function() : int {
   static $count;
   if (!isset($count)) {
     $count = (int) get_option('posts_per_page');
@@ -153,15 +153,15 @@ add_filter('gearlab/search/result_count', function() : int {
   return $count;
 }, 1);
 
-add_filter('gearlab/search/page_num', function() : int {
+add_filter('sitka/search/page_num', function() : int {
   return (int) ($_GET['page_num'] ?? 1);
 }, 1);
 
-add_filter('gearlab/search/meta_tag', function() : string {
+add_filter('sitka/search/meta_tag', function() : string {
   return '';
 }, 1);
 
-add_filter('gearlab/search/result/meta_tag_label_map', function($map = []) : array {
+add_filter('sitka/search/result/meta_tag_label_map', function($map = []) : array {
   return array_merge($map, [
     '_document' => 'Document',
     'post'      => 'Post',
@@ -169,8 +169,8 @@ add_filter('gearlab/search/result/meta_tag_label_map', function($map = []) : arr
   ]);
 });
 
-add_filter('gearlab/search/result/meta_tag_label', function($tag, $_result) : string {
-  $map = apply_filters('gearlab/search/result/meta_tag_label_map', []);
+add_filter('sitka/search/result/meta_tag_label', function($tag, $_result) : string {
+  $map = apply_filters('sitka/search/result/meta_tag_label_map', []);
 
   return $map[$tag] ?? ucfirst($tag);
 }, 10, 2);
