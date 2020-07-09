@@ -46,21 +46,9 @@ However, basic searches (using WordPress's standard `s` query param), will still
 
 Save your changes and you're good to go! Default searches will now redirect to your page. Note that all query string parameters will be preserved *except* `s`, which will be renamed to `sitka_search` to avoid conflicting with WordPress's default functionality.
 
-#### Overriding Timber templates
+#### Using the Sitka WordPress API directly
 
-This plugin has special support for [Timber](https://www.upstatement.com/timber/).
-
-To override how Timber renders your search results, you can add Theme Overrides. These are files that the plugin looks for in your theme and loads it if finds them, falling back to the plugin's own templates if it does not. These files are (relative to your theme root):
-
-* `sitka-insights/search.php`: Main PHP template to run. If you want to support e.g. a UI for filtering on `metaTag`, override this file and see the examples below.
-* `(Timber template path)/sitka-insights/search.twig`: Main Twig template for rendering the search page. If you don't need to change the backend functionality (e.g. how search filters are applied) and only want to change how the overall search results page is rendered, override this file.
-* `(Timber template path)/sitka-insights/search-result.twig`: Render a single search result with Twig.
-
-...where `(Timber template path)` is anywhere that Timber already knows to look for Twig templates. The most commone place is the `templates` or `views` directory in your theme.
-
-#### Override the Sitka search.php template
-
-Place something like the following in your theme at `sitka-insights/search.php` (this example does not rely on Timber):
+If you want a bit more control, you can use the provided WordPress API directly. Place something like the following in your theme at `search.php`:
 
 ```php
 // NOTE: the client may throw an exception!
@@ -80,7 +68,7 @@ wp_header();
 // Render results
 foreach (($response['results'] ?? []) as $result) : ?>
   <article class="search-result">
-    <h1><a href="<?= $result['url'] ?>><?= $result['title'] ?></a></h1>
+    <h1><a href="<?= $result['url'] ?>"><?= $result['title'] ?></a></h1>
     <p><?= $result['snippet'] ?></p>
   </article>
 <?php endforeach; ?>
@@ -108,7 +96,7 @@ $pageOffset = ($_GET['page_num'] ?? 1) - 1;
 try {
   $response = Sitka\search([
     // Pass the user's search term to the API.
-    'query'     => get_query_var('s'),
+    'query'     => get_query_var('my_search_param'),
     // Tell the API how many results we want per page.
     'resLength' => $count,
     // Tell the API which page of results we want.
@@ -125,7 +113,7 @@ try {
 // Render results
 foreach (($response['results'] ?? []) as $result) : ?>
   <article class="search-result">
-    <h1><a href="<?= $result['url'] ?>><?= $result['title'] ?></a></h1>
+    <h1><a href="<?= $result['url'] ?>"><?= $result['title'] ?></a></h1>
     <p><?= $result['snippet'] ?></p>
   </article>
 <?php endforeach; ?>
@@ -147,6 +135,9 @@ The plugin implements WP-CLI commands for major Sitka Insights REST endpoints, s
 
 ```bash
 wp sitka search tacos
+wp sitka s tacos # `s` is an alias for `search`
+wp sitka completions
+wp sitka c taco # `c` is an alias for `completions`
 ```
 
 This will automatically use the credentials you've configured in the plugin settings.

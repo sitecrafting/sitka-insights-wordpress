@@ -30,18 +30,14 @@ require_once __DIR__ . '/wp-api.php';
 use GearLab\Api\Client;
 use Sitka\Plugin\AdminPage;
 use Sitka\Plugin\Rest\SitkaRestController;
-use Sitka\Plugin\TimberTwigHelper;
 
 use Swagger\Client\ApiException;
-use Timber\Timber;
 
 
 define('SITKA_PLUGIN_WEB_PATH', plugin_dir_url(__FILE__));
 define('SITKA_PLUGIN_JS_ROOT', SITKA_PLUGIN_WEB_PATH . 'js');
 define('SITKA_PLUGIN_VIEW_PATH', __DIR__ . '/views');
 
-// "1" for backwards compatibility, from when this was a single toggle setting
-define('SITKA_OVERRIDE_METHOD_TIMBER', '1');
 define('SITKA_OVERRIDE_METHOD_SHORTCODE', 'shortcode');
 
 /*
@@ -58,12 +54,6 @@ add_filter('sitka/api/client', function() {
     'baseUri'    => get_option('sitka_base_uri'),
   ]);
 });
-
-
-/*
- * Disable default search
- */
-add_action('init', Sitka\disable_default_wp_search::class);
 
 
 /*
@@ -118,40 +108,6 @@ if (class_exists(WP_CLI::class)) {
   $command = new Sitka\WpCli\SitkaCommand();
   WP_CLI::add_command('sitka', $command);
 }
-
-// Inject Timber-specific specializations.
-add_action('plugins_loaded', function() {
-  if (class_exists(Timber::class)) {
-    // Timber is running. Extend it!
-    add_filter('get_twig', function(Twig_Environment $twig) {
-      $twig->addFunction(new Twig_SimpleFunction(
-        'sitka_paginate_links',
-        Sitka\paginate_links::class
-      ));
-
-      return $twig;
-    });
-
-    // Add our views/twig to Timber's list of locations.
-    add_filter('timber/locations', function($templatePaths) {
-      $templatePaths[] = SITKA_PLUGIN_VIEW_PATH . '/twig';
-      return $templatePaths;
-    });
-
-    // Load our plugin's default.
-    add_filter('sitka/timber/search_template', function($searchTpl) {
-      if (!file_exists($searchTpl)) {
-        $searchTpl = SITKA_PLUGIN_VIEW_PATH . '/timber/search.php';
-      }
-
-      return $searchTpl;
-    });
-
-    // Tell our plugin how to render the search view, calling Timber::render()
-    // by default.
-    add_action('sitka/timber/render_search', [Timber::class, 'render'], 10, 3);
-  }
-});
 
 
 /*

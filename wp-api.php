@@ -9,7 +9,6 @@
 
 namespace Sitka;
 
-use Timber\Timber;
 use WP_Query;
 
 use Sitka\Plugin\Paginator;
@@ -24,13 +23,6 @@ function search(array $params = []) : array {
 
 function completions(array $params) : array {
   return client()->completions($params);
-}
-
-function search_enabled() : bool {
-  return apply_filters(
-    'sitka/search/enabled',
-    get_option('sitka_search_enabled') === SITKA_OVERRIDE_METHOD_TIMBER
-  );
 }
 
 function shortcode_redirect_enabled() : bool {
@@ -49,56 +41,6 @@ function paginate_links(array $response) : string {
   ob_start();
   require __DIR__ . '/views/pagination.php';
   return ob_get_clean();
-}
-
-function disable_default_wp_search() {
-  if (!search_enabled()) {
-    // Search is currently disabled. Don't override any search functionality.
-    return;
-  }
-
-  add_action('parse_query', function(WP_Query $query) {
-    if ($query->is_search()) {
-      $query->is_search = false;
-      $query->set('sitka_search', true);
-    }
-  });
-
-  add_filter('template_include', function(string $template) {
-    // Use the theme override search template if there is one.
-    // Otherwise, fallback on the plugin template.
-    $searchTpl = get_template_directory() . '/sitka-insights/search.php';
-
-    // Hook up Timber fallback view, if supported.
-    $searchTpl = apply_filters('sitka/timber/search_template', $searchTpl);
-
-    global $wp_query;
-    if ($wp_query->get('sitka_search') && file_exists($searchTpl)) {
-      // Force a 200 OK response.
-      $wp_query->is_404 = false;
-      status_header(200);
-
-      // Override the current selected WP template.
-      return $searchTpl;
-    }
-
-    return $template;
-  });
-
-  add_filter('wp_title', function(string $title, $separator) {
-    global $wp_query;
-    if ($wp_query->get('sitka_search')) {
-      $searchTerms = $wp_query->get('search_terms') ?: [];
-
-      $title = sprintf(
-        'Search: %s %s %s',
-        implode(' ', $searchTerms),
-        trim($separator) ?: '|',
-        get_bloginfo('name')
-      );
-    }
-    return $title;
-  }, 10, 2);
 }
 
 function enqueue_scripts() {
