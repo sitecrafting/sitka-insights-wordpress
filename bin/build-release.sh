@@ -135,7 +135,7 @@ function create_github_release() {
       fi
 
       echo 'pushing latest changes and tags...'
-      git push origin master
+      git push origin main
       git push --tags
       hub release create $prerelease_opt -a "$2" -a "$3" -e "$1"
     else
