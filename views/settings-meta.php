@@ -1,4 +1,5 @@
-<form name="sitka-insights-settings" method="post">
+<form name="sitka-insights-settings" method="post" autofill="false">
+  <h3>Search Settings</h3>
   <div class="sitka-field sitka-field--flex">
     <div class="sitka-field__label">
       <label for="sitka_api_key"><b>API Key</b></label>
@@ -10,29 +11,35 @@
 
   <div class="sitka-field sitka-field--flex">
     <div class="sitka-field__label">
-      <label for="sitka_collection_id"><b>Collection ID</b></label>
+      <label for="sitka_collection_id"><b>Engine ID</b></label>
     </div>
     <div class="sitka-field__input">
       <input type="text" id="sitka_collection_id" name="sitka_collection_id" value="<?= $data['sitka_collection_id'] ?>">
     </div>
   </div>
 
-  <?php // TODO: configure a radio toggle between Staging/Live environments ?>
   <div class="sitka-field sitka-field--flex">
     <div class="sitka-field__label">
-      <label for="sitka_base_uri"><b>Base URI</b></label>
+      <label><b>Environment</b></label>
     </div>
     <div class="sitka-field__input">
-      <input type="text" id="sitka_base_uri" name="sitka_base_uri" value="<?= $data['sitka_base_uri'] ?>">
+      <div>
+        <input type="radio" id="env-prd" name="sitka_environment" value="production" <?= $data['sitka_environment'] === 'production' ? 'checked' : '' ?>>
+        <label for="env-prd">Production</label>
+      </div>
+      <div>
+        <input type="radio" id="env-stg" name="sitka_environment" value="staging" <?= $data['sitka_environment'] === 'staging' ? 'checked' : '' ?>>
+        <label for="env-stg">Staging</label>
+      </div>
     </div>
   </div>
 
   <div class="sitka-field">
-    <h3>Override WP Search</h3>
-    <p>Use this shortcode on any page:</p>
-    <textarea class="sitka-shortcode-text" disabled>[sitka_search]</textarea>
+    <p>Please insert this shortcode on the page where you would like search results to appear.</p>
+    <textarea id="sitka-shortcode" class="sitka-shortcode-text" disabled>[sitka_search]</textarea>
     <button type="button" class="button button-secondary sitka-shortcode-copy">Copy to clipboard</button>
-    <p>Unless you have custom-built an integration, for your theme's normal search form to work, you must enable one of the following options:</p>
+    <br>
+    <br>
     <p>
       <input
         type="radio"
@@ -52,7 +59,7 @@
         value="<?= SITKA_OVERRIDE_METHOD_SHORTCODE ?>"
         <?= $searchRedirectEnabled ? 'checked' : '' ?>
       />
-      <label for="sitka-search-shortcode"><b>Redirect searches to a specific page (Recommended)</b></label>
+      <label for="sitka-search-shortcode"><b>Enable Sitka Search and redirect searches to the page where you added the shortcode above. (Recommended)</b></label>
     </p>
     <p class="sitka-redirect-url-field" <?= $searchRedirectEnabled ? '' : 'style="display:none"' ?>>
       <label for="sitka-search-page-redirect"><b>Redirect searches to:</b></label>
@@ -63,7 +70,6 @@
         value="<?= $data['sitka_search_redirect'] ?>"
         placeholder="/search"
       />
-      <em>Do not include "?" or else redirects may not work properly. The page you specify here must contain the shortcode above.</em>
     </p>
   </div>
   <script>

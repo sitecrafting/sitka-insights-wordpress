@@ -12,11 +12,15 @@
 }
 .sitka-field input[type=text] {
   width: 100%;
+  max-width: 25em;
 }
 textarea.sitka-shortcode-text {
+  height: 2em;
+  width: 16ch;
+  padding-top: 2px;
+  width: 16ch;
   color: black;
   font-weight: 700;
   border: none;
-  height: 2em;
-  width: 16ch;
+  resize: none;
 }
