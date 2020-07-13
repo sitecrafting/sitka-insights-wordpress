@@ -7,6 +7,7 @@
  * Author: SiteCrafting, Inc. <hello@sitecrafting.com>
  * Author URI: https://www.sitecrafting.com/
  * Version: 2.0.0
+ * Requires PHP: 7.1
  */
 
 // no script kiddiez
@@ -51,8 +52,21 @@ add_filter('sitka/api/client', function() {
   return $client ?: new Client([
     'key'        => get_option('sitka_api_key'),
     'collection' => get_option('sitka_collection_id'),
-    'baseUri'    => get_option('sitka_base_uri'),
+    'baseUri'    => apply_filters('sitka/api/base_uri', ''),
   ]);
+});
+
+add_filter('sitka/api/base_uri', function() {
+  $env  = get_option('sitka_environment');
+  $uris = [
+    'production' => 'https://prd.search-api-gateway.aws.gearlabnw.net',
+    'staging'    => 'https://stg.search-api-gateway.aws.gearlabnw.net',
+  ];
+
+  $uri  = $uris[$env] ?? $uris['production'];
+  debug($uri);
+
+  return $uri;
 });
 
 
@@ -65,8 +79,9 @@ add_action('admin_menu', function() {
   $page = AdminPage::add_options_page([
     'option_keys' => [
       'sitka_api_key',
+      'sitka_site_id',
       'sitka_collection_id',
-      'sitka_base_uri',
+      'sitka_environment',
       'sitka_search_enabled',
       'sitka_search_redirect',
     ],
