@@ -74,7 +74,6 @@ add_filter('sitka/feedback/embed_uri', function() {
     'production' => 'https://prd.search-dashboard.aws.gearlabnw.net/feedback/embed/',
     'staging'    => 'https://stg.search-dashboard.aws.gearlabnw.net/feedback/embed/',
   ];
-
   $uri  = $uris[$env] ?? $uris['production'];
 
   return $uri;
