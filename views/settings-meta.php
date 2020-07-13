@@ -1,4 +1,6 @@
 <form name="sitka-insights-settings" method="post" autofill="false">
+  <p><span class="dashicons dashicons-editor-help"></span>Not sure where to find your Site ID, API Key, or Engine ID? <a href="https://dashboard.sitkainsights.com/embed/install">Get step-by-step instructions</a>.</p>
+
   <h3>General Settings</h3>
   <div class="sitka-field sitka-field--flex">
     <div class="sitka-field__label">
@@ -6,7 +8,7 @@
     </div>
     <div class="sitka-field__input">
       <input type="text" id="sitka_site_id" name="sitka_site_id" value="<?= $data['sitka_site_id'] ?>">
-      <p><span class="dashicons dashicons-editor-help"></span>Not sure where to find your Site ID? <a href="https://dashboard.sitkainsights.com/embed/install">Get step-by-step instructions</a>.</p>
+      <p>Enter your site ID to enable additional features likes polls and alerts.</p>
     </div>
   </div>
 
