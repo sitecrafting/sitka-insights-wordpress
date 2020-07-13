@@ -63,7 +63,18 @@ add_filter('sitka/api/base_uri', function() {
   ];
 
   $uri  = $uris[$env] ?? $uris['production'];
-  debug($uri);
+
+  return $uri;
+});
+
+add_filter('sitka/feedback/embed_uri', function() {
+  $env  = get_option('sitka_environment');
+  $uris = [
+    'production' => 'https://prd.search-dashboard.aws.gearlabnw.net/feedback/embed/',
+    'staging'    => 'https://stg.search-dashboard.aws.gearlabnw.net/feedback/embed/',
+  ];
+
+  $uri  = $uris[$env] ?? $uris['production'];
 
   return $uri;
 });
@@ -209,5 +220,17 @@ add_action('init', function() {
       wp_redirect($dest . '?' . http_build_query($params));
       exit;
     }
+  });
+
+
+  /*
+   * Add the Sitka Insights global embed script.
+   * This handles polls, alerts, and other frontend functionality.
+   */
+  add_action('wp_footer', function() {
+    echo apply_filters('sitka/render', 'global-embed.js.php', [
+      'site_id'      => get_option('sitka_site_id'),
+      'feedback_uri' => apply_filters('sitka/feedback/embed_uri', ''),
+    ]);
   });
 });
