@@ -6,6 +6,7 @@
     </div>
     <div class="sitka-field__input">
       <input type="text" id="sitka_site_id" name="sitka_site_id" value="<?= $data['sitka_site_id'] ?>">
+      <p><span class="dashicons dashicons-editor-help"></span>Not sure where to find your Site ID? <a href="https://dashboard.sitkainsights.com/embed/install">Get step-by-step instructions</a>.</p>
     </div>
   </div>
 
