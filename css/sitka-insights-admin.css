@@ -10,6 +10,9 @@
 .sitka-field__input {
   width: 80%;
 }
+.sitka-field__env-option {
+  margin-bottom: 0.5em;
+}
 .sitka-field input[type=text] {
   width: 100%;
   max-width: 25em;

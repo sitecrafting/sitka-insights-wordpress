@@ -33,11 +33,11 @@
       <label><b>Environment</b></label>
     </div>
     <div class="sitka-field__input">
-      <div>
+      <div class="sitka-field__env-option">
         <input type="radio" id="env-prd" name="sitka_environment" value="production" <?= $data['sitka_environment'] === 'production' ? 'checked' : '' ?>>
         <label for="env-prd">Production</label>
       </div>
-      <div>
+      <div class="sitka-field__env-option">
         <input type="radio" id="env-stg" name="sitka_environment" value="staging" <?= $data['sitka_environment'] === 'staging' ? 'checked' : '' ?>>
         <label for="env-stg">Staging</label>
       </div>
