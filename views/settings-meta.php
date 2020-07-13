@@ -1,4 +1,14 @@
 <form name="sitka-insights-settings" method="post" autofill="false">
+  <h3>General Settings</h3>
+  <div class="sitka-field sitka-field--flex">
+    <div class="sitka-field__label">
+      <label for="sitka_site_id"><b>Site ID</b></label>
+    </div>
+    <div class="sitka-field__input">
+      <input type="text" id="sitka_site_id" name="sitka_site_id" value="<?= $data['sitka_site_id'] ?>">
+    </div>
+  </div>
+
   <h3>Search Settings</h3>
   <div class="sitka-field sitka-field--flex">
     <div class="sitka-field__label">

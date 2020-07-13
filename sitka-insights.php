@@ -78,6 +78,7 @@ add_action('admin_menu', function() {
   $page = AdminPage::add_options_page([
     'option_keys' => [
       'sitka_api_key',
+      'sitka_site_id',
       'sitka_collection_id',
       'sitka_environment',
       'sitka_search_enabled',
