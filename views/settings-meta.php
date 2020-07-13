@@ -65,16 +65,6 @@
       />
       <em>Do not include "?" or else redirects may not work properly. The page you specify here must contain the shortcode above.</em>
     </p>
-    <p>
-      <input
-        type="radio"
-        id="sitka-search-timber"
-        name="sitka_search_enabled"
-        value="<?= SITKA_OVERRIDE_METHOD_TIMBER ?>"
-        <?= $data['sitka_search_enabled'] === SITKA_OVERRIDE_METHOD_TIMBER ? 'checked' : '' ?>
-      />
-      <label for="sitka-search-timber"><b>Override default WordPress search template (Advanced - requires Timber plugin, or custom coding)</b></label>
-    </p>
   </div>
   <script>
     jQuery(function($){
