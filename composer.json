@@ -3,7 +3,7 @@
   "description": "Integrate your WordPress site with the Sitka Insights platform",
   "type": "wordpress-plugin",
   "require": {
-    "php": ">=7.1",
+    "php": ">=7.3",
     "composer/installers": "~1.0",
     "sitecrafting/gearlab-tools-php": "v2.0.0-rc.01"
   },
