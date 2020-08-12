@@ -38,7 +38,7 @@ $searchQuery = stripslashes($data['query']) ?? '';
         ])) ?>
 
       <?php endforeach; ?>
-    <?php else : ?>
+    <?php elseif (!empty($searchQuery)) : ?>
 
       <p><?= apply_filters(
         'sitka/search/no_results_message',
