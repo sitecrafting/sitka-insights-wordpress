@@ -8,7 +8,9 @@ Integrate your WordPress site seamlessly with the Sitka Insights suite.
 
 ### Installing Manually
 
-Download the .zip archive of the latest release and place the extracted directory in `wp-content/plugins`. Activate the plugin from the WP Admin as you normally would.
+Go to the GitHub [releases page](https://github.com/sitecrafting/sitka-insights-wordpress/releases/) and download the .zip archive of the latest release. Make sure you download the release archive, **not** the source code archive. For example, if the latest release is called `v2.x.x`, click the download link that says **sitka-insights-v2.x.x.zip**. (You can also use the `tar.gz` archive if you want - they are the same code.)
+
+Once downloaded and unzipped, place the extracted directory in `wp-content/plugins`. Activate the plugin from the WP Admin as you normally would.
 
 ### Installing via Composer
 
