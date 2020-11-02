@@ -155,7 +155,7 @@ wp option get sitka_base_uri
 wp option get sitka_enabled
 wp option set sitka_api_key supersecure
 wp option set sitka_collection_id 12345
-wp option https://prd.search-api-gateway.aws.sitkanw.net
+wp option set sitka_environment production
 wp option set sitka_enabled 1
 ```
 
