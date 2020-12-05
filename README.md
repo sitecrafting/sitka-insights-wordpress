@@ -71,7 +71,7 @@ wp_header();
 <?php if (empty($response['results'])) : ?>
   <p>Sorry, no results for <?= $response['originalQueryPhrase'] ?? ' that search term.' ?></p>
 <?php else : ?>
-  foreach (($response['results'] ?? []) as $result) : ?>
+  <?php foreach (($response['results'] ?? []) as $result) : ?>
     <article class="search-result">
       <h1><a href="<?= $result['url'] ?>"><?= $result['title'] ?></a></h1>
       <p><?= $result['snippet'] ?></p>
