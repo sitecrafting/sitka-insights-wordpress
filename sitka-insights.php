@@ -41,10 +41,7 @@ define('SITKA_PLUGIN_VIEW_PATH', __DIR__ . '/views');
 
 define('SITKA_OVERRIDE_METHOD_SHORTCODE', 'shortcode');
 
-/*
- * Add the main hook for getting an API client instance
- */
-add_filter('sitka/api/client', function() {
+function sitka_default_client() : Client {
   // avoid instantiating the same object twice
   static $client;
 
@@ -54,7 +51,12 @@ add_filter('sitka/api/client', function() {
     'collection' => get_option('sitka_collection_id'),
     'baseUri'    => apply_filters('sitka/api/base_uri', ''),
   ]);
-});
+}
+
+/*
+ * Add the main hook for getting an API client instance
+ */
+add_filter('sitka/api/client', 'sitka_default_client');
 
 add_filter('sitka/api/base_uri', function() {
   $env  = get_option('sitka_environment');
