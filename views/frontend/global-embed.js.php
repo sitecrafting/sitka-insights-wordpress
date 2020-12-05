@@ -1,7 +1,7 @@
 <?php // Check that the WP Admin user specified a Site ID, otherwise log a console error.
 if (empty($data['site_id'])) : ?>
 <script type="text/javascript">console.error(
-  'No Sitka Insights Site ID detected! Please specify one at <?= WP_SITEURL ?>/wp-admin/options-general.php?page=sitka-insights'
+  'No Sitka Insights Site ID detected! Please specify one at <?= get_home_url(null, '/wp-admin/options-general.php?page=sitka-insights') ?>'
 );</script>
 <?php else : ?>
 <!-- Sitka Insights global embed -->
