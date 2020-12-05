@@ -43,6 +43,27 @@ function paginate_links(array $response) : string {
   return ob_get_clean();
 }
 
+/**
+ * Given a Sitka response array, return a human-readable string of the form:
+ * "X-Y of Z results" where:
+ *
+ * * X is resStart
+ * * Y is resEnd
+ * * Z is total
+ *
+ * The given array MUST contain the above keys.
+ * @param array $response the Sitka response array
+ * @return string the human-readable string
+ */
+function enumerate_page(array $response) : string {
+  return sprintf(
+    '%d-%d of %d',
+    $response['resStart'],
+    $response['resEnd'],
+    $response['total']
+  );
+}
+
 function enqueue_scripts() {
   // enqueue dependencies
   wp_enqueue_script('jquery-ui-core');
