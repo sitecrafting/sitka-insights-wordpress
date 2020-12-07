@@ -61,8 +61,8 @@ add_filter('sitka/api/client', 'sitka_default_client');
 add_filter('sitka/api/base_uri', function() {
   $env  = get_option('sitka_environment');
   $uris = [
-    'production' => 'https://prd.search-api-gateway.aws.gearlabnw.net',
-    'staging'    => 'https://stg.search-api-gateway.aws.gearlabnw.net',
+    'production' => 'https://api.sitkainsights.com',
+    'staging'    => 'https://stg-api.sitkainsights.com',
   ];
 
   $uri  = $uris[$env] ?? $uris['production'];
@@ -73,8 +73,8 @@ add_filter('sitka/api/base_uri', function() {
 add_filter('sitka/feedback/embed_uri', function() {
   $env  = get_option('sitka_environment');
   $uris = [
-    'production' => 'https://prd.search-dashboard.aws.gearlabnw.net/feedback/embed/',
-    'staging'    => 'https://stg.search-dashboard.aws.gearlabnw.net/feedback/embed/',
+    'production' => 'https://api.sitka-insights.com/feedback/embed/',
+    'staging'    => 'https://stg-api.sitka-insights.com/feedback/embed/',
   ];
   $uri  = $uris[$env] ?? $uris['production'];
 
