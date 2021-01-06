@@ -95,7 +95,7 @@ $count = 25;
 // Note that we can't use $paged here, because WordPress core won't
 // necessarily report the same number of pages as Sitka, leading to 404s
 // in cases where Sitka has more result pages than WP would.
-$offset = ($_GET['page_num'] ?? 1) - 1;
+$page_offset = ($_GET['page_num'] ?? 1) - 1;
 
 
 // Call out to the API
@@ -106,7 +106,7 @@ try {
     // Tell the API how many results we want per page.
     'resLength' => $count,
     // Tell the API which page of results we want.
-    'resOffset' => $offset * $count,
+    'resOffset' => $page_offset * $count,
     // Tell the API to only return results of a certain type
     'metaKey'   => $_GET['my_content_type'],
   ]);
@@ -213,53 +213,53 @@ $paginator->page_markers($url_params);
 // result:
 [
   [
-    'text' => 'Previous',
-    'url' => '?s=doctor&page_num=3',
+    'text'     => 'Previous',
+    'url'      => '?s=doctor&page_num=3',
     'previous' => true,
   ],
   [
     'page_num' => 1,
-    'current' => false,
-    'url' => '?s=doctor&page_num=1',
+    'current'  => false,
+    'url'      => '?s=doctor&page_num=1',
   ],
   [
     'page_num' => 2,
-    'current' => false,
-    'url' => '?s=doctor&page_num=2',
+    'current'  => false,
+    'url'      => '?s=doctor&page_num=2',
   ],
   [
     'page_num' => 3,
-    'current' => false,
-    'url' => '?s=doctor&page_num=3',
+    'current'  => false,
+    'url'      => '?s=doctor&page_num=3',
   ],
   [
     'page_num' => 4,
-    'current' => true,
-    'url' => '?s=doctor&page_num=4',
+    'current'  => true,
+    'url'      => '?s=doctor&page_num=4',
   ],
   [
     'page_num' => 5,
-    'current' => false,
-    'url' => '?s=doctor&page_num=5',
+    'current'  => false,
+    'url'      => '?s=doctor&page_num=5',
   ],
   [
     'page_num' => 6,
-    'current' => false,
-    'url' => '?s=doctor&page_num=6',
+    'current'  => false,
+    'url'      => '?s=doctor&page_num=6',
   ],
   [
-    'text' => '...',
-    'filler' => true,
+    'text'     => '...',
+    'filler'   => true,
   ],
   [
-    'page_num' => 28,
-    'current' => false,
-    'url' => '?s=doctor&page_num=28',
+    'page_num' => 25,
+    'current'  => false,
+    'url'      => '?s=doctor&page_num=25',
   ],
   [
-    'text' => 'Next',
-    'url' => '?s=doctor&page_num=5',
-    'next' => true,
+    'text'     => 'Next',
+    'url'      => '?s=doctor&page_num=5',
+    'next'     => true,
   ],
 ]
 ```
