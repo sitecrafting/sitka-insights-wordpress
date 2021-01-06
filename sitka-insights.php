@@ -73,8 +73,8 @@ add_filter('sitka/api/base_uri', function() {
 add_filter('sitka/feedback/embed_uri', function() {
   $env  = get_option('sitka_environment');
   $uris = [
-    'production' => 'https://api.sitka-insights.com/feedback/embed/',
-    'staging'    => 'https://stg-api.sitka-insights.com/feedback/embed/',
+    'production' => 'https://api.sitkainsights.com/feedback/embed',
+    'staging'    => 'https://stg-api.sitkainsights.com/feedback/embed',
   ];
   $uri  = $uris[$env] ?? $uris['production'];
 
