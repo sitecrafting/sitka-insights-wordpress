@@ -266,7 +266,7 @@ $paginator->page_markers($url_params);
 
 #### Customizing pagination parameters
 
-If the template markup is fine but you need to affect the pagination *logic* itself, you probably want the `sitka/pagination/params` filter. This hook can be used to customize things like:
+If the template markup is fine but you need to affect the pagination *logic* itself, you probably want the `sitka/pagination/construct` filter, so named because it controls the array passed to the `Sitka\Plugin\Paginator::__construct` method. This hook can be used to customize things like:
 
 * the number of "nearby" or "adjacent" pages next to the current page number to display (default is 2) before a "filler" marker with a `…` is displayed
 * the total page count and current page number, in case you need to override those for some reason
@@ -274,14 +274,12 @@ If the template markup is fine but you need to affect the pagination *logic* its
 Here's an example of overriding the number adjacent pages rendered:
 
 ```php
-add_filter('sitka/pagination/params', function(array $pagination_data) {
-  return array_merge($pagination_data, [
+add_filter('sitka/pagination/construct', function(array $ctor_args) {
+  return array_merge($ctor_args, [
     'display_adjacent' => 3, // override the default of 2
   ]);
 });
 ```
-
-Note that the term "params" named in the hook refer specifically to the args used to construct the Paginator object itself. This has nothing to do with the `url_params` used to create markers and prev/next links.
 
 ### Search Autocomplete
 

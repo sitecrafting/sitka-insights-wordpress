@@ -34,7 +34,7 @@ function shortcode_redirect_enabled() : bool {
 
 function paginate_links(array $response) : string {
   $params = apply_filters(
-    'sitka/pagination/params',
+    'sitka/pagination/construct',
     Paginator::params_from_response($response)
   );
 
