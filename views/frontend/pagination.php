@@ -1,4 +1,11 @@
-<?php if ($paginator->page_count() > 1) : ?>
+<?php
+
+$params    = $data['url_params'];
+$paginator = $data['paginator'];
+$markers   = $paginator->page_markers($params);
+
+/* START MARKUP */
+if ($paginator->page_count() > 1) : ?>
   <div class="pagination">
     <?php foreach ($markers as $marker) : ?>
       <?php if (!empty($marker['previous'])) : ?>

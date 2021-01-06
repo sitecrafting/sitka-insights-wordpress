@@ -33,14 +33,18 @@ function shortcode_redirect_enabled() : bool {
 }
 
 function paginate_links(array $response) : string {
-  $paginator = Paginator::from_search_response($response);
-  // TODO filters for pagination params
-  $markers = $paginator->page_markers($_GET);
-  $params = $_GET;
+  $params = apply_filters(
+    'sitka/pagination/params',
+    Paginator::params_from_response($response)
+  );
 
-  ob_start();
-  require __DIR__ . '/views/pagination.php';
-  return ob_get_clean();
+  $paginator = new Paginator();
+  $paginator->set_pagination($params);
+
+  return apply_filters('sitka/render', 'pagination.php', [
+    'paginator'  => $paginator,
+    'url_params' => $_GET,
+  ]);
 }
 
 /**
