@@ -6,7 +6,7 @@
  * Plugin URI: https://www.sitkainsights.com
  * Author: SiteCrafting, Inc. <hello@sitecrafting.com>
  * Author URI: https://www.sitecrafting.com/
- * Version: 2.2.1
+ * Version: 2.3.0
  * Requires PHP: 7.1
  */
 
@@ -73,8 +73,8 @@ add_filter('sitka/api/base_uri', function() {
 add_filter('sitka/feedback/embed_uri', function() {
   $env  = get_option('sitka_environment');
   $uris = [
-    'production' => 'https://api.sitka-insights.com/feedback/embed/',
-    'staging'    => 'https://stg-api.sitka-insights.com/feedback/embed/',
+    'production' => 'https://api.sitkainsights.com/feedback/embed',
+    'staging'    => 'https://stg-api.sitkainsights.com/feedback/embed',
   ];
   $uri  = $uris[$env] ?? $uris['production'];
 

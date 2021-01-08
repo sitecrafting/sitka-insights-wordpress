@@ -77,7 +77,6 @@ trait Paginated {
       ];
     }
 
-    // TODO current
     foreach (range(1, $this->page_count()) as $page) {
       // Is this number within the acceptable range for display?
       $diff   = abs($page - $this->current_page_number());

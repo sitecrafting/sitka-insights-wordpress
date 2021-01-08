@@ -95,7 +95,7 @@ $count = 25;
 // Note that we can't use $paged here, because WordPress core won't
 // necessarily report the same number of pages as Sitka, leading to 404s
 // in cases where Sitka has more result pages than WP would.
-$pageOffset = ($_GET['page_num'] ?? 1) - 1;
+$page_offset = ($_GET['page_num'] ?? 1) - 1;
 
 
 // Call out to the API
@@ -106,7 +106,7 @@ try {
     // Tell the API how many results we want per page.
     'resLength' => $count,
     // Tell the API which page of results we want.
-    'resOffset' => $pageOffset * $count,
+    'resOffset' => $page_offset * $count,
     // Tell the API to only return results of a certain type
     'metaKey'   => $_GET['my_content_type'],
   ]);
@@ -114,7 +114,6 @@ try {
   error_log($e->getMessage());
   $response = [];
 }
-
 
 // Render results
 foreach (($response['results'] ?? []) as $result) : ?>
@@ -125,6 +124,161 @@ foreach (($response['results'] ?? []) as $result) : ?>
 <?php endforeach; ?>
 
 <?= Sitka\paginate_links($response) ?>
+```
+
+### Theme overrides
+
+When rendering frontend code, such as markup for search results, Sitka checks the root directory of your theme (where your `style.css` lives) for a special `sitka-insights` folder. If a given file, for example `search-result.php`, exists within this folder, Sitka renders that version instead. Otherwise, it renders its own [default implementation](https://github.com/sitecrafting/sitka-insights-wordpress/tree/main/views/frontend).
+
+Sitka works out of the box without any theme overrides, but if you need to customize the markup rendered, this is how to do it.
+
+There are currently three frontend files you can override from your theme:
+
+* `search-result.php` renders a single search result
+* `search-results.php` renders all search results, wrapped in a container element.
+* `pagination.php` renders the pagination 
+
+When you do this, Sitka will `require` your theme file, setting a variable called `$data` which is an array of all the data available to you inside your override template. This will vary between templates.
+
+### Pagination
+
+Sitka implements its own logic for paginating results that, unlike the core `paginate_links()` function, is not coupled to WordPress's internal query logic. In fact, it is much simpler to use than the built-in WordPress function.
+
+Here is the default return value (**not** echoed output) of the function when there are ten pages of results (and the user is on page 1):
+
+```html
+<div class="pagination">
+  <span aria-current="page" class="page-numbers current">1</span>    
+  <a class="page-numbers" href="?s=doctor&amp;page_num=2">2</a>
+  <a class="page-numbers" href="?s=doctor&amp;page_num=3">3</a>
+  <span class="page-numbers dots">…</span>
+  <a class="page-numbers" href="?s=doctor&amp;page_num=10">10</a>
+  <a class="page-numbers next" href="?s=doctor&amp;page_num=2" rel="next">Next</a>
+</div>
+```
+
+#### Customizing pagination markup
+
+You can override this markup using a standard Theme Override (see the previous section about this).
+
+Here is the default implementation:
+
+```php
+<?php
+
+$url_params    = $data['url_params']; // this is just $_GET by default
+$paginator = $data['paginator']; // A Sitka\Plugin\Paginator instance
+$markers   = $paginator->page_markers($url_params);
+
+/* START MARKUP */
+if ($paginator->page_count() > 1) : ?>
+  <div class="pagination">
+    <?php foreach ($markers as $marker) : ?>
+      <?php if (!empty($marker['previous'])) : ?>
+        <a class="page-numbers prev" href="<?= $paginator->previous_page_url($url_params) ?>" rel="prev">Previous</a>
+      <?php endif; ?>
+
+      <?php if (!empty($marker['current'])) : ?>
+        <span aria-current="page" class="page-numbers current"><?= $marker['page_num'] ?></span>
+      <?php elseif (!empty($marker['filler'])) : ?>
+        <span class="page-numbers dots">…</span>
+      <?php elseif (!empty($marker['page_num'])) : ?>
+        <a class="page-numbers" href="<?= $marker['url'] ?>"><?= $marker['page_num'] ?></a>
+      <?php endif ?>
+
+      <?php if (!empty($marker['next'])) : ?>
+        <a class="page-numbers next" href="<?= $paginator->next_page_url($url_params) ?>" rel="next">Next</a>
+      <?php endif; ?>
+    <?php endforeach; ?>
+  </div>
+<?php endif; ?>
+```
+
+`$paginator` is an object that implements most of the complex logic for which prev/next/number links, or "markers," should be displayed. Note that almost all the information you need about each marker lives inside the marker array itself.
+
+Crucially, remember to always pass the `$url_params` array to the Paginator methods `page_markers()`, `previous_page_url()` and `next_page_url()`. Otherwise your links will be wrong.
+
+Here's an example markers array, returned when we're on **page 4** of the results, with **25 total** pages:
+
+```
+// NOTE: Normally you are simply passed the $url_params array; you typically
+// won't build it yourself. This is just for demonstration purposes.
+$url_params = [
+  's'        => 'doctor',
+  'page_num' => 4,
+];
+
+$paginator->page_markers($url_params);
+
+// result:
+[
+  [
+    'text'     => 'Previous',
+    'url'      => '?s=doctor&page_num=3',
+    'previous' => true,
+  ],
+  [
+    'page_num' => 1,
+    'current'  => false,
+    'url'      => '?s=doctor&page_num=1',
+  ],
+  [
+    'page_num' => 2,
+    'current'  => false,
+    'url'      => '?s=doctor&page_num=2',
+  ],
+  [
+    'page_num' => 3,
+    'current'  => false,
+    'url'      => '?s=doctor&page_num=3',
+  ],
+  [
+    'page_num' => 4,
+    'current'  => true,
+    'url'      => '?s=doctor&page_num=4',
+  ],
+  [
+    'page_num' => 5,
+    'current'  => false,
+    'url'      => '?s=doctor&page_num=5',
+  ],
+  [
+    'page_num' => 6,
+    'current'  => false,
+    'url'      => '?s=doctor&page_num=6',
+  ],
+  [
+    'text'     => '...',
+    'filler'   => true,
+  ],
+  [
+    'page_num' => 25,
+    'current'  => false,
+    'url'      => '?s=doctor&page_num=25',
+  ],
+  [
+    'text'     => 'Next',
+    'url'      => '?s=doctor&page_num=5',
+    'next'     => true,
+  ],
+]
+```
+
+#### Customizing pagination parameters
+
+If the template markup is fine but you need to affect the pagination *logic* itself, you probably want the `sitka/pagination/construct` filter, so named because it controls the array passed to the `Sitka\Plugin\Paginator::__construct` method. This hook can be used to customize things like:
+
+* the number of "nearby" or "adjacent" pages next to the current page number to display (default is 2) before a "filler" marker with a `…` is displayed
+* the total page count and current page number, in case you need to override those for some reason
+
+Here's an example of overriding the number adjacent pages rendered:
+
+```php
+add_filter('sitka/pagination/construct', function(array $ctor_args) {
+  return array_merge($ctor_args, [
+    'display_adjacent' => 3, // override the default of 2
+  ]);
+});
 ```
 
 ### Search Autocomplete
