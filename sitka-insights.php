@@ -6,7 +6,7 @@
  * Plugin URI: https://www.sitkainsights.com
  * Author: SiteCrafting, Inc. <hello@sitecrafting.com>
  * Author URI: https://www.sitecrafting.com/
- * Version: 2.3.0
+ * Version: 2.3.3
  * Requires PHP: 7.1
  */
 
