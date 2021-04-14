@@ -61,7 +61,7 @@ function paginate_links(array $response) : string {
  */
 function enumerate_page(array $response) : string {
   return sprintf(
-    '%d-%d of %d',
+    '%s-%s of %s',
     number_format($response['resStart'] ?? 0),
     number_format($response['resEnd'] ?? 0),
     number_format($response['total'] ?? 0)
