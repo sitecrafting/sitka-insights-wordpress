@@ -57,7 +57,7 @@
         <label for="sitka_search_instead_enabled">Enable</label>
       </div>
       <div class="sitka-field__dym-option">
-        <input type="radio" id="sitka_search_instead_enabled" name="sitka_search_instead_enabled" value="disabled"<?= $data['sitka_search_instead_enabled'] === 'disabled' ? 'checked' : '' ?>>
+        <input type="radio" id="sitka_search_instead_enabled" name="sitka_search_instead_enabled" value="disabled"<?= $data['sitka_search_instead_enabled'] !== 'enabled' ? 'checked' : '' ?>>
         <label for="sitka_search_instead_enabled">Disable</label>
       </div>
         <p>When enabled, Sitka will present a link to override automatic typo correction.</p>
