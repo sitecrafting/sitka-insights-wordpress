@@ -47,6 +47,24 @@
     </div>
   </div>
 
+  <div class="sitka-field sitka-field--flex">
+    <div class="sitka-field__label">
+      <label><b>Enable “Search instead” for search term</b></label>
+    </div>
+    <div class="sitka-field__input">
+      <div class="sitka-field__dym-option">
+        <input type="radio" id="sitka_search_instead_enabled" name="sitka_search_instead_enabled" value="enabled"<?= $data['sitka_search_instead_enabled'] === 'enabled' ? 'checked' : '' ?>>
+        <label for="sitka_search_instead_enabled">Enable</label>
+      </div>
+      <div class="sitka-field__dym-option">
+        <input type="radio" id="sitka_search_instead_enabled" name="sitka_search_instead_enabled" value="disabled"<?= $data['sitka_search_instead_enabled'] === 'disabled' ? 'checked' : '' ?>>
+        <label for="sitka_search_instead_enabled">Disable</label>
+      </div>
+        <p>When enabled, Sitka will present a link to override automatic typo correction.</p>
+    </div>
+  </div>
+
+  <h3>Add Shortcode To Page</h3>
   <div class="sitka-field">
     <p>Please insert this shortcode on the page where you would like search results to appear.</p>
     <textarea id="sitka-shortcode" class="sitka-shortcode-text" disabled>[sitka_search]</textarea>
