@@ -105,10 +105,11 @@ add_filter('sitka/search/params', function(array $params) : array {
   $offset  = ($pageNum - 1) * $count;
 
   return [
-    'query'     => apply_filters('sitka/search/query', $_GET['s'] ?? ''),
-    'resLength' => $count,
-    'resOffset' => $offset,
-    'metaTag'   => apply_filters('sitka/search/meta_tag', ''),
+    'query'        => apply_filters('sitka/search/query', $_GET['s'] ?? ''),
+    'resLength'    => $count,
+    'resOffset'    => $offset,
+    'metaTag'      => apply_filters('sitka/search/meta_tag', ''),
+    'literalQuery' => apply_filters('sitka/search/literal_query', ''),
   ];
 }, 10);
 

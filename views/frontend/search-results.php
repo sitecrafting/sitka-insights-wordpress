@@ -7,6 +7,9 @@
 $response    = $data['response'] ?? [];
 $post        = $data['post'] ?? $GLOBALS['post'] ?? null;
 $searchQuery = stripslashes($data['query']) ?? '';
+$originalQuery = $response['originalQueryPhrase'] ?? '';
+$supersedingSuggestion = $response['supersedingSuggestion'] ?? '';
+$didYouMeanOption = get_option('sitka_search_instead_enabled') ?? 'disabled';
 
 ?>
 <section class="sitka-search-form-container">
@@ -22,6 +25,14 @@ $searchQuery = stripslashes($data['query']) ?? '';
           placeholder="Enter keyword or phrase"
           title="Enter keyword or phrase"
         />
+        <?php if ($response['suggestionSupersededQuery']  && $didYouMeanOption == "enabled") : ?>
+          <div class="superseding-suggestion-container">
+            <p>
+              Showing results for <?= $supersedingSuggestion ?> </br> 
+              Search instead for <a href="<?= get_permalink($post) . "?sitka_search=" . $originalQuery . "&sitka_literal_query=1" ?>"><?= $originalQuery ?></a>
+            </p> 
+          </div>
+        <?php endif; ?>
         <button id="searchsubmit" type="submit" class="btn"><span>Search</span></button>
       </form>
     </div><!-- global-search -->

@@ -13,6 +13,9 @@
 .sitka-field__env-option {
   margin-bottom: 0.5em;
 }
+.sitka-field__dym-option {
+  margin-bottom: 0.5em;
+}
 .sitka-field input[type=text] {
   width: 100%;
   max-width: 25em;

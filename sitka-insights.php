@@ -96,6 +96,7 @@ add_action('admin_menu', function() {
       'sitka_environment',
       'sitka_search_enabled',
       'sitka_search_redirect',
+      'sitka_search_instead_enabled',
     ],
   ]);
   // Process any user updates
@@ -160,6 +161,7 @@ add_action('init', function() {
   $wp->add_query_var('sitka_search');
   $wp->add_query_var('sitka_meta_tag');
   $wp->add_query_var('sitka_page_num');
+  $wp->add_query_var('sitka_literal_query');
 
   add_shortcode('sitka_search', function($atts = []) {
     global $post;
@@ -176,6 +178,9 @@ add_action('init', function() {
     });
     add_filter('sitka/search/page_num_param', function() {
       return 'sitka_page_num';
+    });
+    add_filter('sitka/search/literal_query', function() {
+      return  get_query_var('sitka_literal_query');
     });
 
     $searchQuery = apply_filters('sitka/search/query', '');
