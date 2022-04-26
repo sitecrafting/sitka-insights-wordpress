@@ -25,6 +25,7 @@ class SitkaRestController {
     register_rest_route(static::API_NAMESPACE, '/completions', [
       'methods' => 'GET',
       'callback' => [$this, 'completions_action'],
+      'permission_callback' => '__return_true'
     ]);
   }
 
