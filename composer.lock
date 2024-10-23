@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "368b5dc9ca4c3473643dfb92fce946ab",
+    "content-hash": "53242bbeb18e7477cb588970d25e8d5e",
     "packages": [
         {
             "name": "composer/installers",
@@ -608,16 +608,16 @@
         },
         {
             "name": "sitecrafting/gearlab-tools-php",
-            "version": "v2.0.0-rc.03",
+            "version": "dev-curated-results",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sitecrafting/gearlab-tools-php.git",
-                "reference": "eaa4419e28bffdd82bfada5ba9ef5ab8c80bd7df"
+                "reference": "282c6f29419cba8583214c01ff843b77898d9cf7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sitecrafting/gearlab-tools-php/zipball/eaa4419e28bffdd82bfada5ba9ef5ab8c80bd7df",
-                "reference": "eaa4419e28bffdd82bfada5ba9ef5ab8c80bd7df",
+                "url": "https://api.github.com/repos/sitecrafting/gearlab-tools-php/zipball/282c6f29419cba8583214c01ff843b77898d9cf7",
+                "reference": "282c6f29419cba8583214c01ff843b77898d9cf7",
                 "shasum": ""
             },
             "require": {
@@ -657,9 +657,9 @@
             ],
             "support": {
                 "issues": "https://github.com/sitecrafting/gearlab-tools-php/issues",
-                "source": "https://github.com/sitecrafting/gearlab-tools-php/tree/v2.0.0-rc.03"
+                "source": "https://github.com/sitecrafting/gearlab-tools-php/tree/curated-results"
             },
-            "time": "2024-10-11T22:20:31+00:00"
+            "time": "2024-10-23T14:00:52+00:00"
         },
         {
             "name": "symfony/console",
@@ -2980,7 +2980,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "sitecrafting/gearlab-tools-php": 5
+        "sitecrafting/gearlab-tools-php": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
