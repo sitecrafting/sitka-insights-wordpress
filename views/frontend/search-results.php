@@ -10,6 +10,8 @@ $searchQuery = stripslashes($data['query']) ?? '';
 $originalQuery = $response['originalQueryPhrase'] ?? '';
 $supersedingSuggestion = $response['supersedingSuggestion'] ?? '';
 $didYouMeanOption = get_option('sitka_search_instead_enabled') ?? 'disabled';
+$curatedResultsOption = get_option('sitka_search_curated_results_enabled') ?? 'disabled';
+$curatedResultsEnables = $response['curatedResultsEnabled'] ?? false;
 
 ?>
 <section class="sitka-search-form-container">
@@ -25,7 +27,7 @@ $didYouMeanOption = get_option('sitka_search_instead_enabled') ?? 'disabled';
           placeholder="Enter keyword or phrase"
           title="Enter keyword or phrase"
         />
-        <?php if ($response['suggestionSupersededQuery']  && $didYouMeanOption == "enabled") : ?>
+        <?php if (isset($response['suggestionSupersededQuery']) && $response['suggestionSupersededQuery']  && $didYouMeanOption == "enabled") : ?>
           <div class="superseding-suggestion-container">
             <p>
               Showing results for <?= $supersedingSuggestion ?> </br> 
@@ -38,12 +40,31 @@ $didYouMeanOption = get_option('sitka_search_instead_enabled') ?? 'disabled';
     </div><!-- global-search -->
   </div><!-- container -->
 </section>
+
+<?php if ($curatedResultsOption == "enabled" && $curatedResultsEnables && isset($response['curatedResults']) && !empty($response['curatedResults'])) { ?>
+  <section class="sitka-search-results-container curated-results">
+    <div class="container">
+      <h2> Curated results</h2>
+      <?php if (!empty($response['curatedResults'])) : ?>
+        <?php foreach ($response['curatedResults'] as $result) : ?>
+
+          <?= apply_filters('sitka/render', 'curated-result.php', array_merge($data, [
+            'curated_result' => $result,
+          ])) ?>
+
+        <?php endforeach; ?>
+      <?php endif; ?>
+
+    </div>
+  </section>
+<?php } ?>
+
 <section class="sitka-search-results-container">
   <div class="container">
 
     <?php if (!empty($response['results'])) : ?>
       <?php foreach ($response['results'] as $result) : ?>
-
+      
         <?= apply_filters('sitka/render', 'search-result.php', array_merge($data, [
           'result' => $result,
         ])) ?>

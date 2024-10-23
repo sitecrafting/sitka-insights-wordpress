@@ -40,10 +40,13 @@
         <input type="radio" id="env-prd" name="sitka_environment" value="production" <?= $data['sitka_environment'] === 'production' ? 'checked' : '' ?>>
         <label for="env-prd">Production</label>
       </div>
-      <div class="sitka-field__env-option">
-        <input type="radio" id="env-stg" name="sitka_environment" value="staging" <?= $data['sitka_environment'] === 'staging' ? 'checked' : '' ?>>
-        <label for="env-stg">Staging</label>
-      </div>
+      <?php 
+      // Option removed per request from Phil Price
+      //  <div class="sitka-field__env-option">
+      //   <input type="radio" id="env-stg" name="sitka_environment" value="staging" <?= $data['sitka_environment'] === 'staging' ? 'checked' : '' ?>>
+      //   <label for="env-stg">Staging</label>
+      // </div> 
+      ?>
     </div>
   </div>
 
@@ -57,13 +60,29 @@
         <label for="sitka_search_instead_enabled">Enable</label>
       </div>
       <div class="sitka-field__dym-option">
-        <input type="radio" id="sitka_search_instead_enabled" name="sitka_search_instead_enabled" value="disabled"<?= $data['sitka_search_instead_enabled'] !== 'enabled' ? 'checked' : '' ?>>
-        <label for="sitka_search_instead_enabled">Disable</label>
+        <input type="radio" id="sitka_search_instead_disabled" name="sitka_search_instead_enabled" value="disabled"<?= $data['sitka_search_instead_enabled'] !== 'enabled' ? 'checked' : '' ?>>
+        <label for="sitka_search_instead_disabled">Disable</label>
       </div>
         <p>When enabled, Sitka will present a link to override automatic typo correction.</p>
     </div>
   </div>
 
+  <div class="sitka-field sitka-field--flex">
+    <div class="sitka-field__label">
+      <label><b>Include Curated Results on the search page</b></label>
+    </div>
+    <div class="sitka-field__input">
+      <div class="sitka-field__dym-option">
+        <input type="radio" id="sitka_search_curated_results_enabled" name="sitka_search_curated_results_enabled" value="enabled"<?= $data['sitka_search_curated_results_enabled'] === 'enabled' ? 'checked' : '' ?>>
+        <label for="sitka_search_curated_results_enabled">Enable</label>
+      </div>
+      <div class="sitka-field__dym-option">
+        <input type="radio" id="sitka_search_curated_results_disabled" name="sitka_search_curated_results_enabled" value="disabled"<?= $data['sitka_search_curated_results_enabled'] !== 'enabled' ? 'checked' : '' ?>>
+        <label for="sitka_search_curated_results_disabled">Disable</label>
+      </div>
+        <p>When enabled, curated result will appear in search results. Please note: This feature must first be enabled in the Sitka Dashboard.</p>
+    </div>
+  </div>
   <h3>Add Shortcode To Page</h3>
   <div class="sitka-field">
     <p>Please insert this shortcode on the page where you would like search results to appear.</p>
