@@ -11,6 +11,9 @@
 namespace Sitka\Plugin;
 
 trait Paginated {
+
+  protected $pagination;
+
   public function set_pagination(array $pagination) {
     $this->pagination = $pagination;
   }

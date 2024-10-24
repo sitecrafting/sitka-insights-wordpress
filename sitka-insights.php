@@ -97,6 +97,7 @@ add_action('admin_menu', function() {
       'sitka_search_enabled',
       'sitka_search_redirect',
       'sitka_search_instead_enabled',
+      'sitka_search_curated_results_enabled',
     ],
   ]);
   // Process any user updates
