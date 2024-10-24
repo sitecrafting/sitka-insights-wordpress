@@ -27,14 +27,9 @@ padding: 20px;
 }
 .curated-result-headline {
   margin-bottom: 0;
-  order: 1;
 }
-.curated-result-text {
-  order: 3;
-}
-.curated-result-link {
-  order: 2;
-}
+.curated-result-text {}
+.curated-result-link {}
 .curated-result-button {
   display: inline-block;
   align-items: center;
@@ -48,7 +43,6 @@ padding: 20px;
   color: #000;
   background: #00aeef;
   -webkit-appearance: none;
-  order: 4;
 }
 
 .curated-result-button:hover {
