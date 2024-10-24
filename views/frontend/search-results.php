@@ -43,19 +43,18 @@ $curatedResultsEnables = $response['curatedResultsEnabled'] ?? false;
 
 <?php if ($curatedResultsOption == "enabled" && $curatedResultsEnables && isset($response['curatedResults']) && !empty($response['curatedResults'])) { ?>
   <section class="sitka-search-results-container curated-results">
-    <div class="container">
-      <h2> Curated results</h2>
-      <?php if (!empty($response['curatedResults'])) : ?>
-        <?php foreach ($response['curatedResults'] as $result) : ?>
+  
+    <h2 class="sitka-curated-results-section-headline"> Recommended results</h2>
+    <?php if (!empty($response['curatedResults'])) : ?>
+      <?php foreach ($response['curatedResults'] as $result) : ?>
 
-          <?= apply_filters('sitka/render', 'curated-result.php', array_merge($data, [
-            'curated_result' => $result,
-          ])) ?>
+        <?= apply_filters('sitka/render', 'curated-result.php', array_merge($data, [
+          'curated_result' => $result,
+        ])) ?>
 
-        <?php endforeach; ?>
-      <?php endif; ?>
+      <?php endforeach; ?>
+    <?php endif; ?>
 
-    </div>
   </section>
 <?php } ?>
 
