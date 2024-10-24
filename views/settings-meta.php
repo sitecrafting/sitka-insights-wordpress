@@ -41,11 +41,12 @@
         <label for="env-prd">Production</label>
       </div>
       <?php 
-      // Option removed per request from Phil Price
-      //  <div class="sitka-field__env-option">
-      //   <input type="radio" id="env-stg" name="sitka_environment" value="staging" <?= $data['sitka_environment'] === 'staging' ? 'checked' : '' ?>>
-      //   <label for="env-stg">Staging</label>
-      // </div> 
+      /* Option removed per request from Phil Price
+      <div class="sitka-field__env-option">
+         <input type="radio" id="env-stg" name="sitka_environment" value="staging" <?= $data['sitka_environment'] === 'staging' ? 'checked' : '' ?>>
+         <label for="env-stg">Staging</label>
+      </div>
+      */ 
       ?>
     </div>
   </div>
