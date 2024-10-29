@@ -42,6 +42,8 @@
       </div>
       <?php 
       /* Option removed per request from Phil Price
+      * If a developer needs to test someting against the staging instance of the Sitka, simply remove the comments around this block of code to begin the staging option back in. 
+      * This should be temporary change will be reverted when the plugin is reinstalled using composer.
       <div class="sitka-field__env-option">
          <input type="radio" id="env-stg" name="sitka_environment" value="staging" <?= $data['sitka_environment'] === 'staging' ? 'checked' : '' ?>>
          <label for="env-stg">Staging</label>

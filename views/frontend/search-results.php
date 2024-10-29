@@ -11,7 +11,7 @@ $originalQuery = $response['originalQueryPhrase'] ?? '';
 $supersedingSuggestion = $response['supersedingSuggestion'] ?? '';
 $didYouMeanOption = get_option('sitka_search_instead_enabled') ?? 'disabled';
 $curatedResultsOption = get_option('sitka_search_curated_results_enabled') ?? 'disabled';
-$curatedResultsEnables = $response['curatedResultsEnabled'] ?? false;
+$curatedResultsEnabled = $response['curatedResultsEnabled'] ?? false;
 
 ?>
 <section class="sitka-search-form-container">
@@ -41,7 +41,7 @@ $curatedResultsEnables = $response['curatedResultsEnabled'] ?? false;
   </div><!-- container -->
 </section>
 
-<?php if ($curatedResultsOption == "enabled" && $curatedResultsEnables && isset($response['curatedResults']) && !empty($response['curatedResults'])) { ?>
+<?php if ($curatedResultsOption == "enabled" && $curatedResultsEnabled && isset($response['curatedResults']) && !empty($response['curatedResults'])) { ?>
   <section class="sitka-search-results-container curated-results">
   
     <h2 class="sitka-curated-results-section-headline"> Recommended results</h2>
