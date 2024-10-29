@@ -4,6 +4,51 @@
   padding-bottom: 30px;
   border-bottom: 1px solid #d8d8d8;
 }
+.curated-results {
+background-color: #f6f6f6;
+
+display: flex;
+flex-direction: column;
+gap: 20px;
+
+padding: 20px;
+}
+.sitka-curated-results-section-headline {
+  margin-bottom: 0;
+}
+.sitka-curated-result {
+  padding: 20px;
+  border: 1px solid #d8d8d8;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+.curated-result-headline {
+  margin-bottom: 0;
+}
+.curated-result-text {}
+.curated-result-link {}
+.curated-result-button {
+  display: inline-block;
+  align-items: center;
+  column-gap: 12px;
+  padding: 20px 28px;
+  cursor: pointer;
+  border: 0;
+
+  text-decoration: none;
+  
+  color: #000;
+  background: #00aeef;
+  -webkit-appearance: none;
+}
+
+.curated-result-button:hover {
+  color: #000;
+  text-decoration: none;
+}
 .sitka-search-card__label{
   text-transform: uppercase;
   margin: 0 0 5px 0;

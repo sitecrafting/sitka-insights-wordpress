@@ -6,7 +6,7 @@
  * Plugin URI: https://www.sitkainsights.com
  * Author: SiteCrafting, Inc. <hello@sitecrafting.com>
  * Author URI: https://www.sitecrafting.com/
- * Version: 2.3.3
+ * Version: 3.0.0
  * Requires PHP: 7.1
  */
 
@@ -97,6 +97,7 @@ add_action('admin_menu', function() {
       'sitka_search_enabled',
       'sitka_search_redirect',
       'sitka_search_instead_enabled',
+      'sitka_search_curated_results_enabled',
     ],
   ]);
   // Process any user updates

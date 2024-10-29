@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "368b5dc9ca4c3473643dfb92fce946ab",
+    "content-hash": "70105110e6602dd52c147aa13407c99d",
     "packages": [
         {
             "name": "composer/installers",
@@ -608,16 +608,16 @@
         },
         {
             "name": "sitecrafting/gearlab-tools-php",
-            "version": "v2.0.0-rc.03",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sitecrafting/gearlab-tools-php.git",
-                "reference": "eaa4419e28bffdd82bfada5ba9ef5ab8c80bd7df"
+                "reference": "07dcc6d8180058831b3d1807c8f5ce6198629a2a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sitecrafting/gearlab-tools-php/zipball/eaa4419e28bffdd82bfada5ba9ef5ab8c80bd7df",
-                "reference": "eaa4419e28bffdd82bfada5ba9ef5ab8c80bd7df",
+                "url": "https://api.github.com/repos/sitecrafting/gearlab-tools-php/zipball/07dcc6d8180058831b3d1807c8f5ce6198629a2a",
+                "reference": "07dcc6d8180058831b3d1807c8f5ce6198629a2a",
                 "shasum": ""
             },
             "require": {
@@ -657,9 +657,9 @@
             ],
             "support": {
                 "issues": "https://github.com/sitecrafting/gearlab-tools-php/issues",
-                "source": "https://github.com/sitecrafting/gearlab-tools-php/tree/v2.0.0-rc.03"
+                "source": "https://github.com/sitecrafting/gearlab-tools-php/tree/v3.0.0"
             },
-            "time": "2024-10-11T22:20:31+00:00"
+            "time": "2024-10-29T22:08:25+00:00"
         },
         {
             "name": "symfony/console",
@@ -2979,9 +2979,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "sitecrafting/gearlab-tools-php": 5
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
