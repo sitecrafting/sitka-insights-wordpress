@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "53242bbeb18e7477cb588970d25e8d5e",
+    "content-hash": "70105110e6602dd52c147aa13407c99d",
     "packages": [
         {
             "name": "composer/installers",
@@ -608,16 +608,16 @@
         },
         {
             "name": "sitecrafting/gearlab-tools-php",
-            "version": "dev-curated-results",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sitecrafting/gearlab-tools-php.git",
-                "reference": "282c6f29419cba8583214c01ff843b77898d9cf7"
+                "reference": "07dcc6d8180058831b3d1807c8f5ce6198629a2a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sitecrafting/gearlab-tools-php/zipball/282c6f29419cba8583214c01ff843b77898d9cf7",
-                "reference": "282c6f29419cba8583214c01ff843b77898d9cf7",
+                "url": "https://api.github.com/repos/sitecrafting/gearlab-tools-php/zipball/07dcc6d8180058831b3d1807c8f5ce6198629a2a",
+                "reference": "07dcc6d8180058831b3d1807c8f5ce6198629a2a",
                 "shasum": ""
             },
             "require": {
@@ -657,9 +657,9 @@
             ],
             "support": {
                 "issues": "https://github.com/sitecrafting/gearlab-tools-php/issues",
-                "source": "https://github.com/sitecrafting/gearlab-tools-php/tree/curated-results"
+                "source": "https://github.com/sitecrafting/gearlab-tools-php/tree/v3.0.0"
             },
-            "time": "2024-10-23T14:00:52+00:00"
+            "time": "2024-10-29T22:08:25+00:00"
         },
         {
             "name": "symfony/console",
@@ -2979,9 +2979,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "sitecrafting/gearlab-tools-php": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
