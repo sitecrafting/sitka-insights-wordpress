@@ -13,6 +13,8 @@ namespace Sitka\Plugin;
 class Paginator {
   use Paginated;
 
+  protected $pagination;
+
   public static function params_from_response(array $response) : array {
     $count     = apply_filters('sitka/search/result_count', 10);
     $pageCount = ceil((int) ($response['total'] ?? 0) / $count);
