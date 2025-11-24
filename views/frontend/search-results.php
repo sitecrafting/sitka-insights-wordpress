@@ -21,7 +21,7 @@ $curatedResultsEnabled = $response['curatedResultsEnabled'] ?? false;
       <form role="search" method="get" id="searchform" class="searchform sitka-search-form" action="<?= get_permalink($post) ?>">
         <input
           type="text"
-          value="<?= esc_attr_e($searchQuery) ?>"
+          value="<?= esc_attr($searchQuery) ?>"
           name="sitka_search"
           id="search-term"
           placeholder="Enter keyword or phrase"
