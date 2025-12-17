@@ -17,8 +17,9 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.3'
+          php-version: '8.1'
           tools: composer
+          extensions: curl
       
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-dev
