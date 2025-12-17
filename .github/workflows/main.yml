@@ -2,7 +2,7 @@ name: Build and Publish Release
 
 on:
   release:
-    types: [created, published]
+    types: [released, prereleased]
 
 jobs:
   build-and-publish:
