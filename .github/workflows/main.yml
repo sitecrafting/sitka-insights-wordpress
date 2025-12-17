@@ -1,10 +1,8 @@
 name: Build and Publish Release
 
 on:
-  push:
-    branches: [feature/packagist-trusted-publishing]
   release:
-    types: [created]
+    types: [created, published]
 
 jobs:
   build-and-publish:
