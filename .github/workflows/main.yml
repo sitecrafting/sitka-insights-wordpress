@@ -20,6 +20,9 @@ jobs:
           php-version: '7.3'
           tools: composer
       
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-dev
+      
       - name: Get release version
         id: get_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
