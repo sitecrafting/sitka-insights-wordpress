@@ -7,6 +7,14 @@
     "composer/installers": "~1.0",
     "sitecrafting/gearlab-tools-php": "^3.0"
   },
+  "archive": {
+    "exclude": [
+      "/test/",
+      ".gitignore",
+      "bin/",
+      "/.github/"
+    ]
+  },
   "license": "MIT",
   "authors": [
     {
