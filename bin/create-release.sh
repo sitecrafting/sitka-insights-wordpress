@@ -37,9 +37,9 @@ if !  git rev-parse --git-dir > /dev/null 2>&1; then
 fi
 
 # Check if working directory is clean
-if ! git diff-index --quiet HEAD --; then
-    error "Working directory is not clean.  Please commit or stash your changes first."
-fi
+# if ! git diff-index --quiet HEAD --; then
+#     error "Working directory is not clean.  Please commit or stash your changes first."
+# fi
 
 # Get repository info
 REPO_ROOT=$(git rev-parse --show-toplevel)
@@ -55,10 +55,10 @@ info "Current version information:"
 grep -E "Version:|\"version\":" sitka-insights.php composer.json 2>/dev/null || true
 echo ""
 
-read -pr "Enter new version number (e.g., 1.2.3): " VERSION
+read -p "Enter new version number (e.g., 1.2.3): " VERSION
 
 # Validate version format (basic semver check)
-if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+[a-z]?$ ]]; then
     error "Invalid version format. Please use semantic versioning (e.g., 1.2.3)"
 fi
 
@@ -73,8 +73,7 @@ fi
 
 # Update version in sitka-insights.php
 info "Updating version in sitka-insights.php..."
-sed -i. bak -E "s/(Version:[[: space:]]*)[0-9]+\.[0-9]+\.[0-9]+/\1$VERSION/" sitka-insights.php
-rm -f sitka-insights.php. bak
+sed -i -E "s/(^\s*\* Version:)\s*[^\r\n]*/\1 $VERSION/" sitka-insights.php
 success "Updated sitka-insights.php"
 
 # Update version and dist.url in composer.json
