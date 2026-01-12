@@ -15,6 +15,7 @@
   "archive": {
     "exclude": [
       "/test/",
+      "/releases/"
       ".gitignore",
       "bin/",
       "/.github/"
