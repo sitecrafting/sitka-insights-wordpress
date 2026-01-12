@@ -78,12 +78,12 @@ success "Updated sitka-insights.php"
 
 # Update version and dist.url in composer.json
 info "Updating composer.json..."
-DIST_URL="https://github.com/sitecrafting/sitka-insights-wordpress/releases/download/$VERSION/sitka-insights-$VERSION.zip"
+DIST_URL="https://github.com/sitecrafting/sitka-insights-wordpress/releases/download/v$VERSION/sitka-insights-$VERSION.zip"
 
 # Use jq to update composer.json
 jq --arg version "$VERSION" \
    --arg url "$DIST_URL" \
-   '. version = $version | .dist.url = $url' \
+   '.version = $version | .dist.url = $url' \
    composer.json > composer.json.tmp && mv composer.json.tmp composer.json
 
 success "Updated composer.json"
@@ -109,13 +109,13 @@ mkdir -p releases
 
 # Create ZIP archive
 info "Creating ZIP archive..."
-ZIP_FILE="releases/sitka-insights-$VERSION.zip"
+ZIP_FILE="releases/sitka-insights-$VERSION"
 composer archive --format=zip --file="$ZIP_FILE"
 success "Created $ZIP_FILE"
 
 # Create TAR.GZ archive
 info "Creating TAR.GZ archive..."
-TAR_FILE="releases/sitka-insights-$VERSION.tar.gz"
+TAR_FILE="releases/sitka-insights-$VERSION"
 composer archive --format=tar.gz --file="$TAR_FILE"
 
 success "Created $TAR_FILE"
@@ -123,10 +123,10 @@ success "Created $TAR_FILE"
 # Create GitHub release
 info "Creating GitHub release..."
 gh release create "v$VERSION" \
-    --title "Version $VERSION" \
+    --title "Version v$VERSION" \
     --generate-notes \
-    "$ZIP_FILE" \
-    "$TAR_FILE"
+    "$REPO_ROOT/$ZIP_FILE.zip" \
+    "$REPO_ROOT/$TAR_FILE.tar.gz"
 
 success "GitHub release created successfully!"
 
