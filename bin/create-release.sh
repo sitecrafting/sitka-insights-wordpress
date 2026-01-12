@@ -146,11 +146,22 @@ success "Created $TAR_FILE"
 # Remove hackish symlink
 rm ./sitka-insights
 
+# Ask if this is a pre-release
+read -p "Is this a pre-release? (y/N): " -n 1 -r
+echo
+PRERELEASE_FLAG=""
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    PRERELEASE_FLAG="--prerelease"
+    info "This will be marked as a pre-release"
+fi
+
+
 # Create GitHub release
 info "Creating GitHub release..."
 gh release create "v$VERSION" \
     --title "Version v$VERSION" \
     --generate-notes \
+    $PRERELEASE_FLAG \
     "$REPO_ROOT/$ZIP_FILE" \
     "$REPO_ROOT/$TAR_FILE"
 
