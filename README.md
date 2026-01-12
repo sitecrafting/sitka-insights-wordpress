@@ -319,12 +319,21 @@ wp option set sitka_enabled 1
 
 ## Development
 
-To build a new release, choose the Git tag name and run:
+To build a new release use the script `./bin/create-release.sh`
 
-```bash
-bin/build-release.sh <TAG>
+Make sure all your changes are committed then run: 
+
+```sh
+./bin/create-release.sh
 ```
 
-This will create a .tar.gz and a .zip archive which you can upload to a new release on GitHub.
+This script will: 
 
-If you have [`hub`](https://hub.github.com/) installed, the script will detect it and prompt you to optionally create a GitHub release directly.
+* Request a new version number
+* Update the version in the `sitka-insights.php` file
+* Update the `composer.json` file:
+  * Change the `version` value
+  * Update the `dist.url` value to match the download URL from the release
+* Create a tag with the version number
+* Create `.zip` and `.tar.gz` archives. 
+* Create a GitHub release and upload the built assets

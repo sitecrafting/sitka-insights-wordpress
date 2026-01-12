@@ -106,27 +106,53 @@ success "Pushed to remote"
 
 # Create releases directory if it doesn't exist
 mkdir -p releases
+ln -sfn . sitka-insights
 
 # Create ZIP archive
 info "Creating ZIP archive..."
-ZIP_FILE="releases/sitka-insights-$VERSION"
-composer archive --format=zip --file="$ZIP_FILE"
+ZIP_FILE="releases/sitka-insights-$VERSION.zip"
+zip -r "$ZIP_FILE" \
+    sitka-insights/sitka-insights.php \
+    sitka-insights/wp-api.php \
+    sitka-insights/src \
+    sitka-insights/cli \
+    sitka-insights/js \
+    sitka-insights/css \
+    sitka-insights/vendor \
+    sitka-insights/views \
+    sitka-insights/LICENSE.txt \
+    sitka-insights/README.md
+
 success "Created $ZIP_FILE"
 
 # Create TAR.GZ archive
 info "Creating TAR.GZ archive..."
-TAR_FILE="releases/sitka-insights-$VERSION"
-composer archive --format=tar.gz --file="$TAR_FILE"
+TAR_FILE="releases/sitka-insights-$VERSION.tar.gz"
+tar -cvzf "$TAR_FILE" \
+    sitka-insights/vendor/autoload.php \
+    sitka-insights/sitka-insights.php \
+    sitka-insights/wp-api.php \
+    sitka-insights/src \
+    sitka-insights/cli \
+    sitka-insights/js \
+    sitka-insights/css \
+    sitka-insights/vendor \
+    sitka-insights/views \
+    sitka-insights/LICENSE.txt \
+    sitka-insights/README.md
 
 success "Created $TAR_FILE"
+
+# Remove hackish symlink
+rm ./sitka-insights
 
 # Create GitHub release
 info "Creating GitHub release..."
 gh release create "v$VERSION" \
     --title "Version v$VERSION" \
     --generate-notes \
-    "$REPO_ROOT/$ZIP_FILE.zip" \
-    "$REPO_ROOT/$TAR_FILE.tar.gz"
+    "$REPO_ROOT/$ZIP_FILE" \
+    "$REPO_ROOT/$TAR_FILE"
 
 success "GitHub release created successfully!"
 
