@@ -7,10 +7,10 @@
     "composer/installers": "~1.0",
     "sitecrafting/gearlab-tools-php": "^3.0"
   },
-  "version": "0.0.7b",
+  "version": "0.0.8b",
   "dist": {
     "type": "zip",
-    "url": "https://github.com/sitecrafting/sitka-insights-wordpress/releases/download/0.0.7b/sitka-insights-0.0.7b.zip"
+    "url": "https://github.com/sitecrafting/sitka-insights-wordpress/releases/download/0.0.8b/sitka-insights-0.0.8b.zip"
   },
   "archive": {
     "exclude": [
