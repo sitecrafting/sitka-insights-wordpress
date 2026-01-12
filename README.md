@@ -321,7 +321,7 @@ wp option set sitka_enabled 1
 
 To build a new release use the script `./bin/create-release.sh`
 
-Make sure all your changes are committed then run: 
+Make sure all your changes are committed then run this script and follow the prompts: 
 
 ```sh
 ./bin/create-release.sh
@@ -337,3 +337,13 @@ This script will:
 * Create a tag with the version number
 * Create `.zip` and `.tar.gz` archives. 
 * Create a GitHub release and upload the built assets
+
+### Prerequisites
+
+The script requires the following tools to be installed:
+
+- **git** - Version control
+- **gh** (GitHub CLI) - For creating releases. Install from https://cli.github.com/
+- **jq** - JSON processor for updating composer.json
+- **zip** - For creating . zip archives
+- **tar** - For creating .tar.gz archives

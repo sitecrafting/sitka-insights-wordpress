@@ -18,11 +18,16 @@ function fail() {
   echo $($RED; $BOLD)
   echo "$1"
   echo $($RESET)
-  usage
+  # usage
   exit 1
 }
 
 function main() {
+
+
+  fail 'This script has been replaced with bin/create-release.sh. Check the readme for usage instructions. Please use that script instead.'
+
+
   if ! [[ -f ./sitka-insights.php ]] ; then
     fail 'Error: not in root sitka-insights-wordpress directory?'
   fi
