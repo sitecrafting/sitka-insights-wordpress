@@ -37,9 +37,9 @@ if !  git rev-parse --git-dir > /dev/null 2>&1; then
 fi
 
 # Check if working directory is clean
-# if ! git diff-index --quiet HEAD --; then
-#     error "Working directory is not clean.  Please commit or stash your changes first."
-# fi
+if ! git diff-index --quiet HEAD --; then
+    error "Working directory is not clean.  Please commit or stash your changes first."
+fi
 
 # Get repository info
 REPO_ROOT=$(git rev-parse --show-toplevel)
