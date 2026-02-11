@@ -58,7 +58,8 @@ echo ""
 read -p "Enter new version number (e.g., 1.2.3): " VERSION
 
 # Validate version format (basic semver check)
-if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+[a-z]?$ ]]; then
+if ! [[ "$VERSION" =~ ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
+ ]]; then
     error "Invalid version format. Please use semantic versioning (e.g., 1.2.3)"
 fi
 
