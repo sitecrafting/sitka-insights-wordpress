@@ -18,11 +18,16 @@ function fail() {
   echo $($RED; $BOLD)
   echo "$1"
   echo $($RESET)
-  usage
+  # usage
   exit 1
 }
 
 function main() {
+
+
+  fail 'This script has been replaced with bin/create-release.sh. Check the readme for usage instructions. Please use that script instead.'
+
+
   if ! [[ -f ./sitka-insights.php ]] ; then
     fail 'Error: not in root sitka-insights-wordpress directory?'
   fi
@@ -126,10 +131,10 @@ function restore_vendor() {
 
 function create_github_release() {
   if [[ $(which hub) ]] ; then
-    echo $($BOLD)hub detected! You win at Git!$($RESET)
-    read -p 'Create a GitHub release? (y/N) ' create
+    echo "$($BOLD)hub detected! You win at Git!$($RESET)"
+    read -r -p 'Create a GitHub release? (y/N) ' create
     if [[ "$create" = "y" ]] ; then
-      read -p 'Is this a pre-release? (y/N) ' prerelease
+      read -r -p 'Is this a pre-release? (y/N) ' prerelease
       if [[ "$prerelease" = "y" ]] ; then
         prerelease_opt='--prerelease'
       fi
@@ -137,7 +142,7 @@ function create_github_release() {
       echo 'pushing latest changes and tags...'
       git push origin main
       git push --tags
-      hub release create $prerelease_opt -a "$2" -a "$3" -e "$1"
+      hub release create "$prerelease_opt" -a "$2" -a "$3" -e "$1"
     else
       echo 'skipping GitHub release.'
     fi
