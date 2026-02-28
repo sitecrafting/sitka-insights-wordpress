@@ -66,3 +66,199 @@ padding: 20px;
   border: none;
   background: #c6c6c6;
 }
+
+
+/**************/
+/* AI SEARCH */
+/**************/
+
+:root {
+	--sitka-ai-positive-color: #00663A;
+	--sitka-ai-neutral-color: #404040;
+	--sitka-ai-negative-color: #B30000;
+}
+
+.sitka-ai-results {
+	background: rgba(220, 196, 255, 1);
+	/* background: linear-gradient(122deg, rgba(173, 187, 255, 1) 0%, rgba(220, 196, 255, 1) 100%); */
+	background: linear-gradient(122deg, rgb(210, 227, 255) 0%, rgb(241, 217, 255) 100%);
+	border-radius: 15px;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	position: relative;
+}
+
+.sitka-ai-results-section-headline
+{
+	padding-left: 2rem;
+ 	background: url('https://my-wp-site.lndo.site/wp-content/plugins/sitka-insights-wordpress/img/sparkles.svg') no-repeat left center;
+	background-size: 2rem 2rem;
+}
+
+.sitka-beta-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  background: #600085;
+  color: #fff;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  padding: 6px 12px;
+  border-radius: 999px;
+
+  line-height: 1;
+}
+
+p.sitka-ai-search-generated-text
+{
+	font-size: 1rem;
+}
+
+/*******/
+/* AI Search Sources */
+fieldset.sitka-ai-search-sources {
+	border-style: solid;
+	border-radius: 0px;
+	border-width: 0px;
+	border-color: rgba(150,150,150,0.4);
+}
+
+
+fieldset.sitka-ai-search-sources ul{
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+ul.sitka-ai-search-links
+{
+	font-size: 1rem;
+}
+
+ul.sitka-ai-search-links > li > a
+{
+	text-decoration: underline;
+}
+
+fieldset.sitka-ai-search-sources{
+	padding-left: 0px;
+}
+
+fieldset.sitka-ai-search-sources legend{
+	font-size: 14pt;
+}
+
+/*******/
+/* AI Feedback */
+.sitka-ai-feedback-thumbs ul {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	list-style: none;
+	padding-inline-start: 15px;
+}
+
+.sitka-ai-feedback-thumbs fieldset {
+	border-style: solid;
+	border-radius: 0px;
+	border-width: 0px;
+	border-color: rgba(150,150,150,0.4);
+	padding-left: 0px;
+}
+
+.sitka-ai-feedback-thumbs fieldset legend {
+	font-size: 14pt;
+}
+
+.sitka-ai-feedback-thumbs ul li {
+	display: inline-block;
+}
+
+.sitka-ai-feedback-thumbs ul li button {
+	display: inline-flex;
+	vertical-align: middle;
+	margin: 0.25rem;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.5rem 1rem;
+	border-radius: 6px;
+	background: #fff;
+	cursor: pointer;
+	font-family: sans-serif;
+	font-size: 14px;
+	transition: background 0.2s, color 0.2s;
+}
+
+/* Thumbs up button */
+.sitka-ai-feedback-thumbs button.sitka-positive-ai-response {
+	border: 2px solid var(--sitka-ai-positive-color);
+	color: var(--sitka-ai-positive-color);
+}
+.sitka-ai-feedback-thumbs button.sitka-positive-ai-response:hover {
+	background: var(--sitka-ai-positive-color);
+	color: #fff;
+}
+.sitka-ai-feedback-thumbs button.sitka-positive-ai-response:hover svg {
+	fill: #fff;
+}
+
+/* Thumbs down button */
+.sitka-ai-feedback-thumbs button.sitka-negative-ai-response {
+	border: 2px solid var(--sitka-ai-negative-color);
+	color: var(--sitka-ai-negative-color);
+}
+.sitka-ai-feedback-thumbs button.sitka-negative-ai-response:hover {
+	background: var(--sitka-ai-negative-color);
+	color: #fff;
+}
+.sitka-ai-feedback-thumbs button.sitka-negative-ai-response:hover svg {
+	fill: #fff;
+}
+
+.sitka-ai-feedback-thumbs svg {
+	width: 20px;
+	height: 20px;
+	flex-shrink: 0;
+	transition: fill 0.2s;
+}
+
+/* Neutral button */
+.sitka-ai-feedback-thumbs button.sitka-neutral-ai-response {
+	border: 2px solid var(--sitka-ai-neutral-color);
+	color: var(--sitka-ai-neutral-color);
+}
+.sitka-ai-feedback-thumbs button.sitka-neutral-ai-response:hover {
+	background: var(--sitka-ai-neutral-color);
+	color: #fff;
+}
+.sitka-ai-feedback-thumbs button.sitka-neutral-ai-response:hover svg {
+	fill: #fff;
+}
+
+/* Disabled buttons (any type) */
+.sitka-ai-feedback-thumbs button:disabled.sitka-positive-ai-response,
+.sitka-ai-feedback-thumbs button:disabled.sitka-negative-ai-response {
+	border: 2px solid darkgray;
+	color: grey;
+	background: darkgray;
+	cursor: not-allowed; /* optional: indicate disabled */
+}
+
+/* Hover for disabled buttons (same as normal disabled state) */
+.sitka-ai-feedback-thumbs button:disabled.sitka-positive-ai-response:hover,
+.sitka-ai-feedback-thumbs button:disabled.sitka-negative-ai-response:hover {
+	border: 2px solid darkgray;
+	color: grey;
+	background: darkgray;
+}
+
+/* SVG inside disabled buttons */
+.sitka-ai-feedback-thumbs button:disabled.sitka-positive-ai-response svg,
+.sitka-ai-feedback-thumbs button:disabled.sitka-negative-ai-response svg {
+	fill: grey;
+}

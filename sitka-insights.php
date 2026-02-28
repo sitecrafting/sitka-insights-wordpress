@@ -81,6 +81,19 @@ add_filter('sitka/feedback/embed_uri', function() {
   return $uri;
 });
 
+add_filter('sitka/dashboard_uri', function() {
+  return 'https://site-search-admin.lndo.site';
+  // TODO remove before commit ^^ 
+  $env  = get_option('sitka_environment');
+  $uris = [
+    'production'  => 'https://dashboard.sitkainsights.com',
+    'staging'     => 'https://stg-dashboard.sitkainsights.com',
+  ];
+  $uri  = $uris[$env] ?? $uris['production'];
+
+  return $uri;
+});
+
 
 /*
  * Add WP Admin pages (just the one page, actually 🐦)
@@ -98,6 +111,9 @@ add_action('admin_menu', function() {
       'sitka_search_redirect',
       'sitka_search_instead_enabled',
       'sitka_search_curated_results_enabled',
+      'sitka_search_ai_results_enabled',
+      'sitka_ai_results_heading',
+      'sitka_search_ai_results_gen_text_enabled',
     ],
   ]);
   // Process any user updates
