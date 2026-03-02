@@ -82,8 +82,7 @@ add_filter('sitka/feedback/embed_uri', function() {
 });
 
 add_filter('sitka/dashboard_uri', function() {
-  return 'https://site-search-admin.lndo.site';
-  // TODO remove before commit ^^ 
+
   $env  = get_option('sitka_environment');
   $uris = [
     'production'  => 'https://dashboard.sitkainsights.com',

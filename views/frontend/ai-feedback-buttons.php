@@ -77,7 +77,6 @@ $queryLogId = $data['queryLogId'] ?? 0;
             if (xhr.status === 200) {
                 // remove the buttons and set a message.
                 replaceAiFeedbackButtonsWithMessage(true);
-                // TODO test ARIA properties to the fieldset 
             }
             else if (xhr.status !== 200) 
             {
@@ -85,12 +84,6 @@ $queryLogId = $data['queryLogId'] ?? 0;
                 console.log('Something went wrong, unable to send feedback via AJAX request.');
             }
         };
-        // https://site-search-admin.lndo.site/aisearchfeedback/post
-        // ?siteId=1040
-        // &aiText=This%20is%20AI%20text%2E
-        // &queryLogId=1
-        // &context=HereIsContext
-        // &feedbackLabelId=1
         var url = encodeURI(
             'feedbackLabelId=' + feedbackLabelId 
             + '&searchQuery='+searchQuery    

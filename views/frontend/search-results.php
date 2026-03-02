@@ -26,13 +26,11 @@ $aiSearchGeneratedTextEnabled = get_option('sitka_search_ai_results_gen_text_ena
   $ai_message = "";
   $context = "";
   $searchQuery = $originalQuery;
-  $queryLogId = 1;//$response['queryLogId']; TODO fix this
+  $queryLogId = $response['queryLogId'];
 
 
   // AI generated message
-  // TODO put back success true check 
-  // if($aiSearchOptionEnabled == "enabled" && isset($response['aiResult']) && !empty($response['aiResult']) && $response['aiResult']['success'] == true)
-  if($aiSearchOptionEnabled == "enabled" && isset($response['aiResult']) && !empty($response['aiResult']))
+  if($aiSearchOptionEnabled == "enabled" && isset($response['aiResult']) && !empty($response['aiResult']) && $response['aiResult']['success'] == true)
   {
       if ($aiSearchGeneratedTextEnabled === 'enabled') {
         // set the variable if it's enabled and shown to the user
