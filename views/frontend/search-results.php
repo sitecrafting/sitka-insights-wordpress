@@ -12,8 +12,58 @@ $supersedingSuggestion = $response['supersedingSuggestion'] ?? '';
 $didYouMeanOption = get_option('sitka_search_instead_enabled') ?? 'disabled';
 $curatedResultsOption = get_option('sitka_search_curated_results_enabled') ?? 'disabled';
 $curatedResultsEnabled = $response['curatedResultsEnabled'] ?? false;
+$aiSearchOptionEnabled = get_option('sitka_search_ai_results_enabled') ?? 'disabled';
+$aiSearchHeading = get_option('sitka_ai_results_heading') ?? 'AI-Powered Search Results';
+$aiSearchGeneratedTextEnabled = get_option('sitka_search_ai_results_gen_text_enabled') ?? 'disabled';
 
 ?>
+<script>
+
+/**
+ * Get the data needed from the API response into JS variables so we can send AI Feedback via JS functions.
+ */
+  <?php
+  $ai_message = "";
+  $context = "";
+  $searchQuery = $originalQuery;
+  $queryLogId = $response['queryLogId'];
+
+
+  // AI generated message
+  if($aiSearchOptionEnabled == "enabled" && isset($response['aiResult']) && !empty($response['aiResult']) && $response['aiResult']['success'] == true)
+  {
+      if ($aiSearchGeneratedTextEnabled === 'enabled') {
+        // set the variable if it's enabled and shown to the user
+        // -> this will help distinguish feedback between feedback on AI-suggested links and AI text with AI-suggested links.
+        $ai_message = $response['aiResult']['ai_text']; 
+      }
+      else {
+        $ai_message = "";
+      }
+
+      // context (links found by AI)
+      foreach ($response['aiResult']['links'] as $resultLink)
+      {
+        $context .= ($resultLink["url"]." ");
+      }
+
+      if (isset($response['suggestionSupersededQuery']) && $response['suggestionSupersededQuery']  && $didYouMeanOption == "enabled")
+      {
+        $searchQuery = $response['suggestionSupersededQuery'];
+      } 
+  }
+    $dashboard_uri = apply_filters('sitka/dashboard_uri',[]);
+    $dashboard_url = $dashboard_uri."/aisearchfeedback/post";
+    $siteId = get_option('sitka_site_id');
+?>
+  const sitka_ai_feedback_dashboard_url = "<?= $dashboard_url ?>";
+  const sitka_aiText = "<?= $ai_message ?>";
+  const sitka_ai_links_context = "<?= $context ?>";
+  const sitka_searchQuery = "<?= $searchQuery ?>";
+  const sitka_queryLogId = "<?= $queryLogId ?>";
+  const sitka_siteId = "<?= $siteId ?>";
+</script>
+
 <section class="sitka-search-form-container">
   <div class="container">
     <div class="global-search">
@@ -55,6 +105,38 @@ $curatedResultsEnabled = $response['curatedResultsEnabled'] ?? false;
       <?php endforeach; ?>
     <?php endif; ?>
 
+  </section>
+<?php } ?>
+
+<!-- && $response['aiResult']['success'] == true -->
+<?php if ($aiSearchOptionEnabled == "enabled" && isset($response['aiResult']) && !empty($response['aiResult'])) { ?>
+  <section class="sitka-search-results-container sitka-ai-results">
+    <span class="sitka-beta-badge">BETA</span>
+    <h2 class="sitka-ai-results-section-headline">
+    <?= $aiSearchHeading ?>
+    </h2>
+    
+    <?php if (!empty($response['aiResult'])) { ?>
+      <?php if ($aiSearchGeneratedTextEnabled === 'enabled') {?>
+        <p class="sitka-ai-search-generated-text"> <?= $response['aiResult']['ai_text']?></p>
+      <?php }?>
+      <fieldset class="sitka-ai-search-sources">
+        <legend>Sources</legend>
+          <ul class="sitka-ai-search-links">
+          <?php foreach ($response['aiResult']['links'] as $resultLink) { ?>
+            <li>
+              <a href="<?= $resultLink["url"] ?>"><?= $resultLink["title"] ?></a>
+            </li>
+          <?php } ?>
+          </ul>
+      </fieldset>
+      
+       <?= apply_filters('sitka/render', 'ai-feedback-buttons.php', array_merge($data, [
+          'labels' => $response['aiResult']['feedback_labels'],
+          'queryLogId' => $queryLogId
+        ])) ?>
+
+    <?php } ?>
   </section>
 <?php } ?>
 
