@@ -1,0 +1,55 @@
+name: Build and Publish Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  id-token: write # Required for OIDC
+  contents: write # Required to upload release assets
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
+          extensions: curl
+      
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-dev
+      
+      - name: Get release version
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+      
+      - name: Build release artifact
+        env:
+          NO_INTERACTION: 1
+        run: |
+          chmod +x bin/build-release.sh
+          bin/build-release.sh ${{ steps.get_version.outputs.VERSION }}
+      
+      - name: Upload release artifact to GitHub
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./sitka-insights-${{ steps.get_version.outputs.VERSION }}.zip
+          asset_name: sitka-insights-${{ steps.get_version.outputs.VERSION }}.zip
+          asset_content_type: application/zip
+      
+      - name: Publish to Packagist
+        uses: packagist/artifact-publish-github-action@v1
+        with:
+          token: ${{ secrets.PACKAGIST_TOKEN }}
+          package: sitecrafting/sitka-insights-wordpress
+          artifact: sitka-insights-${{ steps.get_version.outputs.VERSION }}.zip
