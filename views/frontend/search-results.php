@@ -15,6 +15,11 @@ $curatedResultsEnabled = $response['curatedResultsEnabled'] ?? false;
 $aiSearchOptionEnabled = get_option('sitka_search_ai_results_enabled') ?? 'disabled';
 $aiSearchHeading = get_option('sitka_ai_results_heading') ?? 'AI-Powered Search Results';
 $aiSearchGeneratedTextEnabled = get_option('sitka_search_ai_results_gen_text_enabled') ?? 'disabled';
+$showAiResults = $aiSearchOptionEnabled == "enabled"
+    && isset($response['aiResult'])
+    && !empty($response['aiResult'])
+    && $response['aiResult']['success'] == true
+    && !empty($response['aiResult']['links']);
 
 ?>
 <script>
@@ -30,7 +35,7 @@ $aiSearchGeneratedTextEnabled = get_option('sitka_search_ai_results_gen_text_ena
 
 
   // AI generated message
-  if($aiSearchOptionEnabled == "enabled" && isset($response['aiResult']) && !empty($response['aiResult']) && $response['aiResult']['success'] == true)
+  if($showAiResults)
   {
       if ($aiSearchGeneratedTextEnabled === 'enabled') {
         // set the variable if it's enabled and shown to the user
@@ -108,15 +113,12 @@ $aiSearchGeneratedTextEnabled = get_option('sitka_search_ai_results_gen_text_ena
   </section>
 <?php } ?>
 
-<!-- && $response['aiResult']['success'] == true -->
-<?php if ($aiSearchOptionEnabled == "enabled" && isset($response['aiResult']) && !empty($response['aiResult'])) { ?>
+<?php if ($showAiResults) { ?>
   <section class="sitka-search-results-container sitka-ai-results">
     <span class="sitka-beta-badge">BETA</span>
     <h2 class="sitka-ai-results-section-headline">
     <?= $aiSearchHeading ?>
     </h2>
-    
-    <?php if (!empty($response['aiResult'])) { ?>
       <?php if ($aiSearchGeneratedTextEnabled === 'enabled') {?>
         <p class="sitka-ai-search-generated-text"> <?= $response['aiResult']['ai_text']?></p>
       <?php }?>
@@ -136,7 +138,6 @@ $aiSearchGeneratedTextEnabled = get_option('sitka_search_ai_results_gen_text_ena
           'queryLogId' => $queryLogId
         ])) ?>
 
-    <?php } ?>
   </section>
 <?php } ?>
 
