@@ -93,7 +93,7 @@ padding: 20px;
 .sitka-ai-results-section-headline
 {
 	padding-left: 2rem;
- 	background: url('https://my-wp-site.lndo.site/wp-content/plugins/sitka-insights-wordpress/img/sparkles.svg') no-repeat left center;
+ 	background: url('/wp-content/plugins/sitka-insights-wordpress/img/sparkles.svg') no-repeat left center;
 	background-size: 2rem 2rem;
 }
 
