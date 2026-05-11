@@ -62,10 +62,10 @@ $showAiResults = $aiSearchOptionEnabled == "enabled"
     $siteId = get_option('sitka_site_id');
 ?>
   const sitka_ai_feedback_dashboard_url = "<?= $dashboard_url ?>";
-  const sitka_aiText = "<?= $ai_message ?>";
-  const sitka_ai_links_context = "<?= $context ?>";
-  const sitka_searchQuery = "<?= $searchQuery ?>";
-  const sitka_queryLogId = "<?= $queryLogId ?>";
+  const sitka_aiText = <?= json_encode($ai_message) ?>;
+  const sitka_ai_links_context = <?= json_encode($context) ?>;
+  const sitka_searchQuery = <?= json_encode($searchQuery) ?>;
+  const sitka_queryLogId = <?= json_encode($queryLogId) ?>;
   const sitka_siteId = "<?= $siteId ?>";
 </script>
 
