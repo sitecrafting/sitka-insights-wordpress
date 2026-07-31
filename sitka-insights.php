@@ -98,11 +98,18 @@ add_action('admin_menu', function() {
       'sitka_search_redirect',
       'sitka_search_instead_enabled',
       'sitka_search_curated_results_enabled',
+      'sitka_mitigation_type',
+      'sitka_mitigation_site_key',
+      'sitka_mitigation_secret_key',
+      'sitka_mitigation_project_id',
     ],
   ]);
   // Process any user updates
-  if ($_POST) {
+  if ($_POST && isset($_POST['_wpnonce'])) {
     $page->save_settings($_POST);
+    // Redirect to prevent form resubmission
+    wp_safe_redirect(add_query_arg('page', 'sitka-insights', admin_url('options-general.php')));
+    exit;
   }
   // Render the page
   $page->init()->add_meta_boxes();
@@ -240,5 +247,68 @@ add_action('init', function() {
       'site_id'      => get_option('sitka_site_id'),
       'feedback_uri' => apply_filters('sitka/feedback/embed_uri', ''),
     ]);
+  });
+
+  /*
+   * Shortcode for rendering spam mitigation (reCAPTCHA or Turnstile)
+   */
+  add_shortcode('sitka_spam_mitigation', function($atts = []) {
+    $mitigation_type = get_option('sitka_mitigation_type');
+    $site_key = get_option('sitka_mitigation_site_key');
+    
+    if (empty($mitigation_type) || empty($site_key)) {
+      return '<!-- Spam mitigation not configured -->';
+    }
+
+    $atts = shortcode_atts([
+      'class' => 'sitka-spam-mitigation',
+      'size' => 'normal', // normal, compact, invisible (for reCAPTCHA)
+      'theme' => 'light', // light, dark
+    ], $atts);
+
+    ob_start();
+    
+    if ($mitigation_type === 'turnstile') {
+      // Cloudflare Turnstile
+      wp_enqueue_script(
+        'turnstile',
+        'https://challenges.cloudflare.com/turnstile/v0/api.js',
+        [],
+        null,
+        true
+      );
+      ?>
+      <div class="<?= esc_attr($atts['class']) ?>">
+        <div 
+          class="cf-turnstile" 
+          data-sitekey="<?= esc_attr($site_key) ?>"
+          data-theme="<?= esc_attr($atts['theme']) ?>"
+        ></div>
+      </div>
+      <?php
+    } elseif ($mitigation_type === 'recaptcha') {
+      // Google reCAPTCHA Enterprise
+      wp_enqueue_script(
+        'recaptcha-enterprise',
+        'https://www.google.com/recaptcha/enterprise.js',
+        [],
+        null,
+        true
+      );
+      
+      $size_attr = $atts['size'] === 'invisible' ? 'data-size="invisible"' : '';
+      ?>
+      <div class="<?= esc_attr($atts['class']) ?>">
+        <div 
+          class="g-recaptcha" 
+          data-sitekey="<?= esc_attr($site_key) ?>"
+          data-theme="<?= esc_attr($atts['theme']) ?>"
+          <?= $size_attr ?>
+        ></div>
+      </div>
+      <?php
+    }
+    
+    return ob_get_clean();
   });
 });

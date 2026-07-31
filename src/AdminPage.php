@@ -68,7 +68,14 @@ class AdminPage {
    */
   public function render() {
     wp_create_nonce('sitka-insights');
-    echo $this->render_view('admin-page.php');
+    echo $this->render_view('admin-page.php', ['page' => $this]);
+  }
+
+  /**
+   * Get any message to display to the user
+   */
+  public function get_message() {
+    return get_transient('sitka_admin_message');
   }
 
   /**
@@ -86,13 +93,70 @@ class AdminPage {
   public function save_settings(array $request) {
     $nonce = $request['_wpnonce'] ?? '';
     if (!wp_verify_nonce($nonce, 'sitka-insights')) {
+      $this->set_error_message('Security verification failed. Please try again.');
+      return;
+    }
+
+    // Validate required fields
+    $required_fields = [
+      'sitka_site_id' => 'Site ID',
+      'sitka_api_key' => 'API Key',
+      'sitka_collection_id' => 'Engine ID',
+      'sitka_mitigation_site_key' => 'Mitigation Site Key',
+      'sitka_mitigation_secret_key' => 'Mitigation API Key / Secret',
+    ];
+
+    // Check if redirect is enabled and validate redirect URL
+    if (isset($request['sitka_search_enabled']) && $request['sitka_search_enabled'] === 'shortcode') {
+      $required_fields['sitka_search_redirect'] = 'Redirect searches to';
+    }
+
+    // Check if reCAPTCHA is selected and validate project ID
+    if (isset($request['sitka_mitigation_type']) && $request['sitka_mitigation_type'] === 'recaptcha') {
+      $required_fields['sitka_mitigation_project_id'] = 'reCAPTCHA Project ID';
+    }
+
+    $errors = [];
+    foreach ($required_fields as $field => $label) {
+      if (empty($request[$field])) {
+        $errors[] = $label;
+      }
+    }
+
+    if (!empty($errors)) {
+      $this->set_error_message('Please fill in all required fields: ' . implode(', ', $errors));
       return;
     }
 
     // update each option that this page is responsible for managing
-    foreach ($this->config['option_keys'] as $key) {
-      update_option($key, $request[$key] ?? false);
+    try {
+      foreach ($this->config['option_keys'] as $key) {
+        update_option($key, $request[$key] ?? false);
+      }
+      $this->set_success_message('Settings saved successfully.');
+    } catch (\Exception $e) {
+      $this->set_error_message('An error occurred while saving settings. Please try again.');
     }
+  }
+
+  /**
+   * Set a success message to display to the user
+   */
+  private function set_success_message($message) {
+    set_transient('sitka_admin_message', [
+      'type' => 'success',
+      'text' => $message,
+    ], 30);
+  }
+
+  /**
+   * Set an error message to display to the user
+   */
+  private function set_error_message($message) {
+    set_transient('sitka_admin_message', [
+      'type' => 'error',
+      'text' => $message,
+    ], 30);
   }
 
   private function render_view(string $view, array $data = []) : string {

@@ -142,3 +142,136 @@ add_filter('sitka/search/result/meta_tag_label', function($tag, $_result) : stri
 
   return $map[$tag] ?? ucfirst($tag);
 }, 10, 2);
+
+/**
+ * Verify spam mitigation token (reCAPTCHA Enterprise or Turnstile)
+ *
+ * @param string $token The token received from the client
+ * @param string $remote_ip Optional: The user's IP address
+ * @return array Response with 'success' boolean and optional 'error' message
+ */
+function verify_spam_mitigation($token, $remote_ip = null) : array {
+  $mitigation_type = get_option('sitka_mitigation_type');
+  $secret_key = get_option('sitka_mitigation_secret_key');
+
+  if (empty($mitigation_type) || empty($secret_key)) {
+    return [
+      'success' => false,
+      'error' => 'Spam mitigation not configured'
+    ];
+  }
+
+  if (empty($token)) {
+    return [
+      'success' => false,
+      'error' => 'No token provided'
+    ];
+  }
+
+  $remote_ip = $remote_ip ?: $_SERVER['REMOTE_ADDR'];
+
+  if ($mitigation_type === 'turnstile') {
+    // Verify Cloudflare Turnstile token
+    $response = wp_remote_post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
+      'body' => [
+        'secret' => $secret_key,
+        'response' => $token,
+        'remoteip' => $remote_ip,
+      ],
+    ]);
+
+    if (is_wp_error($response)) {
+      return [
+        'success' => false,
+        'error' => 'Failed to verify token: ' . $response->get_error_message()
+      ];
+    }
+
+    $body = json_decode(wp_remote_retrieve_body($response), true);
+    
+    return [
+      'success' => $body['success'] ?? false,
+      'error' => isset($body['error-codes']) ? implode(', ', $body['error-codes']) : null
+    ];
+
+  } elseif ($mitigation_type === 'recaptcha') {
+    // Verify Google reCAPTCHA Enterprise token
+    $project_id = get_option('sitka_mitigation_project_id');
+    $api_key = $secret_key; // API key stored in secret_key field
+    
+    if (empty($project_id)) {
+      return [
+        'success' => false,
+        'error' => 'reCAPTCHA Enterprise Project ID not configured'
+      ];
+    }
+
+    $site_key = get_option('sitka_mitigation_site_key');
+    
+    // Create assessment using reCAPTCHA Enterprise API
+    $assessment_data = [
+      'event' => [
+        'token' => $token,
+        'siteKey' => $site_key,
+        'userIpAddress' => $remote_ip,
+      ]
+    ];
+
+    $response = wp_remote_post(
+      "https://recaptchaenterprise.googleapis.com/v1/projects/{$project_id}/assessments?key={$api_key}",
+      [
+        'headers' => [
+          'Content-Type' => 'application/json',
+        ],
+        'body' => json_encode($assessment_data),
+      ]
+    );
+
+    if (is_wp_error($response)) {
+      return [
+        'success' => false,
+        'error' => 'Failed to verify token: ' . $response->get_error_message()
+      ];
+    }
+
+    $body = json_decode(wp_remote_retrieve_body($response), true);
+    
+    // Check for API errors
+    if (isset($body['error'])) {
+      return [
+        'success' => false,
+        'error' => $body['error']['message'] ?? 'reCAPTCHA Enterprise verification failed'
+      ];
+    }
+
+    // Verify token validity
+    $token_properties = $body['tokenProperties'] ?? [];
+    $is_valid = ($token_properties['valid'] ?? false) === true;
+    
+    if (!$is_valid) {
+      return [
+        'success' => false,
+        'error' => $token_properties['invalidReason'] ?? 'Invalid token'
+      ];
+    }
+
+    // Get risk analysis
+    $risk_analysis = $body['riskAnalysis'] ?? [];
+    $score = $risk_analysis['score'] ?? 0; // 0.0 to 1.0 (higher is more likely human)
+    
+    // Consider score >= 0.5 as success (adjust threshold as needed)
+    $success = $score >= 0.5;
+    
+    return [
+      'success' => $success,
+      'score' => $score,
+      'reasons' => $risk_analysis['reasons'] ?? [],
+      'error' => !$success ? 'Score too low (possible bot)' : null
+    ];
+  }
+
+  return [
+    'success' => false,
+    'error' => 'Unknown mitigation type'
+  ];
+}

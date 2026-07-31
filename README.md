@@ -140,6 +140,124 @@ There are currently three frontend files you can override from your theme:
 
 When you do this, Sitka will `require` your theme file, setting a variable called `$data` which is an array of all the data available to you inside your override template. This will vary between templates.
 
+### Spam Mitigation
+
+Sitka Insights includes built-in support for spam mitigation on search forms and other forms using either **Cloudflare Turnstile** or **Google reCAPTCHA Enterprise**.
+
+**Important:** This plugin uses reCAPTCHA Enterprise, not the deprecated reCAPTCHA v3. If you're currently using reCAPTCHA v3, you should migrate to reCAPTCHA Enterprise.
+
+#### Configuration
+
+1. Go to **Settings > Sitka Insights** in the WP Admin
+2. Scroll to the **Spam Mitigation** section
+3. Select your mitigation type (Turnstile or ReCaptcha)
+4. Enter your credentials:
+   - **For Turnstile**: Site Key and Secret Key
+   - **For reCAPTCHA Enterprise**: Site Key, Project ID, and API Key
+5. Save settings
+
+The instructions for obtaining keys for each service are displayed in the admin panel when you select a mitigation type.
+
+#### reCAPTCHA Enterprise Setup
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select an existing one from the dropdown at the top of the page
+3. **Find your Project ID:** Click on the project dropdown at the top. You'll see your project name and below it the **Project ID** (e.g., "my-project-12345"). This is what you'll enter in the Sitka settings - NOT the project name.
+4. Navigate to [reCAPTCHA Enterprise](https://console.cloud.google.com/security/recaptcha) in the left sidebar menu (under "Security")
+5. Click "Enable API" if not already enabled
+6. Click "Create Key" and choose "Score-based (v3)" for invisible verification  
+7. Add your domain(s) to the list of authorized domains
+8. Copy the **Site Key** displayed after creating the key
+9. Go to [APIs & Services > Credentials](https://console.cloud.google.com/apis/credentials)
+10. Click "Create Credentials" > "API Key"
+11. (Recommended) Restrict the API key to only allow "reCAPTCHA Enterprise API" for better security
+12. Copy the **API Key**
+
+**What to enter in Sitka Insights settings:**
+- **Site Key:** From the reCAPTCHA key you created (step 8)
+- **Project ID:** Your Google Cloud Project ID from step 3 (looks like "my-project-12345", NOT the project name)
+- **API Key:** From the credentials page (step 12)
+
+**Common issue:** Make sure to use the Project ID (the unique identifier), not the project name. The Project ID is shown in the project dropdown and is usually lowercase with hyphens.
+
+#### Using the Shortcode
+
+To add spam mitigation to any form, use the `[sitka_spam_mitigation]` shortcode:
+
+```html
+<form method="post" action="/search">
+  <input type="text" name="sitka_search" placeholder="Search...">
+  
+  <!-- Add spam mitigation widget -->
+  [sitka_spam_mitigation]
+  
+  <button type="submit">Search</button>
+</form>
+```
+
+**Shortcode attributes:**
+
+* `class` - CSS class for the container (default: `sitka-spam-mitigation`)
+* `size` - Widget size: `normal`, `compact`, or `invisible` (reCAPTCHA only, default: `normal`)
+* `theme` - Visual theme: `light` or `dark` (default: `light`)
+
+Example with attributes:
+
+```
+[sitka_spam_mitigation class="my-custom-class" theme="dark" size="compact"]
+```
+
+#### Verifying Tokens
+
+When processing form submissions, verify the spam mitigation token on the server side:
+
+```php
+// For Turnstile, the token is in $_POST['cf-turnstile-response']
+// For reCAPTCHA, the token is in $_POST['g-recaptcha-response']
+
+$mitigation_type = get_option('sitka_mitigation_type');
+
+if ($mitigation_type === 'turnstile') {
+  $token = $_POST['cf-turnstile-response'] ?? '';
+} elseif ($mitigation_type === 'recaptcha') {
+  $token = $_POST['g-recaptcha-response'] ?? '';
+}
+
+// Verify the token
+$result = Sitka\verify_spam_mitigation($token);
+
+if ($result['success']) {
+  // Token is valid, process the form
+  // ...
+} else {
+  // Token is invalid
+  $error = $result['error'] ?? 'Verification failed';
+  // Handle error...
+}
+```
+
+For reCAPTCHA v3, you can also check the score:
+
+```php
+$result = Sitka\verify_spam_mitigation($token);
+
+if ($result['success']) {
+  $score = $result['score'] ?? 0; // 0.0 to 1.0 (higher is more human-like)
+  
+  if ($score >= 0.5) {
+    // Likely a human, process the form
+  } else {
+    // Likely a bot, reject the submission
+  }
+  
+  // You can also check the risk reasons
+  $reasons = $result['reasons'] ?? [];
+  // Reasons might include: AUTOMATION, UNEXPECTED_ENVIRONMENT, etc.
+}
+```
+
+**Note on Score Threshold:** The default threshold is 0.5 (50%). You can adjust this in the `verify_spam_mitigation()` function in `wp-api.php` based on your security requirements. Higher thresholds (e.g., 0.7) are more strict but may block some legitimate users.
+
 ### Pagination
 
 Sitka implements its own logic for paginating results that, unlike the core `paginate_links()` function, is not coupled to WordPress's internal query logic. In fact, it is much simpler to use than the built-in WordPress function.
