@@ -5,6 +5,10 @@
  * This is a reference implementation showing how to integrate
  * Cloudflare Turnstile or Google reCAPTCHA Enterprise with your search form.
  * 
+ * When spam mitigation is enabled, all searches are automatically verified
+ * before processing. If verification fails, the search returns empty results
+ * with an error message.
+ * 
  * To use this template, copy it to your theme's sitka-insights folder
  * and customize as needed.
  */

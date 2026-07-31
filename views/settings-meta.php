@@ -156,15 +156,22 @@
       </div>
       <div class="sitka-mitigation-description__recaptcha" style="display: none;">
         <p><strong>Google reCAPTCHA Enterprise Setup:</strong></p>
+        <p style="background: #fff3cd; padding: 10px; border-left: 3px solid #ffc107;"><strong>⚠️ Important:</strong> You MUST use <strong>reCAPTCHA Enterprise</strong> (not the old reCAPTCHA v2/v3 from <code>google.com/recaptcha/admin</code>). Keys from the old admin console will NOT work and will show "Invalid key type" errors.</p>
         <ol>
-          <li>Go to the <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a></li>
+          <li>Go to the <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a> (NOT the old reCAPTCHA admin console)</li>
           <li>Create a new project or select an existing one from the dropdown at the top of the page</li>
           <li><strong>Find your Project ID:</strong> Click on the project dropdown at the top. You'll see your project name and below it the <strong>Project ID</strong> (e.g., "my-project-12345"). Copy this ID - you'll need it later.</li>
           <li>Navigate to <a href="https://console.cloud.google.com/security/recaptcha" target="_blank">reCAPTCHA Enterprise</a> in the left sidebar menu (under "Security")</li>
-          <li>Click "Enable API" if not already enabled</li>
-          <li>Click "Create Key" and choose "Score-based (v3)" for invisible verification</li>
-          <li>Add your domain(s) to the list of authorized domains</li>
-          <li>Copy the <strong>Site Key</strong> displayed after creating the key</li>
+          <li>Click <strong>"Enable API"</strong> if not already enabled - this is required!</li>
+          <li>Click <strong>"Create Key"</strong> and select:</li>
+          <ul style="margin-top: 5px; margin-bottom: 5px;">
+            <li><strong>Display name:</strong> Give it a name (e.g., "My Website")</li>
+            <li><strong>Platform type:</strong> Choose "Website"</li>
+            <li><strong>Domains:</strong> Add your domain(s) without http:// (e.g., "example.com")</li>
+            <li><strong>Integration type:</strong> Select <strong>"Score-based"</strong> - this is the only type that works with this plugin</li>
+            <li><strong>Important:</strong> Do NOT select "Checkbox" - it will cause "Invalid key type" errors</li>
+          </ul>
+          <li>After creating the key, copy the <strong>Site Key</strong> displayed</li>
           <li>Go to <a href="https://console.cloud.google.com/apis/credentials" target="_blank">APIs & Services > Credentials</a></li>
           <li>Click "Create Credentials" > "API Key"</li>
           <li>Restrict the API key to only allow "reCAPTCHA Enterprise API" (recommended for security)</li>
@@ -172,9 +179,19 @@
         </ol>
         <p><strong>Summary of what to enter:</strong></p>
         <ul>
-          <li><strong>Site Key:</strong> From the reCAPTCHA key you created</li>
+          <li><strong>Site Key:</strong> From the reCAPTCHA Enterprise key you created (step 7)</li>
           <li><strong>Project ID:</strong> Your Google Cloud Project ID (found in top navigation, looks like "my-project-12345")</li>
-          <li><strong>API Key:</strong> From the credentials page</li>
+          <li><strong>API Key:</strong> From the credentials page (step 11)</li>
+        </ul>
+        <p><strong>Common Errors:</strong></p>
+        <ul style="color: #d63384;">
+          <li><strong>"Invalid key type"</strong> - Two possible causes:
+            <ol>
+              <li>You're using a key from the old <code>google.com/recaptcha/admin</code> console. You must create a new key in the Google Cloud Console's reCAPTCHA Enterprise section.</li>
+              <li>You created a "Checkbox" key instead of "Score-based" key. Delete it and create a new "Score-based" key.</li>
+            </ol>
+          </li>
+          <li><strong>"API not enabled"</strong> - Make sure you enabled the reCAPTCHA Enterprise API in step 5.</li>
         </ul>
         <p>For more information, visit the <a href="https://cloud.google.com/recaptcha-enterprise/docs" target="_blank">reCAPTCHA Enterprise documentation</a>.</p>
       </div>

@@ -192,6 +192,44 @@ add_action('init', function() {
     });
 
     $searchQuery = apply_filters('sitka/search/query', '');
+    
+    // Verify spam mitigation if enabled
+    $mitigation_type = get_option('sitka_mitigation_type');
+    $verification_error = null;
+    
+    if (!empty($mitigation_type) && !empty($searchQuery)) {
+      // Get the token based on mitigation type
+      $token = null;
+      if ($mitigation_type === 'turnstile') {
+        $token = $_POST['cf-turnstile-response'] ?? $_GET['cf-turnstile-response'] ?? null;
+      } elseif ($mitigation_type === 'recaptcha') {
+        $token = $_POST['g-recaptcha-response'] ?? $_GET['g-recaptcha-response'] ?? null;
+      }
+      
+      // Verify the token
+      if (!empty($token)) {
+        $verification_result = Sitka\verify_spam_mitigation($token);
+        
+        if (!$verification_result['success']) {
+          $verification_error = $verification_result['error'] ?? 'Spam verification failed';
+          error_log('Sitka spam mitigation failed: ' . $verification_error);
+        }
+      } else {
+        // No token provided but mitigation is enabled
+        $verification_error = 'Security verification required';
+        error_log('Sitka spam mitigation: No token provided');
+      }
+    }
+    
+    // If verification failed, return empty results
+    if ($verification_error) {
+      return apply_filters('sitka/render', 'search-results.php', [
+        'post'     => $post,
+        'query'    => $searchQuery,
+        'response' => [],
+        'spam_error' => $verification_error,
+      ]);
+    }
 
     try {
       $response = Sitka\search();
@@ -287,24 +325,35 @@ add_action('init', function() {
       </div>
       <?php
     } elseif ($mitigation_type === 'recaptcha') {
-      // Google reCAPTCHA Enterprise
+      // Google reCAPTCHA Enterprise - use programmatic/invisible execution
+      
+      // Enqueue reCAPTCHA Enterprise API
       wp_enqueue_script(
-        'recaptcha-enterprise',
-        'https://www.google.com/recaptcha/enterprise.js',
+        'recaptcha-enterprise-api',
+        'https://www.google.com/recaptcha/enterprise.js?render=' . urlencode($site_key),
         [],
         null,
         true
       );
       
-      $size_attr = $atts['size'] === 'invisible' ? 'data-size="invisible"' : '';
+      // Enqueue our custom handler
+      wp_enqueue_script(
+        'sitka-recaptcha',
+        SITKA_PLUGIN_JS_ROOT . '/recaptcha.js',
+        ['recaptcha-enterprise-api'],
+        '1.0.0',
+        true
+      );
+      
+      // Pass site key to JavaScript
+      wp_localize_script('sitka-recaptcha', 'sitkaRecaptcha', [
+        'siteKey' => $site_key,
+      ]);
+      
       ?>
       <div class="<?= esc_attr($atts['class']) ?>">
-        <div 
-          class="g-recaptcha" 
-          data-sitekey="<?= esc_attr($site_key) ?>"
-          data-theme="<?= esc_attr($atts['theme']) ?>"
-          <?= $size_attr ?>
-        ></div>
+        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+        <small style="color: #666;">Protected by reCAPTCHA Enterprise</small>
       </div>
       <?php
     }

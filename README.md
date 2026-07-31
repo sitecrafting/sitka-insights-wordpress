@@ -160,25 +160,40 @@ The instructions for obtaining keys for each service are displayed in the admin 
 
 #### reCAPTCHA Enterprise Setup
 
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+⚠️ **Important:** You MUST use **reCAPTCHA Enterprise** (not the old reCAPTCHA v2/v3 from google.com/recaptcha/admin). Keys from the old admin console will NOT work with this plugin and will show "Invalid key type" errors.
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/) (NOT the old reCAPTCHA admin console)
 2. Create a new project or select an existing one from the dropdown at the top of the page
 3. **Find your Project ID:** Click on the project dropdown at the top. You'll see your project name and below it the **Project ID** (e.g., "my-project-12345"). This is what you'll enter in the Sitka settings - NOT the project name.
 4. Navigate to [reCAPTCHA Enterprise](https://console.cloud.google.com/security/recaptcha) in the left sidebar menu (under "Security")
-5. Click "Enable API" if not already enabled
-6. Click "Create Key" and choose "Score-based (v3)" for invisible verification  
-7. Add your domain(s) to the list of authorized domains
-8. Copy the **Site Key** displayed after creating the key
-9. Go to [APIs & Services > Credentials](https://console.cloud.google.com/apis/credentials)
-10. Click "Create Credentials" > "API Key"
-11. (Recommended) Restrict the API key to only allow "reCAPTCHA Enterprise API" for better security
-12. Copy the **API Key**
+5. Click **"Enable API"** if not already enabled - this is required!
+6. Click **"Create Key"** and configure:
+   - **Display name:** Give it a name (e.g., "My Website")
+   - **Platform type:** Choose "Website"
+   - **Domains:** Add your domain(s) without http:// (e.g., "example.com")
+   - **Integration type:** Select **"Score-based"** - this is the ONLY type that works with this plugin
+   - **Important:** Do NOT select "Checkbox" - it will cause "Invalid key type" errors
+7. After creating the key, copy the **Site Key** displayed
+8. Go to [APIs & Services > Credentials](https://console.cloud.google.com/apis/credentials)
+9. Click "Create Credentials" > "API Key"
+10. (Recommended) Click "Restrict Key" and select "reCAPTCHA Enterprise API" only for better security
+11. Copy the **API Key**
 
 **What to enter in Sitka Insights settings:**
-- **Site Key:** From the reCAPTCHA key you created (step 8)
+- **Site Key:** From the reCAPTCHA Enterprise key you created (step 7)
 - **Project ID:** Your Google Cloud Project ID from step 3 (looks like "my-project-12345", NOT the project name)
-- **API Key:** From the credentials page (step 12)
+- **API Key:** From the credentials page (step 11)
 
-**Common issue:** Make sure to use the Project ID (the unique identifier), not the project name. The Project ID is shown in the project dropdown and is usually lowercase with hyphens.
+**Common Issues:**
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| **"Invalid key type"** | 1) Using a key from the old reCAPTCHA admin console (google.com/recaptcha/admin)<br>2) Created a "Checkbox" key instead of "Score-based" | 1) Delete the key and create a new one in Google Cloud Console's reCAPTCHA Enterprise section<br>2) Delete the key and create a new "Score-based" key |
+| **"API not enabled"** | reCAPTCHA Enterprise API is not enabled for your project | Go to the reCAPTCHA Enterprise page and click "Enable API" |
+| **"Invalid project ID"** | Using project name instead of project ID | Use the unique project ID (e.g., "my-project-12345"), not the display name |
+| **403 Forbidden** | API Key doesn't have permission | Make sure the API Key has reCAPTCHA Enterprise API enabled in its restrictions |
+
+**Note:** The old reCAPTCHA v2/v3 from google.com/recaptcha/admin is NOT compatible with this implementation. You must use reCAPTCHA Enterprise from the Google Cloud Console.
 
 #### Using the Shortcode
 
@@ -198,14 +213,40 @@ To add spam mitigation to any form, use the `[sitka_spam_mitigation]` shortcode:
 **Shortcode attributes:**
 
 * `class` - CSS class for the container (default: `sitka-spam-mitigation`)
-* `size` - Widget size: `normal`, `compact`, or `invisible` (reCAPTCHA only, default: `normal`)
-* `theme` - Visual theme: `light` or `dark` (default: `light`)
+* `size` - Widget size: `normal`, `compact` (Turnstile only; reCAPTCHA Enterprise is always invisible)
+* `theme` - Visual theme: `light` or `dark` (Turnstile only; reCAPTCHA Enterprise has no visible widget)
 
-Example with attributes:
+**Note:** reCAPTCHA Enterprise uses invisible/programmatic execution and doesn't display a widget. It automatically verifies users in the background when they submit the form.
+
+Example with attributes (for Turnstile):
 
 ```
 [sitka_spam_mitigation class="my-custom-class" theme="dark" size="compact"]
 ```
+
+#### Automatic Search Verification
+
+When spam mitigation is enabled, the Sitka search functionality automatically verifies all search requests before processing them. This happens automatically when using the `[sitka_search]` shortcode.
+
+**How it works:**
+
+1. User submits a search with the spam mitigation widget
+2. The token is automatically sent with the search request
+3. Server verifies the token before performing the search
+4. If verification fails, empty results are returned with an error message
+5. If verification succeeds, the search proceeds normally
+
+**No additional configuration required** - just add the `[sitka_spam_mitigation]` shortcode to your search form and verification happens automatically.
+
+**Error handling:**
+
+If verification fails, users will see:
+```
+Security Verification Failed: [error message]
+Please try your search again. If this problem persists, contact the site administrator.
+```
+
+The system logs all verification failures for debugging purposes.
 
 #### Verifying Tokens
 
