@@ -1,6 +1,6 @@
 <?php
 $atts = $data['atts'] ?? [];
-$site_key = get_option('sitka_turnstile_site_key');
+$site_key = $data['site_key'] ?? '';
 ?>
 
 <div class="<?= esc_attr($atts['class'] ?? '') ?>">

@@ -320,7 +320,8 @@ add_action('init', function() {
         true
       );
       echo apply_filters('sitka/render', 'spam-mitigation/turnstile.php', [
-        'atts'     => $atts,
+        'atts'      => $atts,
+        'site_key'  => $site_key,
       ]);
 
     } elseif ($mitigation_type === 'recaptcha') {
