@@ -34,9 +34,7 @@ $post = $data['post'] ?? $GLOBALS['post'] ?? null;
     
     <?php if ($mitigation_type): ?>
       <!-- Spam mitigation widget -->
-      <div class="spam-mitigation-wrapper">
-        <?php echo do_shortcode('[sitka_spam_mitigation theme="light" size="normal"]'); ?>
-      </div>
+      <?php echo do_shortcode('[sitka_spam_mitigation theme="light" size="normal"]'); ?>
     <?php endif; ?>
     
     <button id="searchsubmit" type="submit" class="btn btn-primary">

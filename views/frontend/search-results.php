@@ -13,7 +13,7 @@ $didYouMeanOption = get_option('sitka_search_instead_enabled') ?? 'disabled';
 $curatedResultsOption = get_option('sitka_search_curated_results_enabled') ?? 'disabled';
 $curatedResultsEnabled = $response['curatedResultsEnabled'] ?? false;
 $spamError = $data['spam_error'] ?? null;
-
+$mitigation_type = $data['mitigation_type'] ?? null;
 ?>
 <section class="sitka-search-form-container">
   <div class="container">
@@ -35,6 +35,10 @@ $spamError = $data['spam_error'] ?? null;
               Search instead for <a href="<?= get_permalink($post) . "?sitka_search=" . $originalQuery . "&sitka_literal_query=1" ?>"><?= $originalQuery ?></a>
             </p> 
           </div>
+        <?php endif; ?>
+        <?php if ($mitigation_type): ?>
+          <!-- Spam mitigation widget -->
+          <?php echo do_shortcode('[sitka_spam_mitigation theme="light" size="normal"]'); ?>
         <?php endif; ?>
         <button id="searchsubmit" type="submit" class="btn"><span>Search</span></button>
       </form>

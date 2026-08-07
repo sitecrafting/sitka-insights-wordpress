@@ -104,8 +104,8 @@ add_action('admin_menu', function() {
       'sitka_mitigation_project_id',
     ],
   ]);
-  // Process any user updates
-  if ($_POST && isset($_POST['_wpnonce'])) {
+  // Process any user updates - only if we're on the sitka-insights settings page
+  if ($_POST && isset($_GET['page']) && $_GET['page'] === 'sitka-insights') {
     $page->save_settings($_POST);
     // Redirect to prevent form resubmission
     wp_safe_redirect(add_query_arg('page', 'sitka-insights', admin_url('options-general.php')));
@@ -174,6 +174,8 @@ add_action('init', function() {
   add_shortcode('sitka_search', function($atts = []) {
     global $post;
 
+    $mitigation_type = get_option('sitka_mitigation_type');
+
     // Override how search paramaters are set in shortcode context.
     add_filter('sitka/search/query', function() {
       return get_query_var('sitka_search');
@@ -228,6 +230,7 @@ add_action('init', function() {
         'query'    => $searchQuery,
         'response' => [],
         'spam_error' => $verification_error,
+        'mitigation_type' => $mitigation_type,
       ]);
     }
 
@@ -251,6 +254,7 @@ add_action('init', function() {
       'post'     => $post,
       'query'    => $searchQuery,
       'response' => $response,
+      'mitigation_type' => $mitigation_type,
     ]);
   });
 
@@ -315,15 +319,10 @@ add_action('init', function() {
         null,
         true
       );
-      ?>
-      <div class="<?= esc_attr($atts['class']) ?>">
-        <div 
-          class="cf-turnstile" 
-          data-sitekey="<?= esc_attr($site_key) ?>"
-          data-theme="<?= esc_attr($atts['theme']) ?>"
-        ></div>
-      </div>
-      <?php
+      echo apply_filters('sitka/render', 'spam-mitigation/turnstile.php', [
+        'atts'     => $atts,
+      ]);
+
     } elseif ($mitigation_type === 'recaptcha') {
       // Google reCAPTCHA Enterprise - use programmatic/invisible execution
       
@@ -350,12 +349,10 @@ add_action('init', function() {
         'siteKey' => $site_key,
       ]);
       
-      ?>
-      <div class="<?= esc_attr($atts['class']) ?>">
-        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
-        <small style="color: #666;">Protected by reCAPTCHA Enterprise</small>
-      </div>
-      <?php
+      echo apply_filters('sitka/render', 'spam-mitigation/google-recaptcha.php', [
+        'atts'     => $atts,
+      ]);
+      
     }
     
     return ob_get_clean();
