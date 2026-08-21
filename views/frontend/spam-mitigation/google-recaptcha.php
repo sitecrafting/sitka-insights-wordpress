@@ -3,5 +3,5 @@ $atts = $data['atts'] ?? [];
 ?>
 
 <span class="<?= esc_attr($atts['class'] ?? '') ?>">
-  <input type="text" name="g-recaptcha-response">
+  <input type="hidden" name="g-recaptcha-response">
 </span>

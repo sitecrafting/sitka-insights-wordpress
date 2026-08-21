@@ -237,15 +237,6 @@ function verify_spam_mitigation($token, $remote_ip = null) : array {
 
     $body = json_decode(wp_remote_retrieve_body($response), true);
     
-    // Check for API errors
-    if (isset($body['error'])) {
-      return [
-        'success' => false,
-        'error' => $body['error']['message'] ?? 'reCAPTCHA Enterprise verification failed',
-        'results-expired' => isset($body['error-codes']) && in_array('timeout-or-duplicate', $body['error-codes']),
-      ];
-    }
-
     // Verify token validity
     $token_properties = $body['tokenProperties'] ?? [];
     $is_valid = ($token_properties['valid'] ?? false) === true;
@@ -253,7 +244,8 @@ function verify_spam_mitigation($token, $remote_ip = null) : array {
     if (!$is_valid) {
       return [
         'success' => false,
-        'error' => $token_properties['invalidReason'] ?? 'Invalid token'
+        'error' => $token_properties['invalidReason'] ?? 'Invalid token',
+        'results-expired' => in_array($token_properties['invalidReason'] ?? '', ['EXPIRED', 'DUPE']),
       ];
     }
 
