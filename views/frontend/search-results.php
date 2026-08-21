@@ -17,6 +17,7 @@ $results_expired = $data['results_expired'] ?? false;
 $mitigation_type = $data['mitigation_type'] ?? null;
 
 ?>
+<?= apply_filters('sitka/render', 'debug-info.php', $data) ?>
 <section class="sitka-search-form-container">
   <div class="container">
     <div class="global-search">

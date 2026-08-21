@@ -228,7 +228,23 @@
     </div>
   </div>
 
-  
+  <h3>Developer Settings</h3>
+  <div class="sitka-field sitka-field--flex">
+    <div class="sitka-field__label">
+      <label><b>Debug Mode</b></label>
+    </div>
+    <div class="sitka-field__input">
+      <div class="sitka-field__debug-option">
+        <input type="radio" id="sitka_debug_enabled" name="sitka_debug_mode" value="1" <?= isset($data['sitka_debug_mode']) && $data['sitka_debug_mode'] == '1' ? 'checked' : '' ?>>
+        <label for="sitka_debug_enabled">Enable</label>
+      </div>
+      <div class="sitka-field__debug-option">
+        <input type="radio" id="sitka_debug_disabled" name="sitka_debug_mode" value="0" <?= !isset($data['sitka_debug_mode']) || $data['sitka_debug_mode'] == '0' ? 'checked' : '' ?>>
+        <label for="sitka_debug_disabled">Disable</label>
+      </div>
+      <p>When enabled, additional debug information will be displayed on the search results page to help troubleshoot issues. Make sure to disable on production sites.</p>
+    </div>
+  </div>
 
   <script>
     jQuery(function($) {

@@ -102,6 +102,7 @@ add_action('admin_menu', function() {
       'sitka_mitigation_site_key',
       'sitka_mitigation_secret_key',
       'sitka_mitigation_project_id',
+      'sitka_debug_mode',
     ],
   ]);
   // Process any user updates - only if we're on the sitka-insights settings page
