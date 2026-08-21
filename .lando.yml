@@ -1,0 +1,62 @@
+name: sitka-insights
+recipe: wordpress
+config:
+  webroot: wp
+  php: '8.4'
+
+services:
+  appserver:
+    
+    # Debugging setup
+    xdebug: debug
+    config:
+      php: .lando/php/php.ini
+    
+    run_as_root:
+      - apt-get update
+      - apt-get install zip
+
+    run:
+      - cd $LANDO_MOUNT && composer install
+      - cd $LANDO_MOUNT && scripts/setup-wordpress.sh
+
+    overrides:
+      environment:
+        COMPOSER_AUTH: $COMPOSER_AUTH
+        # Pass any non-empty CI envvar from the host into Lando
+        # This is so we can force non-interactive mode setting up WP
+        CI: ${CI:-''}
+
+  database:
+    type: mysql
+
+  node:
+    type: node:14
+
+    globals:
+      webpack: "latest"
+      yarn: "latest"
+
+    run:
+      - yarn
+tooling:
+
+  install:
+    service: appserver
+    cmd: '/app/scripts/setup-wordpress.sh'
+    description: 'Install and configure WordPress for custom plugin dev'
+  yarn:
+    service: node
+  webpack:
+    service: node
+    cmd: 'node_modules/.bin/webpack'
+    description: 'Run arbitrary webpack commands'
+  debug:
+    service: appserver
+    cmd: 'tail -f /app/wp/wp-content/debug.log'
+    description: 'Get real-time WP debug log output'
+
+  xdebug-log:
+    service: appserver
+    description: "View the tail log for /tmp/xdebug.log"
+    cmd: "tail -f /tmp/xdebug.log"

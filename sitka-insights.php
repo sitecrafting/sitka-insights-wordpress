@@ -202,6 +202,8 @@ add_action('init', function() {
     if (!empty($mitigation_type) && !empty($searchQuery)) {
       // Get the token based on mitigation type
       $token = null;
+      $results_expired = false;
+
       if ($mitigation_type === 'turnstile') {
         $token = $_POST['cf-turnstile-response'] ?? $_GET['cf-turnstile-response'] ?? null;
       } elseif ($mitigation_type === 'recaptcha') {
@@ -214,6 +216,7 @@ add_action('init', function() {
         
         if (!$verification_result['success']) {
           $verification_error = $verification_result['error'] ?? 'Spam verification failed';
+          $results_expired = $verification_result['results-expired'] ?? false;
           error_log('Sitka spam mitigation failed: ' . $verification_error);
         }
       } else {
@@ -231,6 +234,7 @@ add_action('init', function() {
         'response' => [],
         'spam_error' => $verification_error,
         'mitigation_type' => $mitigation_type,
+        'results_expired' => $results_expired,
       ]);
     }
 
@@ -255,6 +259,7 @@ add_action('init', function() {
       'query'    => $searchQuery,
       'response' => $response,
       'mitigation_type' => $mitigation_type,
+      'results_expired' => $results_expired,
     ]);
   });
 

@@ -13,7 +13,9 @@ $didYouMeanOption = get_option('sitka_search_instead_enabled') ?? 'disabled';
 $curatedResultsOption = get_option('sitka_search_curated_results_enabled') ?? 'disabled';
 $curatedResultsEnabled = $response['curatedResultsEnabled'] ?? false;
 $spamError = $data['spam_error'] ?? null;
+$results_expired = $data['results_expired'] ?? false;
 $mitigation_type = $data['mitigation_type'] ?? null;
+
 ?>
 <section class="sitka-search-form-container">
   <div class="container">
@@ -46,35 +48,6 @@ $mitigation_type = $data['mitigation_type'] ?? null;
   </div><!-- container -->
 </section>
 
-<?php if ($spamError) : ?>
-  <section class="sitka-search-error-container">
-    <div class="container">
-      <div class="sitka-spam-error alert alert-danger" role="alert">
-        <strong>Security Verification Failed:</strong> <?= esc_html($spamError) ?>
-        <p>Please try your search again. If this problem persists, contact the site administrator.</p>
-      </div>
-    </div>
-  </section>
-  <style>
-    .sitka-spam-error {
-      background-color: #f8d7da;
-      border: 1px solid #f5c2c7;
-      color: #842029;
-      padding: 1rem;
-      margin: 1rem 0;
-      border-radius: 4px;
-    }
-    .sitka-spam-error strong {
-      display: block;
-      margin-bottom: 0.5rem;
-    }
-    .sitka-spam-error p {
-      margin: 0.5rem 0 0 0;
-      font-size: 0.9em;
-    }
-  </style>
-<?php endif; ?>
-
 <?php if ($curatedResultsOption == "enabled" && $curatedResultsEnabled && isset($response['curatedResults']) && !empty($response['curatedResults'])) { ?>
   <section class="sitka-search-results-container curated-results">
   
@@ -105,11 +78,21 @@ $mitigation_type = $data['mitigation_type'] ?? null;
       <?php endforeach; ?>
     <?php elseif (!empty($searchQuery)) : ?>
 
-      <p><?= apply_filters(
-        'sitka/search/no_results_message',
-        sprintf('%s <b>%s</b>', __('No results for'), esc_attr($searchQuery)),
-        $searchQuery
-      ) ?></p>
+      <p>
+        <?php if ($results_expired) : ?>
+          <?= apply_filters(
+            'sitka/search/results_expired_message',
+            "Your search results have expired. Please try your search again.",
+            $searchQuery
+          ) ?>
+        <?php else : ?>
+          <?= apply_filters(
+            'sitka/search/no_results_message',
+            sprintf('%s <b>%s</b>', __('No results for'), esc_attr($searchQuery)),
+            $searchQuery
+          ) ?>
+        <?php endif; ?>
+      </p>
 
     <?php endif; ?>
 

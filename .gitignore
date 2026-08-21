@@ -3,8 +3,12 @@
 *.zip
 .phpunit.result.cache
 /releases/
+node_modules/
+wp/
 
 # editor artifacts
 *.swp
 *.swo
 *.swn
+*.sql
+*.sql.gz

@@ -191,7 +191,8 @@ function verify_spam_mitigation($token, $remote_ip = null) : array {
     
     return [
       'success' => $body['success'] ?? false,
-      'error' => isset($body['error-codes']) ? implode(', ', $body['error-codes']) : null
+      'error' => isset($body['error-codes']) ? implode(', ', $body['error-codes']) : null,
+      'results-expired' => isset($body['error-codes']) && in_array('timeout-or-duplicate', $body['error-codes']),
     ];
 
   } elseif ($mitigation_type === 'recaptcha') {
@@ -240,7 +241,8 @@ function verify_spam_mitigation($token, $remote_ip = null) : array {
     if (isset($body['error'])) {
       return [
         'success' => false,
-        'error' => $body['error']['message'] ?? 'reCAPTCHA Enterprise verification failed'
+        'error' => $body['error']['message'] ?? 'reCAPTCHA Enterprise verification failed',
+        'results-expired' => isset($body['error-codes']) && in_array('timeout-or-duplicate', $body['error-codes']),
       ];
     }
 

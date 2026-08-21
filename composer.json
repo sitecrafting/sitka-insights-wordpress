@@ -2,11 +2,37 @@
   "name": "sitecrafting/sitka-insights-wordpress",
   "description": "Integrate your WordPress site with the Sitka Insights platform",
   "type": "wordpress-plugin",
+  "repositories": {
+    "wpackagist": {
+      "type": "composer",
+      "url": "https://wpackagist.org"
+    }
+  },
   "require": {
     "php": ">=7.3",
     "sitecrafting/gearlab-tools-php": "^3.0"
   },
-  "version": "0.0.17b",
+  "require-dev": {
+    "composer/installers": "^2.3",
+    "johnpbloch/wordpress-core-installer": "^2.0",
+    "johnpbloch/wordpress-core": "^6.5.1",
+    "mnsami/composer-custom-directory-installer": "^2.0",
+    "wpackagist-plugin/classic-editor": "*",
+    "phpunit/phpunit": "^8.5"
+  },
+  "extra": {
+    "installer-paths": {
+      "wp/wp-content/mu-plugins/{$name}": [
+        "type:wordpress-muplugin"
+      ],
+      "wp/wp-content/plugins/{$name}": [
+        "type:wordpress-plugin"
+      ]
+    },
+    "wordpress-install-dir": {
+      "johnpbloch/wordpress-core": "wp"
+    }
+  },
   "dist": {
     "type": "zip",
     "url": "https://github.com/sitecrafting/sitka-insights-wordpress/releases/download/v0.0.17b/sitka-insights-0.0.17b.zip"
@@ -38,12 +64,11 @@
       "Sitka\\Plugin\\": "test/cases/"
     }
   },
-  "require-dev": {
-    "phpunit/phpunit": "^8.5"
-  },
   "config": {
     "allow-plugins": {
-      "composer/installers": true
+      "composer/installers": true,
+      "johnpbloch/wordpress-core-installer": true,
+      "mnsami/composer-custom-directory-installer": true
     }
   }
 }
