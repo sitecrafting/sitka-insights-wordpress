@@ -74,8 +74,20 @@ if [[ !  $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 # Update version in sitka-insights.php
+# Must work with BSD/macOS sed, which takes the -i backup suffix as a SEPARATE
+# argument (so "sed -i -E" eats -E as the suffix and dies on \1) and has no \s
+# shorthand (so \s silently matches nothing). Writing to a temp file avoids -i
+# altogether and mirrors the composer.json step below; POSIX classes work in both
+# BSD and GNU sed.
 info "Updating version in sitka-insights.php..."
-sed -i -E "s/(^\s*\* Version:)\s*[^\r\n]*/\1 $VERSION/" sitka-insights.php
+sed -E "s/(^[[:space:]]*\*[[:space:]]*Version:)[[:space:]]*.*/\1 $VERSION/" \
+    sitka-insights.php > sitka-insights.php.tmp && mv sitka-insights.php.tmp sitka-insights.php
+
+# Confirm the header actually changed. A silently non-matching regex would leave
+# the old version in place and the script would go on to commit, tag and publish
+# a release whose plugin header disagrees with its own tag.
+grep -qE "^[[:space:]]*\*[[:space:]]*Version:[[:space:]]*$VERSION[[:space:]]*$" sitka-insights.php \
+    || error "Version header in sitka-insights.php was not updated - check the plugin header format"
 success "Updated sitka-insights.php"
 
 # Update version and dist.url in composer.json
