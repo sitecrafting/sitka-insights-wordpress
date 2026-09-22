@@ -2,6 +2,7 @@
 *.tar.gz
 *.zip
 .phpunit.result.cache
+/releases/
 
 # editor artifacts
 *.swp
