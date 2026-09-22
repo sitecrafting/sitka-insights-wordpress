@@ -3,6 +3,8 @@
 *.zip
 .phpunit.result.cache
 /releases/
+# stale build staging dir from older versions of bin/create-release.sh
+/sitka-insights/
 
 # editor artifacts
 *.swp

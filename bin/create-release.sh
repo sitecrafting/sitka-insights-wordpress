@@ -120,45 +120,49 @@ success "Pushed to remote"
 
 # Create releases directory if it doesn't exist
 mkdir -p releases
-ln -sfn . sitka-insights
+
+# The files that make up the distributable plugin, relative to the repo root.
+# One list, used for both archives: they previously differed only by a redundant
+# explicit vendor/autoload.php, which vendor/ already covers.
+PAYLOAD=(
+    sitka-insights.php
+    wp-api.php
+    src
+    cli
+    js
+    css
+    vendor
+    views
+    LICENSE.txt
+    README.md
+)
+
+# Both archives must unpack to a single sitka-insights/ directory, since that is
+# the folder name WordPress expects the plugin to install under. We get that
+# prefix by staging a copy in a temp dir rather than by creating anything inside
+# the repo. The previous approach symlinked ./sitka-insights -> . and deleted it
+# only on the success path, so any failure left the link behind - and once that
+# leftover became a real directory, "ln -sfn . sitka-insights" failed outright
+# ("ln: sitka-insights/.: Operation not permitted") and broke every later run.
+STAGE=$(mktemp -d)
+trap 'rm -rf "$STAGE"' EXIT
+
+info "Staging plugin files..."
+mkdir -p "$STAGE/sitka-insights"
+cp -R "${PAYLOAD[@]}" "$STAGE/sitka-insights/"
 
 # Create ZIP archive
 info "Creating ZIP archive..."
 ZIP_FILE="releases/sitka-insights-$VERSION.zip"
-zip -r "$ZIP_FILE" \
-    sitka-insights/sitka-insights.php \
-    sitka-insights/wp-api.php \
-    sitka-insights/src \
-    sitka-insights/cli \
-    sitka-insights/js \
-    sitka-insights/css \
-    sitka-insights/vendor \
-    sitka-insights/views \
-    sitka-insights/LICENSE.txt \
-    sitka-insights/README.md
-
+rm -f "$ZIP_FILE"  # zip adds to an existing archive rather than replacing it
+( cd "$STAGE" && zip -r "$REPO_ROOT/$ZIP_FILE" sitka-insights )
 success "Created $ZIP_FILE"
 
 # Create TAR.GZ archive
 info "Creating TAR.GZ archive..."
 TAR_FILE="releases/sitka-insights-$VERSION.tar.gz"
-tar -cvzf "$TAR_FILE" \
-    sitka-insights/vendor/autoload.php \
-    sitka-insights/sitka-insights.php \
-    sitka-insights/wp-api.php \
-    sitka-insights/src \
-    sitka-insights/cli \
-    sitka-insights/js \
-    sitka-insights/css \
-    sitka-insights/vendor \
-    sitka-insights/views \
-    sitka-insights/LICENSE.txt \
-    sitka-insights/README.md
-
+tar -cvzf "$REPO_ROOT/$TAR_FILE" -C "$STAGE" sitka-insights
 success "Created $TAR_FILE"
-
-# Remove hackish symlink
-rm ./sitka-insights
 
 # Ask if this is a pre-release
 read -p "Is this a pre-release? (y/N): " -n 1 -r
