@@ -48,6 +48,7 @@ cd "$REPO_ROOT"
 # Check if required files exist
 [[ -f "sitka-insights.php" ]] || error "sitka-insights.php not found"
 [[ -f "composer.json" ]] || error "composer. json not found"
+[[ -f "composer.lock" ]] || error "composer.lock not found"
 
 # Request new version number
 echo ""
@@ -102,28 +103,16 @@ jq --arg version "$VERSION" \
 
 success "Updated composer.json"
 
-# Commit changes
-info "Committing changes..."
-git add sitka-insights.php composer.json
-git commit -m "Bump version to $VERSION"
-success "Changes committed"
+# The version field is part of the lock's content hash; refresh it so the lock
+# stays in sync. Package versions are untouched.
+composer update --lock --no-install --no-interaction --no-progress
 
-# Create and push tag
-info "Creating git tag v$VERSION..."
-git tag -a "v$VERSION" -m "Release version $VERSION"
-success "Tag created"
-
-info "Pushing changes and tag to remote..."
-git push origin HEAD
-git push origin "v$VERSION"
-success "Pushed to remote"
-
-# Create releases directory if it doesn't exist
+# Archives are built before anything is committed, tagged or pushed, so a failed
+# build publishes nothing.
 mkdir -p releases
 
 # The files that make up the distributable plugin, relative to the repo root.
-# One list, used for both archives: they previously differed only by a redundant
-# explicit vendor/autoload.php, which vendor/ already covers.
+# vendor/ is not listed: it is installed from composer.lock below.
 PAYLOAD=(
     sitka-insights.php
     wp-api.php
@@ -131,7 +120,6 @@ PAYLOAD=(
     cli
     js
     css
-    vendor
     views
     LICENSE.txt
     README.md
@@ -151,6 +139,13 @@ info "Staging plugin files..."
 mkdir -p "$STAGE/sitka-insights"
 cp -R "${PAYLOAD[@]}" "$STAGE/sitka-insights/"
 
+# Never copy vendor/ from the working tree: it can be stale or hold require-dev
+# packages.
+info "Installing production dependencies from composer.lock..."
+cp composer.json composer.lock "$STAGE/sitka-insights/"
+composer install --working-dir="$STAGE/sitka-insights" --no-dev --optimize-autoloader --no-interaction --no-progress
+rm "$STAGE/sitka-insights/composer.json" "$STAGE/sitka-insights/composer.lock"
+
 # Create ZIP archive
 info "Creating ZIP archive..."
 ZIP_FILE="releases/sitka-insights-$VERSION.zip"
@@ -163,6 +158,22 @@ info "Creating TAR.GZ archive..."
 TAR_FILE="releases/sitka-insights-$VERSION.tar.gz"
 tar -cvzf "$REPO_ROOT/$TAR_FILE" -C "$STAGE" sitka-insights
 success "Created $TAR_FILE"
+
+# Commit changes
+info "Committing changes..."
+git add sitka-insights.php composer.json composer.lock
+git commit -m "Bump version to $VERSION"
+success "Changes committed"
+
+# Create and push tag
+info "Creating git tag v$VERSION..."
+git tag -a "v$VERSION" -m "Release version $VERSION"
+success "Tag created"
+
+info "Pushing changes and tag to remote..."
+git push origin HEAD
+git push origin "v$VERSION"
+success "Pushed to remote"
 
 # Ask if this is a pre-release
 read -p "Is this a pre-release? (y/N): " -n 1 -r
