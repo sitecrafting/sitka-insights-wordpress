@@ -31,6 +31,10 @@ command -v zip >/dev/null 2>&1 || error "zip is required but not installed"
 command -v tar >/dev/null 2>&1 || error "tar is required but not installed"
 command -v composer >/dev/null 2>&1 || error "composer is required but not installed"
 
+# The GitHub release is the last step, after the tag is pushed; fail now rather
+# than leave a pushed tag with no release behind it.
+gh auth status >/dev/null 2>&1 || error "gh is not logged in to GitHub. Run 'gh auth login' first."
+
 # Check if we're in a git repository
 if !  git rev-parse --git-dir > /dev/null 2>&1; then
     error "Not in a git repository"
