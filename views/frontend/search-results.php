@@ -31,7 +31,7 @@ $showAiResults = $aiSearchOptionEnabled == "enabled"
   $ai_message = "";
   $context = "";
   $searchQuery = $originalQuery;
-  $queryLogId = $response['queryLogId'];
+  $queryLogId = $response['queryLogId'] ?? 0;
 
 
   // AI generated message
