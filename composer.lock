@@ -751,19 +751,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sitecrafting/gearlab-tools-php.git",
-                "reference": "55c1261c9f4485e9c4969207dffc72c4e5eea669"
+                "reference": "11644e7f7c1f2259ede655effd038d06db304af9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sitecrafting/gearlab-tools-php/zipball/55c1261c9f4485e9c4969207dffc72c4e5eea669",
-                "reference": "55c1261c9f4485e9c4969207dffc72c4e5eea669",
+                "url": "https://api.github.com/repos/sitecrafting/gearlab-tools-php/zipball/11644e7f7c1f2259ede655effd038d06db304af9",
+                "reference": "11644e7f7c1f2259ede655effd038d06db304af9",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "ext-json": "*",
                 "ext-mbstring": "*",
-                "guzzlehttp/guzzle": "^7.10",
+                "guzzlehttp/guzzle": "^7.15.2",
                 "php": ">=7.1",
                 "symfony/console": "^5.0"
             },
@@ -798,7 +798,7 @@
                 "issues": "https://github.com/sitecrafting/gearlab-tools-php/issues",
                 "source": "https://github.com/sitecrafting/gearlab-tools-php/tree/swaggerhub-gearlab-tools-v4.0.0"
             },
-            "time": "2026-03-24T21:48:51+00:00"
+            "time": "2026-11-06T19:23:03+00:00"
         },
         {
             "name": "symfony/console",
