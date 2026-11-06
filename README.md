@@ -22,6 +22,97 @@ composer require sitecrafting/sitka-insights-wordpress --prefer-dist
 
 *NOTE:* if you are tracking your WordPress codebase as one big monorepo, the `--prefer-dist` flag is important! It tells Composer to find and download the .zip archive instead of the full Git repository. Without this flag, it will create the plugin directory as a [Git submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules) and strange things will happen.
 
+## Upgrading from 2.x to 3.x
+
+For an existing 2.x site this is close to a drop-in upgrade. No settings are
+renamed or removed, there is nothing to migrate, and every feature added in 3.x
+is disabled by default — upgrade and change nothing, and the site behaves as it
+did on 2.x.
+
+Four things are worth checking first.
+
+### Theme overrides of `search-results.php` will hide the new features
+
+Curated Results and AI Search are both rendered from inside
+`views/frontend/search-results.php`. If your theme overrides that file (see
+[Theme overrides](#theme-overrides)), the override keeps working exactly as it
+did on 2.x — and the new sections simply never appear, with no error or warning
+explaining why.
+
+To use either feature, re-apply your customisations on top of the 3.x version of
+`search-results.php`. Overrides of `search-result.php` and `pagination.php` are
+unaffected.
+
+### `composer require` needs `minimum-stability: dev` on 3.1.x
+
+3.1.x depends on `sitecrafting/gearlab-tools-php` at a development branch rather
+than a tagged release, which Composer refuses under its default
+`minimum-stability` of `stable`:
+
+```
+sitecrafting/sitka-insights-wordpress 3.1.0 requires
+sitecrafting/gearlab-tools-php dev-swaggerhub-gearlab-tools-v4.0.0 -> found
+... but it does not match your minimum-stability.
+```
+
+Installing from the release archive (see **Installing Manually** above) is
+unaffected, and is the recommended route. If you need the Composer install, add
+this to your root `composer.json`:
+
+```json
+"minimum-stability": "dev",
+"prefer-stable": true
+```
+
+Be aware that this lowers the stability floor for your whole project, not just
+for this plugin. Version 3.0.x installs normally and needs none of this.
+
+### Guzzle moved from 6 to 7
+
+As of 3.0.2 the plugin is built against Guzzle 7 in place of 6.5, along with
+`guzzlehttp/psr7` 2.x and `psr/http-message` 2.0. These are major version bumps
+with breaking API changes. From 3.1.1, `sitecrafting/gearlab-tools-php` requires
+Guzzle 7.15.2 or later, the first version clear of the Guzzle and psr7 security
+advisories published in 2026, and the release archive bundles 7.16.1.
+
+If your project has its own Composer autoloader, two are registered: yours and
+the plugin's bundled one. Composer puts each autoloader at the front of the
+queue as it registers, and the plugin's normally registers after yours, so the
+bundled copy answers first for any class not yet loaded. Your project's copy is
+used only for classes something loaded earlier in the request. A project that
+pins Guzzle 6 can therefore end up with Guzzle 6 and 7 classes mixed in one
+request, which can fail at runtime. Check your project-level Composer
+dependencies, and bring Guzzle to 7.15.2 or later, before upgrading.
+
+### A site set to the Staging environment stays there, silently
+
+The **Staging** option was removed from the settings screen in 3.0.0, but the
+`sitka_environment` option is still read and still routes to the staging API and
+dashboard. A site saved as `staging` under 2.x keeps talking to staging after
+the upgrade, and the settings screen no longer shows that it is doing so.
+
+If you are not certain which environment a site is on, check the
+`sitka_environment` option, then select **Production** and save.
+
+### What 3.x adds
+
+* **Curated Results** (3.0.0) — results promoted from the Sitka Dashboard,
+  rendered above the main result list.
+* **AI Search** (3.1.0, beta) — AI-generated answer text, source links, and
+  thumbs up/down feedback. The 3.1.0 release archive bundled an older
+  `gearlab-tools-php` without AI support, so it works from 3.1.1.
+* Fixes for PHP 8.2+ dynamic property deprecation warnings (3.0.0, 3.0.1).
+* Fixes for a duplicate HTML `id` on the "Did you mean" setting, and a PHP
+  warning raised on search pages that had no spelling suggestion.
+* 3.1.1: Guzzle 7.15.2 or later (security fixes), a release archive without
+  development tools such as PHPUnit, and a fix for a PHP warning on the search
+  results page.
+
+Curated Results and AI Search are each gated twice: enable them under
+**Settings > Sitka Insights**, *and* have them enabled for your collection in
+the Sitka Dashboard. Ask SiteCrafting if you are unsure whether your collection
+is set up for them.
+
 ## Usage
 
 ### Getting Started
