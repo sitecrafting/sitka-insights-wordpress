@@ -4,6 +4,15 @@
 
 Integrate your WordPress site seamlessly with the Sitka Insights suite.
 
+## Which line should I use?
+
+This is the **2.x** line. It supports **PHP 7.4 and later**, and carries the
+same Guzzle security floor as 3.x, but it does not include Curated Results or
+AI Search and is maintained for security fixes only.
+
+If your site runs **PHP 8.1 or later**, use the **3.x** line on `main` instead.
+That is where features are developed, and its README has an upgrade guide.
+
 ## Installation
 
 ### Installing Manually

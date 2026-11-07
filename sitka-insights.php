@@ -7,7 +7,7 @@
  * Author: SiteCrafting, Inc. <hello@sitecrafting.com>
  * Author URI: https://www.sitecrafting.com/
  * Version: 2.3.9
- * Requires PHP: 7.1
+ * Requires PHP: 7.4
  */
 
 // no script kiddiez
